@@ -46,7 +46,15 @@ const socialLinks = [
   }
 ];
 ---
-<section id="about" class="py-20 bg-white">
+<style>
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
+
+<section id="about" class="py-20 bg-white min-h-screen">
   <div class="container mx-auto px-4">
     <h2 class="text-3xl font-bold mb-12 text-center">About Me</h2>
     
@@ -68,7 +76,7 @@ const socialLinks = [
     <!-- Download CV Button -->
     <div class="flex justify-center mb-12">
       <a
-        href="/public/CV_Mehmet_Sezer.pdf"
+        href="/CV_Mehmet_Sezer.pdf"
         download
         class="inline-flex items-center px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors shadow-md hover:shadow-lg"
       >
