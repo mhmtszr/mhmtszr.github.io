@@ -1,0 +1,87 @@
+---
+const projects = [
+  {
+    title: 'Concurrent Swiss Map',
+    description: 'An open-source Go library that provides a high-performance, thread-safe generic concurrent hash map implementation designed to handle concurrent access efficiently.',
+    github: 'https://github.com/mhmtszr/concurrent-swiss-map',
+    demo: 'https://mhmtszr.github.io/concurrent-swiss-map',
+    technologies: ['Go']
+  },
+  {
+    title: 'Go Elasticsearch Connect Couchbase',
+    description: 'Go implementation of the Couchbase Elasticsearch Connector that replicates documents from Couchbase via Database Change Protocol (DCP) and writes each document to an Elasticsearch index in near real-time.',
+    github: 'https://github.com/mhmtszr/go-elasticsearch-connect-couchbase',
+    demo: 'https://mhmtszr.github.io/go-elasticsearch-connect-couchbase',
+    technologies: ['Go', 'Couchbase', 'Elasticsearch']
+  },
+  {
+    title: 'Pipeline',
+    description: 'A Go pipeline solution that can be used in many different combinations for chaining pipeline steps.',
+    github: 'https://github.com/mhmtszr/pipeline',
+    demo: 'https://mhmtszr.github.io/pipeline',
+    technologies: ['Go', 'Pipeline']
+  },
+  {
+    title: 'Go Kafka Connect Couchbase',
+    description: 'Go implementation of the Couchbase Kafka Connector that streams documents from Couchbase via Database Change Protocol (DCP) and publishes each document to a Kafka topic in near real-time.',
+    github: 'https://github.com/mhmtszr/go-kafka-connect-couchbase',
+    demo: 'https://mhmtszr.github.io/go-kafka-connect-couchbase',
+    technologies: ['Go', 'Couchbase', 'Kafka']
+  },
+  {
+    title: 'kediatR for Quarkus',
+    description: 'A library to handle queries and commands via a command bus in Kotlin and Java applications, supporting CQRS and Event Sourcing patterns.',
+    github: 'https://github.com/mhmtszr/kediatr-quarkus',
+    demo: 'https://mhmtszr.github.io/kediatr-quarkus',
+    technologies: ['Kotlin', 'Java', 'Quarkus']
+  },
+  {
+    title: 'MovieIt',
+    description: 'A mobile application that lists movies to the user according to the semantic content of the text information entered by them.',
+    github: 'https://github.com/mhmtszr/movieit',
+    demo: 'https://mhmtszr.github.io/movieit',
+    technologies: ['Java Spring Boot', 'Dialogflow', 'Neo4j', 'MongoDB', 'Elasticsearch']
+  },
+  {
+    title: 'Go Assist',
+    description: 'A mobile application developed to prevent vehicles (Tow Trucks, etc.) from turning empty, with backend developed using Node.js and admin panel using React.',
+    github: 'https://github.com/mhmtszr/go-assist',
+    demo: 'https://goassist.com.tr',
+    technologies: ['Node.js', 'Express', 'MongoDB', 'Firebase', 'React']
+  },
+  {
+    title: 'Patates Bookstore',
+    description: 'An online book buying application developed with a backend using Java Spring Boot, Firebase, and Elasticsearch.',
+    github: 'https://github.com/mhmtszr/patates-bookstore',
+    demo: 'https://mhmtszr.github.io/patates-bookstore',
+    technologies: ['Java Spring Boot', 'Firebase', 'Elasticsearch']
+  },
+  {
+    title: 'Rememberry',
+    description: 'A Google Assistant Application that reminds various activities to users who have Alzheimer\'s disease, developed during a hackathon.',
+    github: 'https://github.com/mhmtszr/rememberry',
+    demo: 'https://mhmtszr.github.io/rememberry',
+    technologies: ['Dialogflow', 'Node.js', 'Firebase']
+  }
+];
+---
+<section id="projects" class="py-20 bg-white">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-12 text-center">Projects</h2>
+    <div class="grid md:grid-cols-2 gap-8">
+      {projects.map(project => (
+        <a href={project.github} target="_blank" class="bg-gray-50 rounded-lg shadow-md p-6 flex flex-col hover:shadow-lg transition-shadow duration-200" rel="noopener noreferrer">
+          <h3 class="text-xl font-semibold mb-2">{project.title}</h3>
+          <p class="text-gray-700 mb-4 flex-grow">{project.description}</p>
+          <div class="flex flex-wrap gap-2">
+            {project.technologies.map(tech => (
+              <span class="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

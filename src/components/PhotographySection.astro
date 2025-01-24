@@ -1,0 +1,158 @@
+---
+import { photos } from '../data/photos.js'; // Import the photos array
+
+---
+<section id="photography" class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-12 text-center">Photography</h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {photos.map((photo, index) => (
+        <div 
+          class="group relative h-[300px] overflow-hidden rounded-lg shadow-md cursor-pointer photo-item"
+          data-index={index}
+        >
+          <img 
+            src={photo.url} 
+            alt={photo.title} 
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+          <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+              <h3 class="text-lg font-semibold">{photo.title}</h3>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center">
+    <button 
+      id="close-lightbox"
+      class="absolute top-4 right-4 text-white hover:text-gray-300 focus:outline-none z-10"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+    
+    <button 
+      id="prev-image"
+      class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 focus:outline-none z-10"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+    
+    <button 
+      id="next-image"
+      class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 focus:outline-none z-10"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+
+    <div class="max-w-[90vw] max-h-[90vh] mx-auto relative">
+      <img 
+        id="lightbox-image" 
+        src="" 
+        alt="" 
+        class="max-w-full max-h-[90vh] object-contain mx-auto"
+      />
+      <div class="absolute bottom-4 left-0 right-0 text-center">
+        <h3 id="lightbox-title" class="text-white text-base font-normal inline-block px-3 py-2 rounded shadow-sm"></h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { photos } from '../data/photos.js'; // photos dizisini içe aktar
+
+  function initializeLightbox() {
+    let currentIndex = 0;
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxTitle = document.getElementById('lightbox-title');
+    const closeButton = document.getElementById('close-lightbox');
+    const nextButton = document.getElementById('next-image');
+    const prevButton = document.getElementById('prev-image');
+    const photoItems = document.querySelectorAll('.photo-item');
+
+    function openLightbox(index) {
+      currentIndex = index;
+      updateLightboxContent();
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    function updateLightboxContent() {
+      const img = new Image();
+      img.src = photos[currentIndex].url;
+      img.onload = () => {
+        lightboxImage.src = photos[currentIndex].url;
+        lightboxImage.alt = photos[currentIndex].title;
+        lightboxTitle.textContent = photos[currentIndex].title;
+      };
+    }
+
+    function nextImage() {
+      currentIndex = (currentIndex + 1) % photos.length;
+      updateLightboxContent();
+    }
+
+    function previousImage() {
+      currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+      updateLightboxContent();
+    }
+
+    // Add event listeners
+    photoItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const index = parseInt(item.dataset.index);
+        openLightbox(index);
+      });
+    });
+
+    closeButton.addEventListener('click', closeLightbox);
+    nextButton.addEventListener('click', nextImage);
+    prevButton.addEventListener('click', previousImage);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('hidden')) {
+        if (e.key === 'Escape') {
+          closeLightbox();
+        } else if (e.key === 'ArrowRight') {
+          nextImage();
+        } else if (e.key === 'ArrowLeft') {
+          previousImage();
+        }
+      }
+    });
+
+    // Close lightbox when clicking outside the image
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+  }
+
+  // Initialize when the DOM is loaded
+  document.addEventListener('DOMContentLoaded', initializeLightbox);
+  
+  // Initialize when Astro swaps pages
+  document.addEventListener('astro:page-load', initializeLightbox);
+</script>

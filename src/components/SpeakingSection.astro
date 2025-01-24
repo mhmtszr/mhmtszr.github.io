@@ -1,0 +1,187 @@
+---
+const talks = [
+  {
+    title: 'Designing Resilient Platforms with Workflow Orchestration',
+    event: 'Replay\'25 London',
+    date: 'March 2025',
+    description: 'SOON',
+    type: 'image',
+    url: '/speaking/replay25.jpg',
+    slides: 'https://speakerdeck.com/mehmetsezer/designing-resilient-platforms-with-workflow-orchestration'
+  },
+  {
+    title: 'Designing Resilient Platforms with Workflow Orchestration',
+    event: 'DevFest\'24 Ankara',
+    date: 'Dec 2024',
+    description: 'In this presentation, we talked about solving the challenges of managing states and orchestrating long-running processes. I shared practical insights on building systems that stay consistent and reliable, even during complex workflows.',
+    type: 'image',
+    url: '/speaking/workflow.jpg',
+    slides: 'https://speakerdeck.com/mehmetsezer/designing-resilient-platforms-with-workflow-orchestration'
+  },
+  {
+    title: 'Domain Driven Design: Tactical Patterns',
+    event: 'Trendyol Tech',
+    date: 'May 2024',
+    description: 'In this presentation, I talked about CQRS, Event Sourcing, and workflow services.',
+    type: 'video',
+    url: 'https://www.youtube.com/embed/nU7VripqFyc?si=GQAejWDZDuxi5VVt&amp;start=3302'
+  },
+  {
+    title: 'How is it Go\'ing?',
+    event: 'Ankara Gophers',
+    date: 'Nov 2023',
+    description: 'I talked about the new features of Go.',
+    type: 'image',
+    url: '/speaking/ankaragophers.jpg'
+  },
+  {
+    title: 'Trendyol Tech Ankara Go Q&A',
+    event: 'Trendyol Group',
+    date: 'May 2023',
+    description: 'I was the moderator of our Go programming language Q&A event in the Trendyol Group Ankara Office.',
+    type: 'image',
+    url: '/speaking/trendyol_go.jpg'
+  },
+  {
+    title: 'Microservice Architecture',
+    event: 'Mamak Füzyon',
+    date: 'March 2022',
+    description: 'I talked about Microservice Architecture, which is one of the most important topics in the software industry today. I talked about the advantages and disadvantages of microservices, the problems that may arise in microservices, and the solutions to these problems.',
+    type: 'image',
+    url: '/speaking/microservice.jpg'
+  },
+  {
+    title: 'How to handle billion of user requests with scaling?',
+    event: 'DevFest\'22 Ankara',
+    date: 'Dec 2022',
+    description: 'I talked about how to design a system that can efficiently serve users worldwide and work stably under high load, step by step.',
+    type: 'image',
+    url: '/speaking/devfest22ankara.jpg'
+  },
+  {
+    title: 'Career in Software Engineering',
+    event: 'Hacettepe University Computer Science Department',
+    date: 'Dec 2022',
+    description: 'I made a presentation to the department, I shared my experiences as a student and as a software engineer.',
+    type: 'image',
+    url: '/speaking/careerinsoftwareengineering.jpg'
+  },
+  {
+    title: 'Golang Api Graceful Shutdown in Kubernetes',
+    event: 'Go Türkiye',
+    date: 'Aug 2022',
+    description: 'In this presentation, I have shown what graceful shutdown is and how we can gracefully shutdown Go applications running in Kubernetes.',
+    type: 'video',
+    url: 'https://www.youtube.com/embed/7xq4T-OyUIs'
+  },
+  {
+    title: 'Python Programming Language Course',
+    event: 'Koc University IEEE',
+    date: '2019',
+    description: 'I taught "Python Programming Language" course which had about 15 participants for Koc University IEEE in 2019.',
+    type: 'image',
+    url: '/speaking/koc.jpg'
+  },
+  {
+    title: 'Python Programming Language Course',
+    event: 'Hacettepe University ACM',
+    date: '2019',
+    description: 'I taught "Python Programming Language" course which had about 200 participants for Hacettepe University ACM in 2019.',
+    type: 'image',
+    url: '/speaking/acmders.jpg'
+  }
+];
+---
+<section id="speaking" class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-12 text-center">Public Speaking</h2>
+    <div class="space-y-12">
+      {talks.map(talk => (
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="aspect-video">
+              {talk.type === 'video' ? (
+                <iframe
+                  src={talk.url}
+                  class="w-full h-full"
+                  title={talk.title}
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              ) : (
+                <img
+                  src={talk.url}
+                  alt={talk.title}
+                  class="w-full h-full object-cover cursor-pointer"
+                  onClick={() => openLightbox(talk.url, talk.title)}
+                />
+              )}
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-semibold mb-2">{talk.title}</h3>
+              <p class="text-gray-600 mb-2">{talk.event} - {talk.date}</p>
+              <p class="text-gray-700 mb-4">{talk.description}</p>
+              {talk.slides && (
+                <a
+                  href={talk.slides}
+                  target="_blank"
+                  class="inline-flex items-center text-primary-600 hover:text-primary-700"
+                >
+                  View Slides
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section id="lightbox" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+  <div class="relative max-w-full max-h-full">
+    <img id="lightbox-image" class="max-w-full max-h-[80vh] object-contain" />
+    <button id="close-lightbox" class="absolute top-2 right-2 text-white text-2xl">&times;</button>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('click', () => {
+      openLightbox(img.src, img.alt);
+    });
+  });
+
+  function openLightbox(imageUrl, title) {
+    console.log("Lightbox opened for:", title);
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    
+    lightboxImage.src = imageUrl;
+    lightbox.classList.remove('hidden');
+    lightbox.classList.add('flex');
+    
+    document.body.classList.add('bg-dark-overlay');
+
+    // Add event listener for closing the lightbox
+    const closeButton = document.getElementById('close-lightbox');
+    closeButton.addEventListener('click', closeLightbox);
+    
+    // Close lightbox when clicking outside the image
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        closeLightbox();
+      }
+    });
+  }
+
+  function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    lightbox.classList.add('hidden');
+    document.body.classList.remove('bg-dark-overlay');
+  }
+</script>

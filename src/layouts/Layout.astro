@@ -1,0 +1,103 @@
+---
+import '@fontsource/inter';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Backend Engineer Portfolio" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+    <header class="fixed top-0 w-full bg-white/90 backdrop-blur-sm shadow-sm z-50">
+      <nav class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center md:hidden">
+          <a href="/" class="text-xl font-semibold text-primary-600">Mehmet</a>
+          <button id="menuButton" aria-label="Toggle menu" class="text-gray-600 hover:text-primary-600 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+        <ul id="menuItems" class="hidden md:flex items-center justify-center gap-8">
+          <li><a href="/" class="block py-2 hover:text-primary-600">Home</a></li>
+          <li><a href="/about" class="block py-2 hover:text-primary-600">About</a></li>
+          <li><a href="/experience" class="block py-2 hover:text-primary-600">Experience</a></li>
+          <li><a href="/projects" class="block py-2 hover:text-primary-600">Projects</a></li>
+          <li><a href="/speaking" class="block py-2 hover:text-primary-600">Speaking</a></li>
+          <li><a href="/blog" class="block py-2 hover:text-primary-600">Blog</a></li>
+          <li><a href="/photography" class="block py-2 hover:text-primary-600">Photography</a></li>
+          <li><a href="/skills" class="block py-2 hover:text-primary-600">Skills</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="pt-16">
+      <slot />
+    </main>
+    <footer class="bg-gray-900 text-white py-8">
+      <div class="container mx-auto px-4 text-center">
+        <p>&copy; 2025 Mehmet Sezer. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      function setupMobileMenu() {
+        const menuButton = document.getElementById('menuButton');
+        const menuItems = document.getElementById('menuItems');
+        let isOpen = false;
+
+        if (!menuButton || !menuItems) return;
+
+        function toggleMenu() {
+          isOpen = !isOpen;
+          
+          if (isOpen) {
+            menuItems.classList.remove('hidden');
+            menuItems.classList.add('absolute', 'top-full', 'left-0', 'right-0', 'bg-white/90', 'backdrop-blur-sm', 'shadow-md', 'py-4', 'px-4', 'flex', 'flex-col', 'gap-2', 'w-full');
+            menuButton.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            `;
+          } else {
+            menuItems.classList.add('hidden');
+            menuItems.classList.remove('absolute', 'top-full', 'left-0', 'right-0', 'bg-white/90', 'backdrop-blur-sm', 'shadow-md', 'py-4', 'px-4', 'flex', 'flex-col', 'gap-2', 'w-full');
+            menuButton.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            `;
+          }
+        }
+
+        menuButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleMenu();
+        });
+
+        document.addEventListener('click', (e) => {
+          if (isOpen && !menuButton.contains(e.target) && !menuItems.contains(e.target)) {
+            toggleMenu();
+          }
+        });
+      }
+
+      // Run setup when the DOM is ready
+      document.addEventListener('DOMContentLoaded', setupMobileMenu);
+      
+      // Run setup when Astro swaps pages
+      document.addEventListener('astro:page-load', setupMobileMenu);
+    </script>
+  </body>
+</html>

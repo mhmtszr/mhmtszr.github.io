@@ -1,0 +1,94 @@
+---
+const experiences = [
+  {
+    company: 'Trendyol Group',
+    position: 'Senior Software Engineer',
+    period: 'Aug 2021 - Present',
+    description: 'Progressed from Associate Developer to Senior Software Engineer, contributing to the Internal Developer Platform Database Team and the Product Team.',
+    achievements: [
+      'Automated routine database management tasks to enhance productivity.',
+      'Collaborated with cross-functional teams to meet database needs and assist in capacity planning.',
+      'Unified duplicate products using AI models, significantly improving product quality. Unified over 200 million duplicate products',
+      'Led the internationalization process, enabling sellers to reach global markets. One of the milestone of the company.'
+    ],
+    technologies: ['Go', 'Microservice', 'Distributed System', 'Kotlin', 'Couchbase', 'PostgreSQL', 'Redis']
+  },
+  {
+    company: 'Bayzat',
+    position: 'Junior Software Engineer',
+    period: 'Feb 2021 - Aug 2021',
+    achievements: [
+      'Focused on backend development and mobile development in a multi-national agile team.',
+      'Developed backend services using Kotlin and Spring Boot',
+      'Wrote integration and unit tests',
+      'Worked on mobile development using Flutter'
+    ],
+    technologies: ['Kotlin', 'Spring Boot', 'PostgreSQL', 'Redis', 'AWS', 'Flutter']
+  },
+  {
+    company: 'Monday Hero',
+    position: 'Full Stack Developer',
+    period: 'May 2020 - Nov 2020',
+    achievements: [
+      'Developed the backend and admin panel for the "GoAssist" mobile application.',
+      'Created application integration plugins using Node.js and TypeScript',
+      'Developed core algorithms and API using Swift Vapor'
+    ],
+    technologies: ['Node.js', 'Express', 'MongoDB', 'Firebase', 'React', 'Swift Vapor']
+  },
+  {
+    company: 'OPLOG Operational Logistics',
+    position: 'Artificial Intelligence Engineer Intern',
+    period: 'Dec 2019 - Mar 2020',
+    achievements: [
+      'Worked on data anomalies and real-time data analysis.',
+      'Analyzed and reported real-time data using Power BI'
+    ],
+    technologies: ['Power BI']
+  },
+  {
+    company: 'KOMTAS Data & Analytics',
+    position: 'Software Engineer Intern',
+    period: 'Jun 2019 - Aug 2019',
+    achievements: [
+      'Developed a web service with Flask and MySQL to trigger Pentaho Kettle Jobs.',
+      'Analyzed data by using Apache Nifi, Pentaho Data Integration.'
+    ],
+    technologies: ['Flask', 'MySQL', 'Apache Nifi', 'Pentaho Data Integration']
+  }
+];
+---
+<section id="experience" class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-3xl font-bold mb-12 text-center">Work Experience</h2>
+    <div class="space-y-12">
+      {experiences.map(exp => (
+        <div class="bg-white p-8 rounded-lg shadow-md">
+          <div class="flex justify-between items-start mb-4">
+            <div>
+              <h3 class="text-2xl font-semibold text-gray-900">{exp.position}</h3>
+              <p class="text-lg text-primary-600">{exp.company}</p>
+            </div>
+            <span class="text-gray-500">{exp.period}</span>
+          </div>
+          <p class="text-gray-700 mb-4">{exp.description}</p>
+          <div class="mb-4">
+            <h4 class="text-lg font-semibold mb-2">Key Achievements:</h4>
+            <ul class="list-disc list-inside text-gray-700">
+              {exp.achievements.map(achievement => (
+                <li>{achievement}</li>
+              ))}
+            </ul>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            {exp.technologies.map(tech => (
+              <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
