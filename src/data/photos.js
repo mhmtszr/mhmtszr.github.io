@@ -8,6 +8,26 @@ export const photos = [
         title: 'Big Ben, London'
     },
     {
+        url: '/photography/bigben2.jpg',
+        title: 'Big Ben, London'
+    },
+    {
+        url: '/photography/bigben3.jpg',
+        title: 'Big Ben, London'
+    },
+    {
+        url: '/photography/bankstation.jpg',
+        title: 'Bank Station, London'
+    },
+    {
+        url: '/photography/bloomberg.jpg',
+        title: 'Bloomberg Office, London'
+    },
+    {
+        url: '/photography/towerbridge.jpg',
+        title: 'Tower Bridge, London'
+    },
+    {
         url: '/photography/londoneye.jpg',
         title: 'London Eye, London'
     },
