@@ -1,4 +1,4 @@
-import { getArticleBySlug } from '@/lib/mdx'
+import { getArticleBySlug, getAllArticles } from '@/lib/mdx'
 import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
@@ -8,6 +8,14 @@ interface ArticlePageProps {
   params: {
     slug: string
   }
+}
+
+// Generate all possible article slugs at build time
+export async function generateStaticParams() {
+  const articles = await getAllArticles()
+  return articles.map((article) => ({
+    slug: article.slug,
+  }))
 }
 
 export default async function ArticlePage({ params }: ArticlePageProps) {
