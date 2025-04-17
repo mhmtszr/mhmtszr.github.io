@@ -4,9 +4,9 @@ import path from 'path'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import rehypePrettyCode from 'rehype-pretty-code'
 
-// Configure server-side behavior
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+// Configure for static generation
+export const dynamic = 'force-static'
+export const revalidate = false
 
 export interface ArticleMetadata {
   title: string

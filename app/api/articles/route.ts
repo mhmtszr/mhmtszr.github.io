@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
 import { getAllArticles } from '@/lib/mdx'
 
+// Force static generation
+export const dynamic = 'force-static'
+export const revalidate = false
+
 export async function GET() {
   try {
     const articles = await getAllArticles()
