@@ -20,7 +20,7 @@ export const metadata = {
       siteName: 'Mehmet Sezer Portfolio',
       images: [
         {
-          url: '/bloomberg.jpg',
+          url: '/photography/bloomberg.jpg',
           width: 1200,
           height: 630,
           alt: 'Mehmet Sezer - Senior Software Engineer'
@@ -33,7 +33,7 @@ export const metadata = {
       card: 'summary_large_image',
       title: 'Mehmet Sezer - Senior Software Engineer',
       description: 'Personal portfolio of Mehmet Sezer, a Senior Software Engineer specializing in distributed systems and cloud architecture.',
-      images: ['/bloomberg.jpg'],
+      images: ['/photography/bloomberg.jpg'],
       creator: '@_mehmetsezer'
     },
     robots: {
