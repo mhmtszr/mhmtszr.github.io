@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import Parser from 'rss-parser'
+import fallbackData from './fallback.json'
 
 const MEDIUM_RSS_URL = 'https://medium.com/@mehmet.sezer/feed'
 
@@ -11,6 +12,10 @@ interface CustomFeedItem {
   content: string | undefined
   categories: string[] | undefined
 }
+
+// Force static generation
+export const dynamic = 'force-static'
+export const revalidate = false
 
 export async function GET() {
   try {
@@ -27,7 +32,7 @@ export async function GET() {
     const feed = await parser.parseURL(MEDIUM_RSS_URL)
     
     if (!feed.items?.length) {
-      return NextResponse.json({ articles: [] })
+      return NextResponse.json(fallbackData)
     }
     
     const articles = feed.items.map((item: CustomFeedItem) => {
@@ -47,9 +52,6 @@ export async function GET() {
     return NextResponse.json({ articles })
   } catch (error) {
     console.error('Error fetching Medium articles:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch Medium articles' },
-      { status: 500 }
-    )
+    return NextResponse.json(fallbackData)
   }
 } 
