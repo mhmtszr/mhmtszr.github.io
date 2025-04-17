@@ -11,7 +11,42 @@ export const metadata = {
   title: "Mehmet Sezer - Senior Software Engineer",
   description:
     "Personal portfolio of Mehmet Sezer, a Senior Software Engineer specializing in distributed systems and cloud architecture.",
-    generator: 'v0.dev'
+    generator: 'v0.dev',
+    metadataBase: new URL('https://mhmtszr.github.io'),
+    openGraph: {
+      title: 'Mehmet Sezer - Senior Software Engineer',
+      description: 'Personal portfolio of Mehmet Sezer, a Senior Software Engineer specializing in distributed systems and cloud architecture.',
+      url: 'https://mhmtszr.github.io',
+      siteName: 'Mehmet Sezer Portfolio',
+      images: [
+        {
+          url: '/bloomberg.jpg',
+          width: 1200,
+          height: 630,
+          alt: 'Mehmet Sezer - Senior Software Engineer'
+        }
+      ],
+      locale: 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Mehmet Sezer - Senior Software Engineer',
+      description: 'Personal portfolio of Mehmet Sezer, a Senior Software Engineer specializing in distributed systems and cloud architecture.',
+      images: ['/bloomberg.jpg'],
+      creator: '@_mehmetsezer'
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
 }
 
 export default function RootLayout({
