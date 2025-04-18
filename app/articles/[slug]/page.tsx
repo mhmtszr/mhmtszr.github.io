@@ -7,53 +7,56 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 
 interface ArticlePageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 // Generate metadata for the article page
 export async function generateMetadata(
   { params }: ArticlePageProps
 ): Promise<Metadata> {
-  const slug = params?.slug
-  if (!slug) {
-    return {}
-  }
-
-  const article = await getArticleBySlug(slug)
+  const { slug } = await params
   
-  if (!article) {
-    return {}
-  }
+  try {
+    const article = await getArticleBySlug(slug)
+    
+    if (!article) {
+      return {}
+    }
 
-  const ogImage = article.meta.image || '/images/placeholder-article.jpg'
-  
-  return {
-    title: article.meta.title,
-    description: article.meta.description,
-    openGraph: {
+    const ogImage = article.meta.image || '/images/placeholder-article.jpg'
+    
+    return {
       title: article.meta.title,
       description: article.meta.description,
-      type: 'article',
-      publishedTime: article.meta.date,
-      authors: ['Mehmet Sezer'],
-      tags: article.meta.tags,
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: article.meta.title,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: article.meta.title,
-      description: article.meta.description,
-      images: [ogImage],
-    },
+      authors: [{ name: 'Mehmet Sezer' }],
+      keywords: article.meta.tags,
+      openGraph: {
+        title: article.meta.title,
+        description: article.meta.description,
+        type: 'article',
+        publishedTime: article.meta.date,
+        authors: ['Mehmet Sezer'],
+        tags: article.meta.tags,
+        images: [
+          {
+            url: ogImage,
+            width: 1200,
+            height: 630,
+            alt: article.meta.title,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: article.meta.title,
+        description: article.meta.description,
+        images: [ogImage],
+      },
+    }
+  } catch (error) {
+    return {}
   }
 }
 
@@ -68,7 +71,8 @@ export async function generateStaticParams() {
 export default async function ArticlePage(
   { params }: ArticlePageProps
 ) {
-  const slug = params?.slug
+  const { slug } = await params
+  
   if (!slug) {
     notFound()
   }
@@ -118,6 +122,29 @@ export default async function ArticlePage(
       <div className="prose dark:prose-invert max-w-none mt-8">
         {article.content}
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BlogPosting',
+            headline: article.meta.title,
+            description: article.meta.description,
+            author: {
+              '@type': 'Person',
+              name: 'Mehmet Sezer',
+              url: 'https://msezer.dev'
+            },
+            datePublished: article.meta.date,
+            image: article.meta.image,
+            publisher: {
+              '@type': 'Person',
+              name: 'Mehmet Sezer',
+              url: 'https://msezer.dev'
+            }
+          })
+        }}
+      />
     </article>
   )
 } 

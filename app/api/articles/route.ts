@@ -8,7 +8,6 @@ export const revalidate = false
 export async function GET() {
   try {
     const articles = await getAllArticles()
-    console.log('API - Articles loaded:', articles)
     return NextResponse.json(articles)
   } catch (error) {
     console.error('API - Error loading articles:', error)
