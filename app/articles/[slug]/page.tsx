@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import { Calendar } from 'lucide-react'
 import { Metadata } from 'next'
+import Image from 'next/image'
 
 interface ArticlePageProps {
   params: {
@@ -12,8 +13,15 @@ interface ArticlePageProps {
 }
 
 // Generate metadata for the article page
-export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
-  const article = await getArticleBySlug(params.slug)
+export async function generateMetadata(
+  { params }: ArticlePageProps
+): Promise<Metadata> {
+  const slug = params?.slug
+  if (!slug) {
+    return {}
+  }
+
+  const article = await getArticleBySlug(slug)
   
   if (!article) {
     return {}
@@ -57,12 +65,15 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function ArticlePage({ params }: ArticlePageProps) {
-  if (!params?.slug) {
+export default async function ArticlePage(
+  { params }: ArticlePageProps
+) {
+  const slug = params?.slug
+  if (!slug) {
     notFound()
   }
 
-  const article = await getArticleBySlug(params.slug)
+  const article = await getArticleBySlug(slug)
   
   if (!article) {
     notFound()
@@ -71,6 +82,18 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   return (
     <article className="container py-8">
       <div className="flex flex-col gap-4">
+        {article.meta.image && (
+          <div className="relative w-full flex items-center justify-center mb-6">
+            <Image
+              src={article.meta.image}
+              alt={article.meta.title}
+              width={1200}
+              height={630}
+              className="w-full max-h-[400px] md:max-h-[500px] object-contain"
+              priority
+            />
+          </div>
+        )}
         <h1 className="text-4xl font-bold">{article.meta.title}</h1>
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4 text-muted-foreground" />
