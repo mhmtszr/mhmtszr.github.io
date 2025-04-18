@@ -35,7 +35,7 @@ const articlesDirectory = path.join(process.cwd(), 'content/articles')
 
 const prettyCodeOptions = {
   // Use more standard themes
-  theme: 'github-dark',
+  theme: 'material-theme',
   onVisitLine(node: any) {
     // Prevent lines from collapsing in `display: grid` mode
     if (node.children.length === 0) {

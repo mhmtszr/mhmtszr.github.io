@@ -19,7 +19,7 @@ import {
   Twitter,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/theme-toggle"
 
@@ -66,17 +66,21 @@ export default function Sidebar() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[80%] max-w-[300px] p-0">
-              <div className="flex flex-col h-full">
-                <div className="flex items-center gap-3 mt-4 mb-8 px-4">
-                  <Avatar className="h-12 w-12 border border-gray-200 dark:border-gray-700">
+            <SheetContent side="left" className="w-[80%] max-w-[300px] p-0 flex flex-col">
+              <div className="flex flex-col h-full min-h-0">
+                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Navigation menu containing links to different sections of the website and social media profiles
+                </SheetDescription>
+                <div className="flex items-center gap-3 mt-4 mb-6 px-4">
+                  <Avatar className="h-10 w-10 border border-gray-200 dark:border-gray-700">
                     <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer" />
                     <AvatarFallback>MS</AvatarFallback>
                   </Avatar>
-                  <span className="font-bold text-xl">Mehmet Sezer</span>
+                  <span className="font-bold text-lg">Mehmet Sezer</span>
                 </div>
-                <nav className="flex-1 overflow-y-auto">
-                  <ul className="grid gap-1 px-2">
+                <nav className="flex-1 overflow-y-auto min-h-0">
+                  <ul className="grid gap-0.5 px-2">
                     {navItems.map((item) => {
                       const IconComponent = item.icon
                       const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
@@ -99,13 +103,13 @@ export default function Sidebar() {
                   </ul>
                 </nav>
                 {/* Mobile Social Links */}
-                <div className="border-t border-gray-200 dark:border-gray-800 mt-auto pt-4 px-6">
-                  <div className="flex items-center justify-start gap-4">
+                <div className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 py-8 flex-shrink-0">
+                  <div className="grid grid-cols-5 gap-2 px-4 mb-6">
                     <Link
                       href="https://github.com/mhmtszr"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                      className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     >
                       <Github className="h-5 w-5" />
                       <span className="sr-only">GitHub</span>
@@ -114,7 +118,7 @@ export default function Sidebar() {
                       href="https://linkedin.com/in/mehmetsezer"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                      className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     >
                       <Linkedin className="h-5 w-5" />
                       <span className="sr-only">LinkedIn</span>
@@ -123,7 +127,7 @@ export default function Sidebar() {
                       href="https://x.com/_mehmetsezer"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                      className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     >
                       <Twitter className="h-5 w-5" />
                       <span className="sr-only">Twitter</span>
@@ -132,7 +136,7 @@ export default function Sidebar() {
                       href="https://medium.com/@mehmet.sezer"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                      className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     >
                       <BookOpenText className="h-5 w-5" />
                       <span className="sr-only">Medium</span>
@@ -141,14 +145,14 @@ export default function Sidebar() {
                       href="/CV_Mehmet_Sezer.pdf"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                      className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     >
                       <FileText className="h-5 w-5" />
                       <span className="sr-only">CV</span>
                     </Link>
                   </div>
-                  <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                    &copy; {new Date().getFullYear()} Mehmet Sezer
+                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center px-4">
+                    &copy; 2025 Mehmet Sezer
                   </p>
                 </div>
               </div>
@@ -247,7 +251,7 @@ export default function Sidebar() {
               </Link>
             </div>
             <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">
-              &copy; {new Date().getFullYear()} Mehmet Sezer
+              &copy; 2025 Mehmet Sezer
             </p>
           </div>
         </div>
