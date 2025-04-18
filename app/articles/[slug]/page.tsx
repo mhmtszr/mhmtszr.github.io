@@ -3,10 +3,49 @@ import { notFound } from 'next/navigation'
 import { format } from 'date-fns'
 import { Badge } from '@/components/ui/badge'
 import { Calendar } from 'lucide-react'
+import { Metadata } from 'next'
 
 interface ArticlePageProps {
   params: {
     slug: string
+  }
+}
+
+// Generate metadata for the article page
+export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
+  const article = await getArticleBySlug(params.slug)
+  
+  if (!article) {
+    return {}
+  }
+
+  const ogImage = article.meta.image || '/images/placeholder-article.jpg'
+  
+  return {
+    title: article.meta.title,
+    description: article.meta.description,
+    openGraph: {
+      title: article.meta.title,
+      description: article.meta.description,
+      type: 'article',
+      publishedTime: article.meta.date,
+      authors: ['Mehmet Sezer'],
+      tags: article.meta.tags,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: article.meta.title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.meta.title,
+      description: article.meta.description,
+      images: [ogImage],
+    },
   }
 }
 

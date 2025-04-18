@@ -2,7 +2,7 @@
 title: "Database Fundamentals: A Comprehensive Guide(SOON)"
 description: "Learn the core concepts of databases, from basic terminology to advanced concepts like normalization and transactions."
 date: "2024-03-07"
-image: "/articles/database.webp"
+image: "/article/database.png"
 tags: ["database", "sql", "backend-development"]
 ---
 
