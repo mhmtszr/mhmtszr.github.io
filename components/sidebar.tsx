@@ -142,7 +142,7 @@ export default function Sidebar() {
                       <span className="sr-only">Medium</span>
                     </Link>
                     <Link
-                      href="/CV_Mehmet_Sezer.pdf"
+                      href="/Mehmet_Sezer_Resume.pdf"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
@@ -241,7 +241,7 @@ export default function Sidebar() {
                 <span className="sr-only">Medium</span>
               </Link>
               <Link
-                href="/CV_Mehmet_Sezer.pdf"
+                href="/Mehmet_Sezer_Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"

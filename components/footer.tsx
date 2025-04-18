@@ -43,7 +43,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link 
-                  href="/CV_Mehmet_Sezer.pdf"
+                  href="/Mehmet_Sezer_Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer" 
                   className="text-gray-400 hover:text-white transition-colors"
@@ -94,7 +94,7 @@ export default function Footer() {
                 <span className="sr-only">Medium</span>
               </Link>
               <Link
-                href="/CV_Mehmet_Sezer.pdf"
+                href="/Mehmet_Sezer_Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
