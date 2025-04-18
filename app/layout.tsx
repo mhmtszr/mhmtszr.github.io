@@ -13,11 +13,21 @@ export const metadata = {
     template: "%s | Mehmet Sezer"
   },
   description:
-    "Senior Software Engineer at Trendyol specializing in microservice architecture and distributed systems. Building scalable and reliable software solutions.",
+    "Senior Software Engineer at Trendyol. Specializing in microservice architecture and distributed systems. Building scalable and reliable software solutions.",
   generator: 'Next.js',
   applicationName: 'Mehmet Sezer Portfolio',
   referrer: 'origin-when-cross-origin',
-  keywords: ['Mehmet Sezer', 'Software Engineer', 'Senior Developer', 'Microservices', 'Distributed Systems', 'Software Architecture'],
+  keywords: [
+    'Mehmet Sezer',
+    'Senior Software Engineer',
+    'Software Engineer',
+    'Trendyol Group',
+    'Software Engineer Trendyol',
+    'Distributed Systems',
+    'Microservices Architecture',
+    'Software Architecture',
+    'Hacettepe University Computer Science'
+  ],
   authors: [{ name: 'Mehmet Sezer', url: 'https://msezer.dev' }],
   creator: 'Mehmet Sezer',
   publisher: 'Mehmet Sezer',
@@ -109,6 +119,12 @@ export default function RootLayout({
               name: 'Mehmet Sezer',
               jobTitle: 'Senior Software Engineer',
               url: 'https://msezer.dev',
+              alumniOf: {
+                '@type': 'CollegeOrUniversity',
+                name: 'Hacettepe University',
+                department: 'Computer Science'
+              },
+              description: 'Senior Software Engineer at Trendyol specializing in microservice architecture and distributed systems. Building scalable and reliable software solutions.',
               sameAs: [
                 'https://github.com/mhmtszr',
                 'https://linkedin.com/in/mehmetsezer',
@@ -117,13 +133,21 @@ export default function RootLayout({
               ],
               worksFor: {
                 '@type': 'Organization',
-                name: 'Trendyol'
+                name: 'Trendyol',
+                url: 'https://trendyol.com',
+                description: 'Turkey\'s leading e-commerce platform'
               },
               knowsAbout: [
                 'Software Engineering',
                 'Microservices',
                 'Distributed Systems',
-                'Software Architecture'
+                'Software Architecture',
+                'High-Performance Computing',
+                'Cloud Architecture',
+                'System Design'
+              ],
+              award: [
+                '3rd Highest GPA in Computer Science Department at Hacettepe University'
               ]
             })
           }}
