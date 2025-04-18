@@ -24,7 +24,7 @@ export default async function Image() {
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
-          backgroundImage: 'url(/photography/bloomberg.jpg)',
+          backgroundImage: 'url(/opengraph-image.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}

@@ -8,19 +8,22 @@ import Script from "next/script"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "Mehmet Sezer - Senior Software Engineer",
+  title: "Mehmet Sezer",
   description:
-    "Personal portfolio of Mehmet Sezer, a Senior Software Engineer specializing in distributed systems and cloud architecture.",
+    "Senior Software Engineer specializing in microservice architecture and distributed systems.",
     generator: 'v0.dev',
     metadataBase: new URL('https://mhmtszr.github.io'),
+    icons: {
+      icon: '/favicon.png',
+    },
     openGraph: {
-      title: 'Mehmet Sezer - Senior Software Engineer',
-      description: 'Personal portfolio of Mehmet Sezer, a Senior Software Engineer specializing in distributed systems and cloud architecture.',
+      title: 'Mehmet Sezer',
+      description: 'Senior Software Engineer specializing in microservice architecture and distributed systems.',
       url: 'https://mhmtszr.github.io',
-      siteName: 'Mehmet Sezer Portfolio',
+      siteName: 'mhmtszr.github.io',
       images: [
         {
-          url: '/photography/bloomberg.jpg',
+          url: '/opengraph-image.png',
           width: 1200,
           height: 630,
           alt: 'Mehmet Sezer - Senior Software Engineer'
@@ -31,9 +34,9 @@ export const metadata = {
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'Mehmet Sezer - Senior Software Engineer',
-      description: 'Personal portfolio of Mehmet Sezer, a Senior Software Engineer specializing in distributed systems and cloud architecture.',
-      images: ['/photography/bloomberg.jpg'],
+      title: 'Mehmet Sezer',
+      description: 'Senior Software Engineer specializing in microservice architecture and distributed systems.',
+      images: ['/opengraph-image.png'],
       creator: '@_mehmetsezer'
     },
     robots: {
