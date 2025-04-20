@@ -519,27 +519,24 @@ function PhotographyContent() {
     if (!hasMorePhotos || isLoading) return;
     
     setIsLoading(true);
-    // Add a small delay to ensure loading state is visible
-    setTimeout(() => {
+    // Use requestAnimationFrame for smoother loading
+    requestAnimationFrame(() => {
       setDisplayCount(prevCount => {
-        const newCount = Math.min(prevCount + BATCH_SIZE, filteredPhotos.length);
-        if (newCount >= filteredPhotos.length) {
-          // If we've loaded all photos, clear loading state
+        const nextCount = prevCount + BATCH_SIZE;
+        const finalCount = Math.min(nextCount, filteredPhotos.length);
+        
+        // Only clear loading when the state is actually updated
+        requestAnimationFrame(() => {
           setIsLoading(false);
-        }
-        return newCount;
+        });
+        
+        return finalCount;
       });
-      
-      // Only clear loading if we haven't loaded all photos
-      if (displayCount + BATCH_SIZE < filteredPhotos.length) {
-        setIsLoading(false);
-      }
-    }, 500);
-  }, [hasMorePhotos, isLoading, filteredPhotos.length, displayCount]);
+    });
+  }, [hasMorePhotos, isLoading, filteredPhotos.length]);
 
   // Reset when filter changes
   useEffect(() => {
-    setIsLoading(false);
     setDisplayCount(BATCH_SIZE);
     setIsChangingCountry(true);
     
@@ -550,34 +547,22 @@ function PhotographyContent() {
     return () => clearTimeout(timer);
   }, [filter]);
 
-  // Intersection Observer setup
+  // Optimized Intersection Observer setup
   useEffect(() => {
-    if (!hasMorePhotos || isLoading || isChangingCountry) return;
+    if (!observerTarget.current || isChangingCountry) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry?.isIntersecting) {
-          loadMorePhotos();
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '100px',
+    const observer = new IntersectionObserver(entries => {
+      const first = entries[0];
+      if (first.isIntersecting && hasMorePhotos && !isLoading) {
+        loadMorePhotos();
       }
-    );
+    }, {
+      threshold: 0.1,
+      rootMargin: '100px',
+    });
 
-    const currentTarget = observerTarget.current;
-    if (currentTarget) {
-      observer.observe(currentTarget);
-    }
-
-    return () => {
-      if (currentTarget) {
-        observer.unobserve(currentTarget);
-      }
-      observer.disconnect();
-    };
+    observer.observe(observerTarget.current);
+    return () => observer.disconnect();
   }, [loadMorePhotos, hasMorePhotos, isLoading, isChangingCountry]);
 
   useEffect(() => {
@@ -648,7 +633,7 @@ function PhotographyContent() {
         </div>
 
         {filteredPhotos.length === 0 ? (
-          <div className="min-h-[400px] flex flex-col items-center justify-center">
+          <div className="text-center py-12">
             <p className="text-gray-500 dark:text-gray-400">No photos found for {filter}</p>
             <button
               onClick={() => setFilter("All")}
@@ -666,7 +651,7 @@ function PhotographyContent() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-full">
               {displayedPhotos.map((photo, index) => (
                 <PhotoDetail
                   key={photo.url}
@@ -683,8 +668,8 @@ function PhotographyContent() {
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.5, delay: (index % BATCH_SIZE) * 0.1 }}
-                      className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3]"
+                      transition={{ duration: 0.3, delay: Math.min((index % BATCH_SIZE) * 0.1, 0.5) }}
+                      className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3] max-h-[50vh] sm:max-h-[60vh] md:max-h-none"
                     >
                       <img
                         src={photo.url}
@@ -693,9 +678,9 @@ function PhotographyContent() {
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300" />
-                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <p className="text-sm font-medium">{photo.title}</p>
-                        <p className="text-xs mt-1">{photo.city}, {photo.country}</p>
+                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/60 to-transparent">
+                        <p className="text-sm font-medium truncate">{photo.title}</p>
+                        <p className="text-xs mt-1 truncate">{photo.city}, {photo.country}</p>
                       </div>
                     </motion.div>
                   }
@@ -711,16 +696,11 @@ function PhotographyContent() {
             {hasMorePhotos && (
               <div 
                 ref={observerTarget}
-                className="h-40 w-full flex items-center justify-center my-8"
-                style={{ minHeight: '150px' }}
+                className="h-20 w-full flex items-center justify-center mt-8"
+                style={{ visibility: isLoading ? 'visible' : 'hidden' }}
               >
-                {isLoading ? (
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-800 dark:border-gray-200" />
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Loading more photos...</p>
-                  </div>
-                ) : (
-                  <div className="w-full h-20 opacity-0" /> // Invisible element to trigger intersection
+                {isLoading && (
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-800 dark:border-gray-200" />
                 )}
               </div>
             )}
