@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import Sidebar from "@/components/sidebar"
 import Script from "next/script"
+import GoogleAnalytics from "@/components/google-analytics"
 
 // Preload non-critical CSS with high priority but non-blocking
 const preloadNonCriticalCSS = () => {
@@ -195,6 +196,7 @@ export default function RootLayout({
             </div>
           </div>
         </ThemeProvider>
+        <GoogleAnalytics />
       </body>
     </html>
   )
