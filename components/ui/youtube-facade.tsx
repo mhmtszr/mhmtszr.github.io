@@ -21,8 +21,22 @@ export function YouTubeFacade({ videoUrl, title }: YouTubeFacadeProps) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Extract video ID from URL
-  const videoId = videoUrl.match(/(?:embed\/|v=|\/)([\w-]{11})(?:\?|&|\/)?/)?.[1];
+  // Parse YouTube URL and parameters
+  const parseYouTubeUrl = (url: string) => {
+    // First, decode the URL and remove any HTML entities
+    const decodedUrl = decodeURIComponent(url.replace(/&amp;/g, '&'));
+    
+    // Extract video ID
+    const videoId = decodedUrl.match(/(?:embed\/|v=|\/)([\w-]{11})(?:\?|&|\/)?/)?.[1];
+    
+    // Extract start time
+    const startMatch = decodedUrl.match(/[?&]start=(\d+)/);
+    const startTime = startMatch ? startMatch[1] : null;
+    
+    return { videoId, startTime };
+  };
+
+  const { videoId, startTime } = parseYouTubeUrl(videoUrl);
   
   if (!videoId) {
     return <div>Invalid YouTube URL</div>;
@@ -30,7 +44,8 @@ export function YouTubeFacade({ videoUrl, title }: YouTubeFacadeProps) {
 
   // Construct URLs
   const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  const youtubeWebUrl = `https://www.youtube.com/watch?v=${videoId}`;
+  // For mobile YouTube links, we need to use 't' parameter instead of 'start'
+  const youtubeWebUrl = `https://www.youtube.com/watch?v=${videoId}${startTime ? `&t=${startTime}s` : ''}`;
 
   if (isMobile) {
     return (
