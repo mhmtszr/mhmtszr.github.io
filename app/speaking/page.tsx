@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/
 import { FileText, Calendar } from "lucide-react"
 import Link from "next/link"
 import { Timeline, TimelineItem } from "../../components/ui/timeline"
+import { YouTubeFacade } from "@/components/ui/youtube-facade"
 
 const talks = [
   {
@@ -161,12 +162,38 @@ export default function SpeakingPage() {
                 isLeft={index % 2 === 0}
                 year={showYear ? currentYear : undefined}
               >
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <div className="space-y-4 cursor-pointer">
-                      {/* Media */}
-                      <div className="w-full">
-                        {talk.type === "image" ? (
+                {talk.type === "video" ? (
+                  <div className="space-y-4">
+                    <div className="w-full">
+                      <YouTubeFacade videoUrl={talk.url} title={talk.title} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold">{talk.title}</h3>
+                      <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-2">
+                        <Calendar className="w-4 h-4" />
+                        <span>{talk.date}</span>
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-300 mt-2">{talk.event}</p>
+                      <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm line-clamp-3">{talk.description}</p>
+                      {talk.slides && (
+                        <Link
+                          href={talk.slides}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline mt-2"
+                        >
+                          <FileText className="w-4 h-4" />
+                          View Slides
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <div className="space-y-4 cursor-pointer">
+                        {/* Media */}
+                        <div className="w-full">
                           <div className="h-48 bg-gray-200 dark:bg-gray-700 relative rounded-lg overflow-hidden">
                             <img
                               src={talk.url || `/placeholder.svg?height=200&width=400&text=${encodeURIComponent(talk.title)}`}
@@ -174,71 +201,49 @@ export default function SpeakingPage() {
                               className="w-full h-full object-cover"
                             />
                           </div>
-                        ) : (
-                          <div className="relative pt-[56.25%] bg-black rounded-lg overflow-hidden">
-                            <iframe
-                              src={talk.url}
-                              title={talk.title}
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
-                              className="absolute top-0 left-0 w-full h-full"
-                            ></iframe>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Content */}
-                      <div>
-                        <h3 className="text-xl font-semibold">{talk.title}</h3>
-                        <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-2">
-                          <Calendar className="w-4 h-4" />
-                          <span>{talk.date}</span>
                         </div>
-                        <p className="text-gray-600 dark:text-gray-300 mt-2">{talk.event}</p>
-                        <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm line-clamp-3">{talk.description}</p>
-                        {talk.slides && (
-                          <Link
-                            href={talk.slides}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline mt-2"
-                          >
-                            <FileText className="w-4 h-4" />
-                            View Slides
-                          </Link>
-                        )}
+
+                        {/* Content */}
+                        <div>
+                          <h3 className="text-xl font-semibold">{talk.title}</h3>
+                          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-2">
+                            <Calendar className="w-4 h-4" />
+                            <span>{talk.date}</span>
+                          </div>
+                          <p className="text-gray-600 dark:text-gray-300 mt-2">{talk.event}</p>
+                          <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm line-clamp-3">{talk.description}</p>
+                          {talk.slides && (
+                            <Link
+                              href={talk.slides}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline mt-2"
+                            >
+                              <FileText className="w-4 h-4" />
+                              View Slides
+                            </Link>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent 
-                    className="p-0 border-none bg-transparent backdrop-blur-xl"
-                    onPointerDownOutside={(e) => {
-                      const element = e.target as HTMLElement;
-                      element.closest('button')?.click();
-                    }}
-                  >
-                    <DialogTitle className="sr-only">{talk.title}</DialogTitle>
-                    <div className="h-full flex flex-col items-center justify-center">
-                      {talk.type === "image" ? (
+                    </DialogTrigger>
+                    <DialogContent 
+                      className="p-0 border-none bg-transparent backdrop-blur-xl"
+                      onPointerDownOutside={(e) => {
+                        const element = e.target as HTMLElement;
+                        element.closest('button')?.click();
+                      }}
+                    >
+                      <DialogTitle className="sr-only">{talk.title}</DialogTitle>
+                      <div className="h-full flex flex-col items-center justify-center">
                         <img
                           src={talk.url || `/placeholder.svg?height=600&width=800&text=${encodeURIComponent(talk.title)}`}
                           alt={talk.title}
                           className="max-h-[85vh] w-auto object-contain rounded-lg"
                         />
-                      ) : (
-                        <div className="w-full max-w-4xl aspect-video rounded-lg overflow-hidden">
-                          <iframe
-                            src={talk.url}
-                            title={talk.title}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="w-full h-full"
-                          ></iframe>
-                        </div>
-                      )}
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                )}
               </TimelineItem>
             )
           })}
