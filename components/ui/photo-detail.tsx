@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { motion } from "framer-motion"
-import React, { ReactNode, useCallback } from "react"
+import React, { ReactNode, useCallback, useState } from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import Image from "next/image"
 
@@ -32,6 +32,7 @@ export function PhotoDetail({
   preloadedImage,
 }: PhotoDetailProps) {
   const isMobile = useIsMobile()
+  const [isImageLoading, setIsImageLoading] = useState(true)
 
   const handleDragEnd = useCallback((e: any, info: any) => {
     if (!isMobile) return
@@ -45,6 +46,11 @@ export function PhotoDetail({
       onNext(e)
     }
   }, [isMobile, onNext, onPrevious])
+
+  // Reset loading state when url changes
+  React.useEffect(() => {
+    setIsImageLoading(true)
+  }, [url])
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -98,13 +104,19 @@ export function PhotoDetail({
             dragMomentum={false}
             className="relative flex items-center justify-center w-full h-full"
           >
+            {isImageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-gray-800 dark:border-gray-800 dark:border-t-gray-200" />
+              </div>
+            )}
             <Image
               src={url}
               alt={title}
               width={1920}
               height={1080}
-              className="w-auto h-auto max-w-[95vw] max-h-[95vh] object-contain mx-auto"
+              className={`w-auto h-auto max-w-[95vw] max-h-[95vh] object-contain mx-auto transition-opacity duration-300 ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
               priority
+              onLoadingComplete={() => setIsImageLoading(false)}
             />
           </motion.div>
         ) : (
