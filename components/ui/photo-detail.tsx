@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { motion } from "framer-motion"
-import React, { ReactNode, useCallback, useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import React, { ReactNode, useCallback, useState, useRef, useEffect } from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
 import Image from "next/image"
 
@@ -33,6 +33,9 @@ export function PhotoDetail({
 }: PhotoDetailProps) {
   const isMobile = useIsMobile()
   const [isImageLoading, setIsImageLoading] = useState(true)
+  const [currentImageUrl, setCurrentImageUrl] = useState(url)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const imageRef = useRef<HTMLImageElement>(null)
 
   const handleDragEnd = useCallback((e: any, info: any) => {
     if (!isMobile) return
@@ -47,10 +50,35 @@ export function PhotoDetail({
     }
   }, [isMobile, onNext, onPrevious])
 
-  // Reset loading state when url changes
-  React.useEffect(() => {
-    setIsImageLoading(true)
-  }, [url])
+  // Handle URL changes smoothly
+  useEffect(() => {
+    if (url !== currentImageUrl) {
+      setIsTransitioning(true)
+      setIsImageLoading(true)
+      
+      // Start transition
+      const transitionTimeout = setTimeout(() => {
+        setCurrentImageUrl(url)
+      }, 100)
+
+      return () => clearTimeout(transitionTimeout)
+    }
+  }, [url, currentImageUrl])
+
+  // Preload next image
+  useEffect(() => {
+    if (currentImageUrl) {
+      const img = document.createElement('img')
+      img.src = currentImageUrl
+    }
+  }, [currentImageUrl])
+
+  const handleImageLoad = useCallback(() => {
+    setIsTransitioning(false)
+    setTimeout(() => {
+      setIsImageLoading(false)
+    }, 100)
+  }, [])
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -58,7 +86,7 @@ export function PhotoDetail({
         {trigger}
       </DialogTrigger>
       <DialogContent 
-        className="p-0 border-none bg-transparent backdrop-blur-sm max-w-[95vw] max-h-[95vh] w-auto h-auto flex items-center justify-center"
+        className="p-0 border-none bg-transparent backdrop-blur-sm max-w-[95vw] max-h-[95vh] w-auto h-auto flex items-center justify-center overflow-hidden"
       >
         <DialogTitle className="sr-only">
           {title}
@@ -72,7 +100,7 @@ export function PhotoDetail({
                 e.stopPropagation();
                 onPrevious(e);
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all z-50"
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all z-10"
               aria-label="Previous photo"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
@@ -84,7 +112,7 @@ export function PhotoDetail({
                 e.stopPropagation();
                 onNext(e);
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all z-50"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all z-10"
               aria-label="Next photo"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
@@ -102,22 +130,38 @@ export function PhotoDetail({
             dragElastic={0.2}
             onDragEnd={handleDragEnd}
             dragMomentum={false}
-            className="relative flex items-center justify-center w-full h-full"
+            className="relative w-full h-full flex items-center justify-center"
           >
-            {isImageLoading && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-gray-800 dark:border-gray-800 dark:border-t-gray-200" />
-              </div>
-            )}
-            <Image
-              src={url}
-              alt={title}
-              width={1920}
-              height={1080}
-              className={`w-auto h-auto max-w-[95vw] max-h-[95vh] object-contain mx-auto transition-opacity duration-300 ${isImageLoading ? 'opacity-0' : 'opacity-100'}`}
-              priority
-              onLoadingComplete={() => setIsImageLoading(false)}
-            />
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={currentImageUrl}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="relative flex items-center justify-center"
+              >
+                <div className="relative w-auto h-auto">
+                  {(isImageLoading || isTransitioning) && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-gray-800 dark:border-gray-800 dark:border-t-gray-200" />
+                    </div>
+                  )}
+                  <Image
+                    ref={imageRef}
+                    key={currentImageUrl}
+                    src={currentImageUrl}
+                    alt={title}
+                    width={1920}
+                    height={1080}
+                    className={`w-auto h-auto max-w-[95vw] max-h-[95vh] object-contain transition-opacity duration-300 ${(isImageLoading || isTransitioning) ? 'opacity-0' : 'opacity-100'}`}
+                    priority
+                    onLoadingComplete={handleImageLoad}
+                    loading="eager"
+                  />
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
         ) : (
           <div className="w-full aspect-video rounded-lg overflow-hidden">
