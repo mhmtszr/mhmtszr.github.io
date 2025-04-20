@@ -494,6 +494,7 @@ export default function PhotographyPage() {
   const [filter, setFilter] = useState("All")
   const [displayCount, setDisplayCount] = useState(BATCH_SIZE)
   const [isLoading, setIsLoading] = useState(false)
+  const [isChangingCountry, setIsChangingCountry] = useState(false)
   const observerTarget = useRef<HTMLDivElement>(null)
 
   // Filter photos based on selected country
@@ -542,9 +543,16 @@ export default function PhotographyPage() {
     }
   }, [loadMorePhotos])
 
-  // Reset display count when filter changes
+  // Reset display count and show loading when filter changes
   useEffect(() => {
-    setDisplayCount(BATCH_SIZE)
+    const loadNewCountry = async () => {
+      setIsChangingCountry(true)
+      setDisplayCount(BATCH_SIZE)
+      // Add a small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 300))
+      setIsChangingCountry(false)
+    }
+    loadNewCountry()
   }, [filter])
 
   useEffect(() => {
@@ -623,6 +631,13 @@ export default function PhotographyPage() {
             >
               Show all photos
             </button>
+          </div>
+        ) : isChangingCountry ? (
+          <div className="min-h-[400px] flex items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800 dark:border-gray-200" />
+              <p className="text-gray-600 dark:text-gray-400">Loading photos from {filter}...</p>
+            </div>
           </div>
         ) : (
           <>
