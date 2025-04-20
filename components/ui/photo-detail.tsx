@@ -52,7 +52,7 @@ export function PhotoDetail({
         {trigger}
       </DialogTrigger>
       <DialogContent 
-        className="p-0 border-none bg-transparent backdrop-blur-sm max-w-[95vw] max-h-[95vh] w-auto h-auto"
+        className="p-0 border-none bg-transparent backdrop-blur-sm max-w-[95vw] max-h-[95vh] w-auto h-auto flex items-center justify-center"
       >
         <DialogTitle className="sr-only">
           {title}
@@ -96,14 +96,14 @@ export function PhotoDetail({
             dragElastic={0.2}
             onDragEnd={handleDragEnd}
             dragMomentum={false}
-            className="relative w-full h-full flex items-center justify-center"
+            className="relative flex items-center justify-center w-full h-full"
           >
             <Image
               src={url}
               alt={title}
               width={1920}
               height={1080}
-              className="w-auto h-auto max-w-[95vw] max-h-[95vh] object-contain"
+              className="w-auto h-auto max-w-[95vw] max-h-[95vh] object-contain mx-auto"
               priority
             />
           </motion.div>
