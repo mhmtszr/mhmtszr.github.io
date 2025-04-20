@@ -515,49 +515,70 @@ function PhotographyContent() {
 
   const hasMorePhotos = displayCount < filteredPhotos.length
 
-  const loadMorePhotos = useCallback(async () => {
-    if (isLoading || !hasMorePhotos) return
+  const loadMorePhotos = useCallback(() => {
+    if (!hasMorePhotos || isLoading) return;
     
-    setIsLoading(true)
-    // Simulate network delay for smoother UX
-    await new Promise(resolve => setTimeout(resolve, 500))
-    setDisplayCount(prev => Math.min(prev + BATCH_SIZE, filteredPhotos.length))
-    setIsLoading(false)
-  }, [isLoading, hasMorePhotos, filteredPhotos.length])
+    setIsLoading(true);
+    // Add a small delay to ensure loading state is visible
+    setTimeout(() => {
+      setDisplayCount(prevCount => {
+        const newCount = Math.min(prevCount + BATCH_SIZE, filteredPhotos.length);
+        if (newCount >= filteredPhotos.length) {
+          // If we've loaded all photos, clear loading state
+          setIsLoading(false);
+        }
+        return newCount;
+      });
+      
+      // Only clear loading if we haven't loaded all photos
+      if (displayCount + BATCH_SIZE < filteredPhotos.length) {
+        setIsLoading(false);
+      }
+    }, 500);
+  }, [hasMorePhotos, isLoading, filteredPhotos.length, displayCount]);
+
+  // Reset when filter changes
+  useEffect(() => {
+    setIsLoading(false);
+    setDisplayCount(BATCH_SIZE);
+    setIsChangingCountry(true);
+    
+    const timer = setTimeout(() => {
+      setIsChangingCountry(false);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [filter]);
 
   // Intersection Observer setup
   useEffect(() => {
+    if (!hasMorePhotos || isLoading || isChangingCountry) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          loadMorePhotos()
+        const [entry] = entries;
+        if (entry?.isIntersecting) {
+          loadMorePhotos();
         }
       },
-      { threshold: 0.1 }
-    )
+      {
+        threshold: 0.1,
+        rootMargin: '100px',
+      }
+    );
 
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current)
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
     }
 
     return () => {
-      if (observerTarget.current) {
-        observer.unobserve(observerTarget.current)
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
       }
-    }
-  }, [loadMorePhotos])
-
-  // Reset display count and show loading when filter changes
-  useEffect(() => {
-    const loadNewCountry = async () => {
-      setIsChangingCountry(true)
-      setDisplayCount(BATCH_SIZE)
-      // Add a small delay to show loading state
-      await new Promise(resolve => setTimeout(resolve, 300))
-      setIsChangingCountry(false)
-    }
-    loadNewCountry()
-  }, [filter])
+      observer.disconnect();
+    };
+  }, [loadMorePhotos, hasMorePhotos, isLoading, isChangingCountry]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -627,7 +648,7 @@ function PhotographyContent() {
         </div>
 
         {filteredPhotos.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="min-h-[400px] flex flex-col items-center justify-center">
             <p className="text-gray-500 dark:text-gray-400">No photos found for {filter}</p>
             <button
               onClick={() => setFilter("All")}
@@ -690,10 +711,16 @@ function PhotographyContent() {
             {hasMorePhotos && (
               <div 
                 ref={observerTarget}
-                className="h-10 w-full flex items-center justify-center mt-8"
+                className="h-40 w-full flex items-center justify-center my-8"
+                style={{ minHeight: '150px' }}
               >
-                {isLoading && (
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-800 dark:border-gray-200" />
+                {isLoading ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-800 dark:border-gray-200" />
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Loading more photos...</p>
+                  </div>
+                ) : (
+                  <div className="w-full h-20 opacity-0" /> // Invisible element to trigger intersection
                 )}
               </div>
             )}
