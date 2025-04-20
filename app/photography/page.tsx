@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef, useCallback } from "react"
 import { motion } from "framer-motion"
 import { PhotoDetail } from "@/components/ui/photo-detail"
 
@@ -487,15 +487,65 @@ const uniqueCountries = ["All", ...Array.from(
   new Set(photos.map(photo => photo.country))
 )]
 
+const BATCH_SIZE = 21;
+
 export default function PhotographyPage() {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null)
   const [filter, setFilter] = useState("All")
+  const [displayCount, setDisplayCount] = useState(BATCH_SIZE)
+  const [isLoading, setIsLoading] = useState(false)
+  const observerTarget = useRef<HTMLDivElement>(null)
 
   // Filter photos based on selected country
   const filteredPhotos = useMemo(() => 
     filter === "All" ? photos : photos.filter(photo => photo.country === filter),
     [filter]
   )
+
+  // Get the current batch of photos to display
+  const displayedPhotos = useMemo(() => 
+    filteredPhotos.slice(0, displayCount),
+    [filteredPhotos, displayCount]
+  )
+
+  const hasMorePhotos = displayCount < filteredPhotos.length
+
+  const loadMorePhotos = useCallback(async () => {
+    if (isLoading || !hasMorePhotos) return
+    
+    setIsLoading(true)
+    // Simulate network delay for smoother UX
+    await new Promise(resolve => setTimeout(resolve, 500))
+    setDisplayCount(prev => Math.min(prev + BATCH_SIZE, filteredPhotos.length))
+    setIsLoading(false)
+  }, [isLoading, hasMorePhotos, filteredPhotos.length])
+
+  // Intersection Observer setup
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMorePhotos()
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (observerTarget.current) {
+      observer.observe(observerTarget.current)
+    }
+
+    return () => {
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current)
+      }
+    }
+  }, [loadMorePhotos])
+
+  // Reset display count when filter changes
+  useEffect(() => {
+    setDisplayCount(BATCH_SIZE)
+  }, [filter])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -575,46 +625,60 @@ export default function PhotographyPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredPhotos.map((photo, index) => (
-              <PhotoDetail
-                key={photo.url}
-                isOpen={selectedPhotoIndex === index}
-                onOpenChange={(open) => {
-                  setSelectedPhotoIndex(open ? index : null)
-                }}
-                type="image"
-                url={photo.url}
-                title={photo.title}
-                onNext={handleNext}
-                onPrevious={handlePrevious}
-                trigger={
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3]"
-                  >
-                    <img
-                      src={photo.url}
-                      alt={photo.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300" />
-                    <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <p className="text-sm font-medium">{photo.title}</p>
-                      <p className="text-xs mt-1">{photo.city}, {photo.country}</p>
-                    </div>
-                  </motion.div>
-                }
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {displayedPhotos.map((photo, index) => (
+                <PhotoDetail
+                  key={photo.url}
+                  isOpen={selectedPhotoIndex === index}
+                  onOpenChange={(open) => {
+                    setSelectedPhotoIndex(open ? index : null)
+                  }}
+                  type="image"
+                  url={photo.url}
+                  title={photo.title}
+                  onNext={handleNext}
+                  onPrevious={handlePrevious}
+                  trigger={
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, delay: (index % BATCH_SIZE) * 0.1 }}
+                      className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3]"
+                    >
+                      <img
+                        src={photo.url}
+                        alt={photo.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300" />
+                      <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <p className="text-sm font-medium">{photo.title}</p>
+                        <p className="text-xs mt-1">{photo.city}, {photo.country}</p>
+                      </div>
+                    </motion.div>
+                  }
+                >
+                  {photo.title}
+                  <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
+                    ({photo.city}, {photo.country})
+                  </span>
+                </PhotoDetail>
+              ))}
+            </div>
+            
+            {hasMorePhotos && (
+              <div 
+                ref={observerTarget}
+                className="h-10 w-full flex items-center justify-center mt-8"
               >
-                {photo.title}
-                <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
-                  ({photo.city}, {photo.country})
-                </span>
-              </PhotoDetail>
-            ))}
-          </div>
+                {isLoading && (
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-800 dark:border-gray-200" />
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>
