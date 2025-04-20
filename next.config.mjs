@@ -18,7 +18,6 @@ const nextConfig = {
   },
   experimental: {
     mdxRs: true,
-    optimizeCss: true,
   },
   // Configure webpack to handle Node.js modules and optimize CSS
   webpack: (config, { dev, isServer }) => {
