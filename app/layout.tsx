@@ -5,7 +5,16 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Sidebar from "@/components/sidebar"
 import Script from "next/script"
 
-// Load non-critical CSS asynchronously
+// Preload non-critical CSS with high priority but non-blocking
+const preloadNonCriticalCSS = () => {
+  const link = document.createElement('link')
+  link.rel = 'preload'
+  link.as = 'style'
+  link.href = '/globals.css'
+  document.head.appendChild(link)
+}
+
+// Load non-critical CSS after page load
 const loadNonCriticalCSS = () => {
   const link = document.createElement('link')
   link.rel = 'stylesheet'
@@ -16,7 +25,8 @@ const loadNonCriticalCSS = () => {
 
 const inter = Inter({ 
   subsets: ["latin"],
-  display: 'swap' // Optimize font loading
+  display: 'swap', // Optimize font loading
+  preload: true // Ensure font is preloaded
 })
 
 export const metadata = {
@@ -105,6 +115,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Preload critical resources */}
+        <link
+          rel="preload"
+          href="/globals.css"
+          as="style"
+        />
         <Script id="theme-script" strategy="beforeInteractive">
           {`
             (function() {
@@ -122,7 +138,10 @@ export default function RootLayout({
           `}
         </Script>
         <Script id="load-css" strategy="afterInteractive">
-          {`(${loadNonCriticalCSS.toString()})();`}
+          {`
+            (${preloadNonCriticalCSS.toString()})();
+            window.addEventListener('load', ${loadNonCriticalCSS.toString()});
+          `}
         </Script>
         <Script
           id="schema-script"

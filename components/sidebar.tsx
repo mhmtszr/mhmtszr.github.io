@@ -37,11 +37,6 @@ export default function Sidebar() {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
-  const handlePDFClick = (e: React.MouseEvent) => {
-    e.preventDefault()
-    window.open('/Mehmet_Sezer_Resume.pdf', '_blank', 'noopener,noreferrer')
-  }
-
   // Only show the sidebar after hydration to avoid layout shift
   useEffect(() => {
     setMounted(true)
@@ -146,14 +141,15 @@ export default function Sidebar() {
                       <BookOpenText className="h-5 w-5" />
                       <span className="sr-only">Medium</span>
                     </Link>
-                    <Link
+                    <a
                       href="/Mehmet_Sezer_Resume.pdf"
-                      onClick={handlePDFClick}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     >
                       <FileText className="h-5 w-5" />
                       <span className="sr-only">CV</span>
-                    </Link>
+                    </a>
                   </div>
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center px-4">
                     &copy; 2025 Mehmet Sezer
@@ -244,14 +240,15 @@ export default function Sidebar() {
                 <BookOpenText className="h-5 w-5" />
                 <span className="sr-only">Medium</span>
               </Link>
-              <Link
+              <a
                 href="/Mehmet_Sezer_Resume.pdf"
-                onClick={handlePDFClick}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
               >
                 <FileText className="h-5 w-5" />
                 <span className="sr-only">CV</span>
-              </Link>
+              </a>
             </div>
             <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">
               &copy; 2025 Mehmet Sezer
