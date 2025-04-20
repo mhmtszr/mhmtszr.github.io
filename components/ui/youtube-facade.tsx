@@ -1,86 +1,127 @@
-import { useEffect, useState } from 'react';
-import { Play } from 'lucide-react';
-import Image from 'next/image';
+import { useState, useEffect } from "react"
+import { Play } from "lucide-react"
+import Image from "next/image"
 
 interface YouTubeFacadeProps {
-  videoUrl: string;
-  title: string;
+  url: string
+  title: string
 }
 
-export function YouTubeFacade({ videoUrl, title }: YouTubeFacadeProps) {
-  const [isMobile, setIsMobile] = useState(false);
-  
+export function YouTubeFacade({ url, title }: YouTubeFacadeProps) {
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
   useEffect(() => {
-    // Check if we're on mobile
     const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+      setIsMobile(window.innerWidth <= 768)
+    }
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
-  // Parse YouTube URL and parameters
-  const parseYouTubeUrl = (url: string) => {
-    // First, decode the URL and remove any HTML entities
-    const decodedUrl = decodeURIComponent(url.replace(/&amp;/g, '&'));
-    
-    // Extract video ID
-    const videoId = decodedUrl.match(/(?:embed\/|v=|\/)([\w-]{11})(?:\?|&|\/)?/)?.[1];
-    
-    // Extract start time
-    const startMatch = decodedUrl.match(/[?&]start=(\d+)/);
-    const startTime = startMatch ? startMatch[1] : null;
-    
-    return { videoId, startTime };
-  };
+  // Decode HTML entities and clean up the URL
+  const decodedUrl = url.replace(/&amp;/g, '&')
 
-  const { videoId, startTime } = parseYouTubeUrl(videoUrl);
+  // Extract video ID and start time from URL
+  const videoId = decodedUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/)?.[1]
+  const startTime = decodedUrl.match(/[?&]start=(\d+)/)?.[1]
   
-  if (!videoId) {
-    return <div>Invalid YouTube URL</div>;
-  }
+  if (!videoId) return null
 
-  // Construct URLs
-  const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-  // For mobile YouTube links, we need to use 't' parameter instead of 'start'
-  const youtubeWebUrl = `https://www.youtube.com/watch?v=${videoId}${startTime ? `&t=${startTime}s` : ''}`;
+  const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`
+  const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0${startTime ? `&start=${startTime}` : ''}`
+  const mobileUrl = `vnd.youtube://${videoId}${startTime ? `?t=${startTime}` : ''}`
+  const webUrl = `https://www.youtube.com/watch?v=${videoId}${startTime ? `&t=${startTime}` : ''}`
+
+  const handleMobileClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    
+    // Open web URL in new tab first
+    const webTab = window.open(webUrl, '_blank')
+    
+    // Try to open YouTube app
+    const tryYouTubeApp = () => {
+      // Create a hidden anchor for app deep linking
+      const link = document.createElement('a')
+      link.style.display = 'none'
+      link.href = mobileUrl
+      document.body.appendChild(link)
+      link.click()
+      
+      // Cleanup
+      setTimeout(() => {
+        document.body.removeChild(link)
+      }, 1000)
+    }
+    
+    // Try opening the app after ensuring web fallback is ready
+    setTimeout(tryYouTubeApp, 100)
+  }
 
   if (isMobile) {
     return (
-      <a
-        href={youtubeWebUrl}
+      <a 
+        href={webUrl}
+        onClick={handleMobileClick}
         target="_blank"
         rel="noopener noreferrer"
-        className="relative block w-full aspect-video rounded-lg overflow-hidden bg-gray-900"
+        className="relative aspect-video w-full block group"
+        aria-label={`Play ${title} on YouTube`}
       >
-        <Image
-          src={thumbnailUrl}
-          alt={title}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, 800px"
-        />
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-          <div className="bg-red-600 rounded-full p-4">
-            <Play className="w-8 h-8 text-white" />
+        <div className="relative w-full h-full">
+          <Image
+            src={thumbnailUrl}
+            alt={title}
+            fill
+            className="object-cover rounded-lg"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={false}
+            quality={85}
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+            <Play className="w-16 h-16 text-white group-hover:scale-110 transition-transform" />
           </div>
         </div>
       </a>
-    );
+    )
+  }
+
+  if (!isLoaded) {
+    return (
+      <button 
+        onClick={() => setIsLoaded(true)}
+        className="relative aspect-video w-full cursor-pointer group"
+        aria-label={`Play ${title}`}
+      >
+        <div className="relative w-full h-full">
+          <Image
+            src={thumbnailUrl}
+            alt={title}
+            fill
+            className="object-cover rounded-lg"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={false}
+            quality={85}
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+            <Play className="w-16 h-16 text-white group-hover:scale-110 transition-transform" />
+          </div>
+        </div>
+      </button>
+    )
   }
 
   return (
-    <div className="w-full aspect-video rounded-lg overflow-hidden">
+    <div className="relative aspect-video w-full">
       <iframe
-        src={videoUrl}
+        src={embedUrl}
         title={title}
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
-        className="w-full h-full"
+        className="absolute top-0 left-0 w-full h-full rounded-lg"
         loading="lazy"
       />
     </div>
-  );
+  )
 } 

@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog"
 import { FileText, Calendar } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { Timeline, TimelineItem } from "../../components/ui/timeline"
 import { YouTubeFacade } from "@/components/ui/youtube-facade"
 
@@ -165,7 +166,7 @@ export default function SpeakingPage() {
                 {talk.type === "video" ? (
                   <div className="space-y-4">
                     <div className="w-full">
-                      <YouTubeFacade videoUrl={talk.url} title={talk.title} />
+                      <YouTubeFacade url={talk.url} title={talk.title} />
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold">{talk.title}</h3>
@@ -194,11 +195,15 @@ export default function SpeakingPage() {
                       <div className="space-y-4 cursor-pointer">
                         {/* Media */}
                         <div className="w-full">
-                          <div className="h-48 bg-gray-200 dark:bg-gray-700 relative rounded-lg overflow-hidden">
-                            <img
+                          <div className="relative aspect-[16/9] rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
+                            <Image
                               src={talk.url || `/placeholder.svg?height=200&width=400&text=${encodeURIComponent(talk.title)}`}
                               alt={talk.title}
-                              className="w-full h-full object-cover"
+                              fill
+                              className="object-cover"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              priority={index === 0}
+                              quality={90}
                             />
                           </div>
                         </div>
