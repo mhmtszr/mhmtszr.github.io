@@ -651,7 +651,7 @@ function PhotographyContent() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {displayedPhotos.map((photo, index) => (
                 <PhotoDetail
                   key={photo.url}
@@ -669,13 +669,17 @@ function PhotographyContent() {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.3, delay: Math.min((index % BATCH_SIZE) * 0.1, 0.5) }}
-                      className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3] max-h-[50vh] sm:max-h-[60vh] md:max-h-none"
+                      className="relative group cursor-pointer overflow-hidden rounded-lg aspect-square"
                     >
-                      <img
+                      <Image
                         src={photo.url}
-                        alt={photo.title}
-                        loading="lazy"
+                        alt={photo.title || ""}
+                        width={800}
+                        height={800}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        priority={index < 8}
+                        loading={index >= 8 ? "lazy" : "eager"}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300" />
                       <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/60 to-transparent">
