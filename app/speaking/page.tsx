@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { motion } from "framer-motion"
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog"
 import { FileText, Calendar } from "lucide-react"
@@ -8,6 +8,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Timeline, TimelineItem } from "../../components/ui/timeline"
 import { YouTubeFacade } from "@/components/ui/youtube-facade"
+import { useSearchParams } from 'next/navigation'
 
 const talks = [
   {
@@ -110,8 +111,10 @@ const talks = [
     url: '/speaking/acmders.jpg'
   }
 ];
-export default function SpeakingPage() {
+
+function SpeakingContent() {
   const [filter, setFilter] = useState("All")
+  const searchParams = useSearchParams()
 
   // Define filter options
   const filterOptions = ["All", "2025", "2024", "2023", "2022", "2019"]
@@ -255,5 +258,22 @@ export default function SpeakingPage() {
         </Timeline>
       </div>
     </section>
+  )
+}
+
+export default function SpeakingPage() {
+  return (
+    <Suspense 
+      fallback={
+        <div className="min-h-[400px] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800 dark:border-gray-200" />
+            <p className="text-gray-600 dark:text-gray-400">Loading speaking engagements...</p>
+          </div>
+        </div>
+      }
+    >
+      <SpeakingContent />
+    </Suspense>
   )
 }

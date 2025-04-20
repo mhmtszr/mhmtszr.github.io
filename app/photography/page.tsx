@@ -1,8 +1,11 @@
 "use client"
 
-import { useState, useEffect, useMemo, useRef, useCallback } from "react"
+import { useState, useEffect, useMemo, useRef, useCallback, Suspense } from "react"
 import { motion } from "framer-motion"
 import { PhotoDetail } from "@/components/ui/photo-detail"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import Image from "next/image"
+import { useSearchParams } from 'next/navigation'
 
 // Photography data with actual photos
 const photos = [
@@ -489,7 +492,8 @@ const uniqueCountries = ["All", ...Array.from(
 
 const BATCH_SIZE = 12;
 
-export default function PhotographyPage() {
+function PhotographyContent() {
+  const searchParams = useSearchParams()
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null)
   const [filter, setFilter] = useState("All")
   const [displayCount, setDisplayCount] = useState(BATCH_SIZE)
@@ -697,5 +701,22 @@ export default function PhotographyPage() {
         )}
       </div>
     </section>
+  )
+}
+
+export default function PhotographyPage() {
+  return (
+    <Suspense 
+      fallback={
+        <div className="min-h-[400px] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800 dark:border-gray-200" />
+            <p className="text-gray-600 dark:text-gray-400">Loading photos...</p>
+          </div>
+        </div>
+      }
+    >
+      <PhotographyContent />
+    </Suspense>
   )
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { LayoutGrid, List } from "lucide-react"
 import { ArticleCard } from "@/components/ui/article-card"
 import { Button } from "@/components/ui/button"
@@ -8,6 +8,7 @@ import { type ArticleMetadata } from "@/lib/mdx"
 import { getMediumArticles, type MediumArticle } from "@/lib/medium"
 import { motion } from "framer-motion"
 import { useMediaQuery } from "../../hooks/use-media-query"
+import { useSearchParams } from 'next/navigation'
 
 interface Article {
   title: string
@@ -34,12 +35,13 @@ const item = {
   show: { opacity: 1, y: 0 }
 }
 
-export default function ArticlesPage() {
+function ArticlesContent() {
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const [isListView, setIsListView] = useState(false)
   const [articles, setArticles] = useState<Article[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const searchParams = useSearchParams()
 
   useEffect(() => {
     if (!isDesktop && isListView) {
@@ -207,5 +209,20 @@ export default function ArticlesPage() {
         </motion.div>
       </div>
     </div>
+  )
+}
+
+export default function ArticlesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[400px] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800 dark:border-gray-200" />
+          <p className="text-gray-600 dark:text-gray-400">Loading articles...</p>
+        </div>
+      </div>
+    }>
+      <ArticlesContent />
+    </Suspense>
   )
 }

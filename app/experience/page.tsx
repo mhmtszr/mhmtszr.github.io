@@ -4,6 +4,8 @@ import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Timeline, TimelineItem } from "../../components/ui/timeline"
 import { getYear } from "date-fns"
+import { Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 interface Experience {
   company: string
@@ -78,7 +80,9 @@ const experiences: Experience[] = [
   },
 ]
 
-export default function ExperiencePage() {
+function ExperienceContent() {
+  const searchParams = useSearchParams()
+  
   // Function to get year from period string
   const getStartYear = (period: string) => {
     const parts = period.split(" - ")[0].split(" ")
@@ -89,19 +93,12 @@ export default function ExperiencePage() {
     <section className="py-12 px-4 md:px-8 lg:px-12">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-12">Professional Experience</h1>
-
         <Timeline>
           {experiences.map((exp, index) => {
             const currentStartYear = getStartYear(exp.period)
-            
-            // Get the next experience's year (since list is sorted newest to oldest)
             const nextStartYear = index + 1 < experiences.length 
               ? getStartYear(experiences[index + 1].period)
               : undefined
-            
-            // Show year on the first experience of each year
-            // For the first experience, always show the year
-            // For others, show only if it's different from the next experience's year
             const year = currentStartYear !== nextStartYear ? currentStartYear : undefined
             
             return (
@@ -145,5 +142,22 @@ export default function ExperiencePage() {
         </Timeline>
       </div>
     </section>
+  )
+}
+
+export default function ExperiencePage() {
+  return (
+    <Suspense 
+      fallback={
+        <div className="min-h-[400px] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800 dark:border-gray-200" />
+            <p className="text-gray-600 dark:text-gray-400">Loading experience...</p>
+          </div>
+        </div>
+      }
+    >
+      <ExperienceContent />
+    </Suspense>
   )
 }

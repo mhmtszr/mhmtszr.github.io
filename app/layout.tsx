@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Sidebar from "@/components/sidebar"
 import Script from "next/script"
 import GoogleAnalytics from "@/components/google-analytics"
+import { Suspense } from "react"
 
 // Preload non-critical CSS with high priority but non-blocking
 const preloadNonCriticalCSS = () => {
@@ -62,9 +63,9 @@ export const metadata = {
   metadataBase: new URL('https://msezer.dev'),
   alternates: {},
   icons: {
-    icon: '/favicon.png'
+    icon: 'https://msezer.dev/favicon.png'
   },
-  manifest: '/site.webmanifest',
+  manifest: 'https://msezer.dev/site.webmanifest',
   openGraph: {
     title: 'Mehmet Sezer - Senior Software Engineer',
     description: 'Senior Software Engineer at Trendyol specializing in microservice architecture and distributed systems. Building scalable and reliable software solutions.',
@@ -72,7 +73,7 @@ export const metadata = {
     siteName: 'Mehmet Sezer',
     images: [
       {
-        url: '/opengraph-image.png',
+        url: 'https://msezer.dev/opengraph-image.png',
         width: 1200,
         height: 630,
         alt: 'Mehmet Sezer - Senior Software Engineer'
@@ -87,7 +88,7 @@ export const metadata = {
     description: 'Senior Software Engineer at Trendyol specializing in microservice architecture and distributed systems.',
     creator: '@_mehmetsezer',
     creatorId: '_mehmetsezer',
-    images: ['/opengraph-image.png'],
+    images: ['https://msezer.dev/opengraph-image.png'],
   },
   robots: {
     index: true,
@@ -196,7 +197,9 @@ export default function RootLayout({
             </div>
           </div>
         </ThemeProvider>
-        <GoogleAnalytics />
+        <Suspense>
+          <GoogleAnalytics />
+        </Suspense>
       </body>
     </html>
   )

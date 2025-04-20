@@ -1,6 +1,6 @@
 import { ImageResponse } from 'next/og'
 
-export const runtime = 'edge'
+export const runtime = 'nodejs'
 export const dynamic = 'force-static'
 export const revalidate = false
 
@@ -24,7 +24,7 @@ export default async function Image() {
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
-          backgroundImage: 'url(/opengraph-image.png)',
+          backgroundImage: 'url(https://msezer.dev/opengraph-image.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}

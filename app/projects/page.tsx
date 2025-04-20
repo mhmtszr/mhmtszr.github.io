@@ -1,10 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, Suspense } from "react"
 import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Github, ExternalLink } from "lucide-react"
 import Link from "next/link"
+import { useSearchParams } from 'next/navigation'
 
 const projects = [
   {
@@ -85,7 +86,8 @@ const projects = [
   },
 ]
 
-export default function ProjectsPage() {
+function ProjectsContent() {
+  const searchParams = useSearchParams()
   const [filter, setFilter] = useState("All")
 
   // Get unique technologies for filter options
@@ -173,5 +175,20 @@ export default function ProjectsPage() {
         )}
       </div>
     </section>
+  )
+}
+
+export default function ProjectsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[400px] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800 dark:border-gray-200" />
+          <p className="text-gray-600 dark:text-gray-400">Loading projects...</p>
+        </div>
+      </div>
+    }>
+      <ProjectsContent />
+    </Suspense>
   )
 }
