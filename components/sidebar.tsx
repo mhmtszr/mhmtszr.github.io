@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/theme-toggle"
+import dynamic from 'next/dynamic'
 
 const navItems = [
   { name: "About", href: "/", icon: User },
@@ -36,6 +37,11 @@ export default function Sidebar() {
   const pathname = usePathname()
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+
+  const handlePDFClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    window.open('/Mehmet_Sezer_Resume.pdf', '_blank', 'noopener,noreferrer')
+  }
 
   // Only show the sidebar after hydration to avoid layout shift
   useEffect(() => {
@@ -52,7 +58,7 @@ export default function Sidebar() {
       <div className="sticky top-0 z-40 flex items-center justify-between px-4 h-16 border-b md:hidden bg-white dark:bg-gray-950">
         <Link href="/" className="flex items-center gap-3">
           <Avatar className="h-9 w-9 border border-gray-200 dark:border-gray-700">
-            <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer" />
+            <AvatarImage src="/photography/profile.jpg" alt="Profile photo" />
             <AvatarFallback>MS</AvatarFallback>
           </Avatar>
           <span className="font-bold text-xl">Mehmet Sezer</span>
@@ -74,7 +80,7 @@ export default function Sidebar() {
                 </SheetDescription>
                 <div className="flex items-center gap-3 mt-4 mb-6 px-4">
                   <Avatar className="h-10 w-10 border border-gray-200 dark:border-gray-700">
-                    <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer" />
+                    <AvatarImage src="/photography/profile.jpg" alt="Profile photo" />
                     <AvatarFallback>MS</AvatarFallback>
                   </Avatar>
                   <span className="font-bold text-lg">Mehmet Sezer</span>
@@ -143,8 +149,7 @@ export default function Sidebar() {
                     </Link>
                     <Link
                       href="/Mehmet_Sezer_Resume.pdf"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      onClick={handlePDFClick}
                       className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     >
                       <FileText className="h-5 w-5" />
@@ -168,7 +173,7 @@ export default function Sidebar() {
             <div className="flex flex-col items-center px-6 mb-8">
               <div className="mb-4">
                 <Avatar className="h-24 w-24 border-2 border-gray-200 dark:border-gray-700">
-                  <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer" />
+                  <AvatarImage src="/photography/profile.jpg" alt="Profile photo" />
                   <AvatarFallback>MS</AvatarFallback>
                 </Avatar>
               </div>
@@ -242,8 +247,7 @@ export default function Sidebar() {
               </Link>
               <Link
                 href="/Mehmet_Sezer_Resume.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
+                onClick={handlePDFClick}
                 className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
               >
                 <FileText className="h-5 w-5" />

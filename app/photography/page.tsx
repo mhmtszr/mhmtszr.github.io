@@ -487,7 +487,7 @@ const uniqueCountries = ["All", ...Array.from(
   new Set(photos.map(photo => photo.country))
 )]
 
-const BATCH_SIZE = 21;
+const BATCH_SIZE = 12;
 
 export default function PhotographyPage() {
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null)

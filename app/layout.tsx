@@ -1,11 +1,23 @@
 import type React from "react"
-import "@/app/globals.css"
+import "./critical.css"
 import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import Sidebar from "@/components/sidebar"
 import Script from "next/script"
 
-const inter = Inter({ subsets: ["latin"] })
+// Load non-critical CSS asynchronously
+const loadNonCriticalCSS = () => {
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = '/globals.css'
+  link.type = 'text/css'
+  document.head.appendChild(link)
+}
+
+const inter = Inter({ 
+  subsets: ["latin"],
+  display: 'swap' // Optimize font loading
+})
 
 export const metadata = {
   title: {
@@ -108,6 +120,9 @@ export default function RootLayout({
               }
             })();
           `}
+        </Script>
+        <Script id="load-css" strategy="afterInteractive">
+          {`(${loadNonCriticalCSS.toString()})();`}
         </Script>
         <Script
           id="schema-script"
