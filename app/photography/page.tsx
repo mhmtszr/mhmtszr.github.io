@@ -603,10 +603,35 @@ function PhotographyContent() {
   const handleNext = (e: React.MouseEvent) => {
     e.stopPropagation()
     if (selectedPhotoIndex === null) return
-    setSelectedPhotoIndex(
-      selectedPhotoIndex === filteredPhotos.length - 1 ? 0 : selectedPhotoIndex + 1
-    )
+
+    // If we're at the last loaded photo and there are more to load
+    if (selectedPhotoIndex === displayedPhotos.length - 1 && hasMorePhotos) {
+      loadMorePhotos()
+      // Keep the dialog open and wait for more photos
+      return
+    }
+
+    // Regular navigation within loaded photos
+    if (selectedPhotoIndex < filteredPhotos.length - 1) {
+      setSelectedPhotoIndex(selectedPhotoIndex + 1)
+    }
   }
+
+  // Update selected photo index when more photos are loaded
+  useEffect(() => {
+    // Only proceed if we're in detail view and at the end of current batch
+    if (selectedPhotoIndex !== null && selectedPhotoIndex === displayedPhotos.length - 1 && hasMorePhotos) {
+      // Move to the next photo once new photos are loaded
+      setSelectedPhotoIndex(selectedPhotoIndex + 1)
+    }
+  }, [displayedPhotos.length, selectedPhotoIndex, hasMorePhotos])
+
+  // Preload next batch when approaching the end
+  useEffect(() => {
+    if (selectedPhotoIndex !== null && selectedPhotoIndex >= displayedPhotos.length - 3 && hasMorePhotos) {
+      loadMorePhotos()
+    }
+  }, [selectedPhotoIndex, displayedPhotos.length, hasMorePhotos, loadMorePhotos])
 
   return (
     <section className="py-12 px-4 md:px-8 lg:px-12">
@@ -664,6 +689,17 @@ function PhotographyContent() {
                   title={photo.title}
                   onNext={handleNext}
                   onPrevious={handlePrevious}
+                  preloadedImage={
+                    <Image
+                      src={photo.url}
+                      alt={photo.title || ""}
+                      width={800}
+                      height={800}
+                      className="h-full w-auto object-contain transform-gpu"
+                      priority={index < BATCH_SIZE}
+                      sizes="100vw"
+                    />
+                  }
                   trigger={
                     <motion.div
                       initial={{ opacity: 0, scale: 0.9 }}

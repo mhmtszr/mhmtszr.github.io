@@ -1,7 +1,8 @@
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { motion } from "framer-motion"
-import { ReactNode, useCallback } from "react"
+import React, { ReactNode, useCallback } from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
+import Image from "next/image"
 
 interface PhotoDetailProps {
   children: ReactNode
@@ -14,6 +15,7 @@ interface PhotoDetailProps {
   description?: string
   onNext?: (e: React.MouseEvent) => void
   onPrevious?: (e: React.MouseEvent) => void
+  preloadedImage?: ReactNode
 }
 
 export function PhotoDetail({
@@ -27,6 +29,7 @@ export function PhotoDetail({
   description,
   onNext,
   onPrevious,
+  preloadedImage,
 }: PhotoDetailProps) {
   const isMobile = useIsMobile()
 
@@ -49,7 +52,7 @@ export function PhotoDetail({
         {trigger}
       </DialogTrigger>
       <DialogContent 
-        className={`p-0 border-none bg-transparent backdrop-blur-xl ${isMobile ? 'w-[85vw] h-[60vh]' : 'w-fit'}`}
+        className="p-0 border-none bg-transparent backdrop-blur-sm max-w-[95vw] max-h-[95vh] w-auto h-auto"
       >
         <DialogTitle className="sr-only">
           {title}
@@ -63,7 +66,7 @@ export function PhotoDetail({
                 e.stopPropagation();
                 onPrevious(e);
               }}
-              className={`absolute ${isMobile ? 'left-4' : 'left-4'} top-1/2 -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all z-50`}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all z-50"
               aria-label="Previous photo"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
@@ -75,7 +78,7 @@ export function PhotoDetail({
                 e.stopPropagation();
                 onNext(e);
               }}
-              className={`absolute ${isMobile ? 'right-4' : 'right-4'} top-1/2 -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-2 rounded-full transition-all z-50`}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-all z-50"
               aria-label="Next photo"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-6 h-6">
@@ -86,28 +89,24 @@ export function PhotoDetail({
         )}
 
         {type === "image" ? (
-          <div className="relative flex items-center justify-center h-full" onClick={() => onOpenChange(false)}>
-            <motion.img
+          <motion.div
+            onClick={(e) => e.stopPropagation()}
+            drag={isMobile ? "x" : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragEnd={handleDragEnd}
+            dragMomentum={false}
+            className="relative w-full h-full flex items-center justify-center"
+          >
+            <Image
               src={url}
               alt={title}
-              className="h-full w-auto object-contain transform-gpu"
-              onClick={(e) => e.stopPropagation()}
-              drag={isMobile ? "x" : false}
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.2}
-              onDragEnd={handleDragEnd}
-              dragMomentum={false}
+              width={1920}
+              height={1080}
+              className="w-auto h-auto max-w-[95vw] max-h-[95vh] object-contain"
+              priority
             />
-            <button
-              onClick={() => onOpenChange(false)}
-              className="fixed right-2 top-2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full transition-all z-[100]"
-              aria-label="Close dialog"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3 h-3">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+          </motion.div>
         ) : (
           <div className="w-full aspect-video rounded-lg overflow-hidden">
             <iframe
