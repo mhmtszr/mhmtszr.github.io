@@ -112,7 +112,7 @@ export default function ExperiencePage() {
               >
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-2xl font-bold">{exp.position}</h3>
+                    <h2 className="text-2xl font-bold">{exp.position}</h2>
                     <p className="text-gray-500 dark:text-gray-400">
                       {exp.company} | {exp.period}
                     </p>
@@ -123,7 +123,7 @@ export default function ExperiencePage() {
                   )}
 
                   <div>
-                    <h4 className="font-semibold mb-2">Key Achievements:</h4>
+                    <h3 className="font-semibold mb-2">Key Achievements:</h3>
                     <ul className="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-300">
                       {exp.achievements.map((achievement, i) => (
                         <li key={i}>{achievement}</li>

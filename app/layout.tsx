@@ -59,9 +59,7 @@ export const metadata = {
     telephone: false,
   },
   metadataBase: new URL('https://msezer.dev'),
-  alternates: {
-    canonical: '/',
-  },
+  alternates: {},
   icons: {
     icon: '/favicon.png'
   },
@@ -186,6 +184,7 @@ export default function RootLayout({
             })
           }}
         />
+        <link rel="icon" href="/favicon.png" />
       </head>
       <body className={inter.className}>
         <ThemeProvider defaultTheme="light">
