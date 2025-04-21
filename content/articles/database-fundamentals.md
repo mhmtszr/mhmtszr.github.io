@@ -3,7 +3,7 @@ title: "Database Fundamentals: A Comprehensive Guide(SOON)"
 description: "Learn the core concepts of databases, from basic terminology to advanced concepts like normalization and transactions."
 date: "2024-03-07"
 image: "/article/database.png"
-tags: ["database", "sql", "backend-development"]
+tags: ["database", "sql"]
 ---
 
 Databases are the backbone of modern applications, serving as the foundation for storing, organizing, and managing data effectively. In this comprehensive guide, we'll explore the fundamental concepts of databases and their crucial role in software development.
