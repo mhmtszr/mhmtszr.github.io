@@ -12,7 +12,7 @@ Databases are the backbone of modern applications, serving as the foundation for
 
 A database is an organized collection of structured information or data, typically stored electronically in a computer system. Databases are designed to manage large amounts of information by providing efficient methods for data storage, retrieval, and updates.
 
-Here's a simple example of creating a database and table in SQL
+Here is a simple example of creating a database and table in SQL
 
 ```sql
 -- Create a new database
