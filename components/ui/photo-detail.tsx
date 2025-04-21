@@ -42,13 +42,20 @@ export function PhotoDetail({
     
     const SWIPE_THRESHOLD = 50
     const offset = info.offset.x
+    const offsetY = info.offset.y
+
+    // Handle vertical pull to close
+    if (offsetY > SWIPE_THRESHOLD) {
+      onOpenChange(false)
+      return
+    }
 
     if (offset > SWIPE_THRESHOLD && onPrevious) {
       onPrevious(e)
     } else if (offset < -SWIPE_THRESHOLD && onNext) {
       onNext(e)
     }
-  }, [isMobile, onNext, onPrevious])
+  }, [isMobile, onNext, onPrevious, onOpenChange])
 
   // Handle URL changes smoothly
   useEffect(() => {
@@ -92,6 +99,19 @@ export function PhotoDetail({
           {title}
         </DialogTitle>
         
+        {/* Close button for mobile */}
+        {isMobile && (
+          <button
+            onClick={() => onOpenChange(false)}
+            className="absolute right-3 top-3 bg-black/50 hover:bg-black/70 text-white p-1.5 rounded-full transition-all z-20"
+            aria-label="Close photo"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        )}
+        
         {/* Navigation buttons for photography view */}
         {onPrevious && onNext && (
           <>
@@ -125,8 +145,8 @@ export function PhotoDetail({
         {type === "image" ? (
           <motion.div
             onClick={(e) => e.stopPropagation()}
-            drag={isMobile ? "x" : false}
-            dragConstraints={{ left: 0, right: 0 }}
+            drag={isMobile ? true : false}
+            dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
             dragElastic={0.2}
             onDragEnd={handleDragEnd}
             dragMomentum={false}
