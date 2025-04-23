@@ -6,6 +6,7 @@ import Sidebar from "@/components/sidebar"
 import Script from "next/script"
 import GoogleAnalytics from "@/components/google-analytics"
 import { Suspense } from "react"
+import ScrollReset from "@/components/scroll-reset"
 
 // Preload non-critical CSS with high priority but non-blocking
 const preloadNonCriticalCSS = () => {
@@ -190,6 +191,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <ThemeProvider defaultTheme="light">
+          <ScrollReset />
           <div className="flex min-h-screen flex-col">
             <Sidebar />
             <div className="flex-1 md:ml-64">
