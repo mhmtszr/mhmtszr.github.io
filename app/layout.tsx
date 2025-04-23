@@ -4,8 +4,6 @@ import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import Sidebar from "@/components/sidebar"
 import Script from "next/script"
-import GoogleAnalytics from "@/components/google-analytics"
-import { Suspense } from "react"
 import ScrollReset from "@/components/scroll-reset"
 
 // Preload non-critical CSS with high priority but non-blocking
@@ -199,9 +197,6 @@ export default function RootLayout({
             </div>
           </div>
         </ThemeProvider>
-        <Suspense>
-          <GoogleAnalytics />
-        </Suspense>
       </body>
     </html>
   )
