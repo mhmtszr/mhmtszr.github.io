@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from "react"
 import { motion } from "framer-motion"
-import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { FileText, Calendar } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -194,7 +194,7 @@ function SpeakingContent() {
                   </div>
                 ) : (
                   <Dialog>
-                    <DialogTrigger asChild>
+                    <DialogTrigger className="outline-none focus:outline-none ring-0 focus:ring-0 block w-full text-left">
                       <div className="space-y-4 cursor-pointer">
                         {/* Media */}
                         <div className="w-full">
@@ -206,6 +206,7 @@ function SpeakingContent() {
                               className="object-cover"
                               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                               priority={index === 0}
+                              loading={index === 0 ? undefined : "lazy"}
                               quality={90}
                             />
                           </div>
@@ -234,19 +235,23 @@ function SpeakingContent() {
                         </div>
                       </div>
                     </DialogTrigger>
+                    {/* Apply different widths for mobile vs desktop */}
                     <DialogContent 
-                      className="p-0 border-none bg-transparent backdrop-blur-xl"
+                      className="p-0 w-[95vw] max-w-[95vw] md:w-auto md:max-w-3xl border-none bg-transparent backdrop-blur-xl"
                       onPointerDownOutside={(e) => {
                         const element = e.target as HTMLElement;
                         element.closest('button')?.click();
                       }}
                     >
                       <DialogTitle className="sr-only">{talk.title}</DialogTitle>
+                      <DialogDescription className="sr-only">
+                        {talk.description || `Enlarged image for ${talk.title}`}
+                      </DialogDescription>
                       <div className="h-full flex flex-col items-center justify-center">
                         <img
                           src={talk.url || `/placeholder.svg?height=600&width=800&text=${encodeURIComponent(talk.title)}`}
                           alt={talk.title}
-                          className="max-h-[85vh] w-auto object-contain rounded-lg"
+                          className="w-full object-contain rounded-lg"
                         />
                       </div>
                     </DialogContent>

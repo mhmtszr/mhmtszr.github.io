@@ -56,16 +56,13 @@ function ArticlesContent() {
         setError(null)
 
         // Get MDX articles from API
-        console.log('Fetching MDX articles...')
         const mdxResponse = await fetch('/api/articles')
         if (!mdxResponse.ok) {
           throw new Error('Failed to fetch MDX articles')
         }
         const mdxArticles = await mdxResponse.json()
-        console.log('MDX articles fetched:', mdxArticles)
 
         const formattedMDXArticles: Article[] = mdxArticles.map((article: { meta: ArticleMetadata, slug: string }) => {
-          console.log('Processing MDX article:', article)
           return {
             title: article.meta.title,
             description: article.meta.description || 'No description available',
@@ -77,12 +74,9 @@ function ArticlesContent() {
           }
         })
 
-        console.log('Formatted MDX articles:', formattedMDXArticles)
 
         // Get Medium articles
-        console.log('Fetching Medium articles...')
         const mediumArticles = await getMediumArticles()
-        console.log('Medium articles fetched:', mediumArticles)
 
         const formattedMediumArticles: Article[] = mediumArticles.map((article: MediumArticle) => ({
           title: article.title,
@@ -97,8 +91,6 @@ function ArticlesContent() {
         const allArticles = [...formattedMDXArticles, ...formattedMediumArticles].sort((a, b) => 
           new Date(b.date).getTime() - new Date(a.date).getTime()
         )
-
-        console.log('All articles:', allArticles)
 
         if (allArticles.length === 0) {
           setError('No articles found')

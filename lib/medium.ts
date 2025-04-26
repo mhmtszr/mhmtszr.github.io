@@ -23,7 +23,6 @@ const MEDIUM_RSS_URL = 'https://medium.com/@mehmet.sezer/feed'
 
 export async function getMediumArticles(): Promise<MediumArticle[]> {
   try {
-    console.log('Fetching Medium articles from API route...')
     const response = await fetch('/api/medium')
     
     if (!response.ok) {
@@ -31,7 +30,6 @@ export async function getMediumArticles(): Promise<MediumArticle[]> {
     }
     
     const data = await response.json()
-    console.log('Articles fetched:', data.articles?.length || 0)
     
     return data.articles || []
   } catch (error) {

@@ -49,7 +49,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile Navigation */}
-      <div className="sticky top-0 z-40 flex items-center justify-between px-4 h-16 border-b md:hidden bg-white dark:bg-gray-950">
+      <div className="sticky top-0 z-40 flex items-center justify-between px-4 h-16 border-b md:!hidden bg-white dark:bg-gray-950">
         <Link href="/" className="flex items-center gap-3">
           <Avatar className="h-9 w-9 border border-gray-200 dark:border-gray-700">
             <AvatarImage src="/photography/profile.jpg" alt="Profile photo" />
@@ -83,7 +83,7 @@ export default function Sidebar() {
                   <ul className="grid gap-0.5 px-2">
                     {navItems.map((item) => {
                       const IconComponent = item.icon
-                      const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
+                      const isActive = pathname !== null && (pathname === item.href || pathname.startsWith(`${item.href}/`))
                       return (
                         <li key={item.name}>
                           <Link
@@ -182,7 +182,7 @@ export default function Sidebar() {
               <ul className="grid gap-1">
                 {navItems.map((item) => {
                   const IconComponent = item.icon
-                  const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
+                  const isActive = pathname !== null && (pathname === item.href || pathname.startsWith(`${item.href}/`))
                   return (
                     <li key={item.name}>
                       <Link

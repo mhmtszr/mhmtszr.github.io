@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog"
 import { motion, AnimatePresence } from "framer-motion"
 import React, { ReactNode, useCallback, useState, useRef, useEffect } from "react"
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -98,6 +98,9 @@ export function PhotoDetail({
         <DialogTitle className="sr-only">
           {title}
         </DialogTitle>
+        <DialogDescription className="sr-only">
+          {description || title}
+        </DialogDescription>
         
         {/* Close button for mobile */}
         {isMobile && (
@@ -176,7 +179,7 @@ export function PhotoDetail({
                     height={1080}
                     className={`w-auto h-auto max-w-[95vw] max-h-[95vh] object-contain transition-opacity duration-300 ${(isImageLoading || isTransitioning) ? 'opacity-0' : 'opacity-100'}`}
                     priority
-                    onLoadingComplete={handleImageLoad}
+                    onLoad={handleImageLoad}
                     loading="eager"
                   />
                 </div>

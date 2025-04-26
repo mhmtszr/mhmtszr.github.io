@@ -1,3 +1,5 @@
+"use client"; // Mark as Client Component because it uses framer-motion
+
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
 

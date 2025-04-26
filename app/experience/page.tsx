@@ -1,11 +1,11 @@
-"use client"
+// "use client"
 
-import { motion } from "framer-motion"
+// import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Timeline, TimelineItem } from "../../components/ui/timeline"
 import { getYear } from "date-fns"
-import { Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+// import { Suspense } from 'react'
+// import { useSearchParams } from 'next/navigation'
 
 interface Experience {
   company: string
@@ -80,9 +80,7 @@ const experiences: Experience[] = [
   },
 ]
 
-function ExperienceContent() {
-  const searchParams = useSearchParams()
-  
+export default async function ExperiencePage() {
   // Function to get year from period string
   const getStartYear = (period: string) => {
     const parts = period.split(" - ")[0].split(" ")
@@ -142,22 +140,5 @@ function ExperienceContent() {
         </Timeline>
       </div>
     </section>
-  )
-}
-
-export default function ExperiencePage() {
-  return (
-    <Suspense 
-      fallback={
-        <div className="min-h-[400px] flex items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800 dark:border-gray-200" />
-            <p className="text-gray-600 dark:text-gray-400">Loading experience...</p>
-          </div>
-        </div>
-      }
-    >
-      <ExperienceContent />
-    </Suspense>
   )
 }

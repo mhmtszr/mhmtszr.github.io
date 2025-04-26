@@ -1,34 +1,38 @@
 import type React from "react"
-import "./critical.css"
+import fs from 'fs';
+import path from 'path';
+// Remove critical.css import here, we will inline it
+// import "./critical.css" 
 import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import Sidebar from "@/components/sidebar"
 import Script from "next/script"
 import ScrollReset from "@/components/scroll-reset"
 
-// Preload non-critical CSS with high priority but non-blocking
-const preloadNonCriticalCSS = () => {
-  const link = document.createElement('link')
-  link.rel = 'preload'
-  link.as = 'style'
-  link.href = '/globals.css'
-  document.head.appendChild(link)
-}
-
-// Load non-critical CSS after page load
-const loadNonCriticalCSS = () => {
-  const link = document.createElement('link')
-  link.rel = 'stylesheet'
-  link.href = '/globals.css'
-  link.type = 'text/css'
-  document.head.appendChild(link)
-}
+// Remove manual loading functions
+// const preloadNonCriticalCSS = () => { ... }
+// const loadNonCriticalCSS = () => { ... }
 
 const inter = Inter({ 
   subsets: ["latin"],
   display: 'swap', // Optimize font loading
   preload: true // Ensure font is preloaded
 })
+
+// Function to read critical CSS - ensure this runs server-side only
+const readCriticalCss = () => {
+  try {
+    // Adjust the path according to your project structure if needed
+    const cssPath = path.join(process.cwd(), 'app', 'critical.css'); 
+    return fs.readFileSync(cssPath, 'utf8');
+  } catch (error) {
+    console.error("Error reading critical CSS:", error);
+    return ''; // Return empty string on error
+  }
+};
+
+const criticalCssContent = readCriticalCss();
+
 
 export const metadata = {
   title: {
@@ -64,7 +68,6 @@ export const metadata = {
   icons: {
     icon: 'https://msezer.dev/favicon.png'
   },
-  manifest: 'https://msezer.dev/site.webmanifest',
   openGraph: {
     title: 'Mehmet Sezer - Senior Software Engineer',
     description: 'Senior Software Engineer at Trendyol specializing in microservice architecture and distributed systems. Building scalable and reliable software solutions.',
@@ -114,12 +117,19 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Preload critical resources */}
-        <link
+        {/* Add the standard manifest link tag */}
+        <link rel="manifest" href="/site.webmanifest" />
+        
+        {/* Inline Critical CSS */}
+        <style dangerouslySetInnerHTML={{ __html: criticalCssContent }} />
+        
+        {/* Remove preload link for globals.css */}
+        {/* <link
           rel="preload"
           href="/globals.css"
           as="style"
-        />
+        /> */}
+        
         <Script id="theme-script" strategy="beforeInteractive">
           {`
             (function() {
@@ -136,12 +146,10 @@ export default function RootLayout({
             })();
           `}
         </Script>
-        <Script id="load-css" strategy="afterInteractive">
-          {`
-            (${preloadNonCriticalCSS.toString()})();
-            window.addEventListener('load', ${loadNonCriticalCSS.toString()});
-          `}
-        </Script>
+        
+        {/* Remove script that loads non-critical CSS */}
+        {/* <Script id="load-css" strategy="afterInteractive"> ... </Script> */}
+        
         <Script
           id="schema-script"
           type="application/ld+json"
@@ -203,4 +211,4 @@ export default function RootLayout({
 }
 
 
-import './globals.css'
+import './globals.css' // Keep this import for Next.js to handle non-critical CSS
