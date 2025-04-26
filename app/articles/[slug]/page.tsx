@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Calendar } from 'lucide-react'
 import { Metadata } from 'next'
 import Image from 'next/image'
+import { CodeCopyWrapper } from '@/components/ui/code-copy-wrapper'
 
 interface ArticlePageProps {
   params: Promise<{
@@ -120,7 +121,7 @@ export default async function ArticlePage(
         )}
       </div>
       <div className="prose dark:prose-invert max-w-none mt-8">
-        {article.content}
+        <CodeCopyWrapper>{article.content}</CodeCopyWrapper>
       </div>
       <script
         type="application/ld+json"
