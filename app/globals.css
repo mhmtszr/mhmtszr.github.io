@@ -108,6 +108,10 @@
     @apply max-w-none;
   }
 
+  .prose h2 {
+    @apply border-b pb-2 mb-4;
+  }
+
   .prose pre {
     @apply my-4 p-4 rounded-lg overflow-x-auto border relative;
     background-color: hsl(var(--code-bg));

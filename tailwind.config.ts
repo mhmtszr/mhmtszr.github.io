@@ -110,6 +110,8 @@ const config = {
               backgroundColor: 'hsl(var(--muted))',
               borderRadius: '0.25rem',
               padding: '0.25rem',
+              '&::before': { content: '"" !important' },
+              '&::after': { content: '"" !important' },
             },
             pre: {
               backgroundColor: 'hsl(var(--muted))',

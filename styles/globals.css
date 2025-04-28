@@ -90,5 +90,18 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
   }
+}
+
+/* Add this rule to hide backticks within inline code elements */
+:not(pre) > code::before,
+:not(pre) > code::after {
+  content: ""; /* Hide the default backticks */
+}
+
+/* Optional: Adjust padding if needed after removing backticks */
+:not(pre) > code {
+  padding-left: 0.4em; /* Adjust as needed */
+  padding-right: 0.4em; /* Adjust as needed */
 }
