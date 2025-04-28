@@ -47,7 +47,7 @@ These practices are based on my personal experiences and opinions. I am always o
 
 A well-organized Go project should follow a structured layout:
 
-More detailed: https://github.com/golang-standards/project-layout
+More detailed: [https://github.com/golang-standards/project-layout](https://github.com/golang-standards/project-layout)
 
 ```
 📂 project-root/
@@ -249,7 +249,7 @@ improvements.
 
 ![img.png](/article/go-practices/img_2.png)
 
-Benchmarks show that `jsoniter provides faster serialization and deserialization with lower memory overhead.
+Benchmarks show that `jsoniter` provides faster serialization and deserialization with lower memory overhead.
 
 **Example Usage**:
 
@@ -300,8 +300,7 @@ func main() {
 ```
 
 Using sync.Pool, I helped resolve [a memory leak in New Relic Go Agent](https://github.com/newrelic/go-agent/pull/620).
-Instead of creating a new gzip writer for every request, I introduced a pool to reuse instances, reducing CPU usage by ~
-40% and memory usage by ~22%.
+Instead of creating a new gzip writer for every request, I introduced a pool to reuse instances, reducing CPU usage by ~40% and memory usage by ~22%.
 
 ### Prefer `strconv` over `fmt`
 
@@ -392,7 +391,7 @@ BenchmarkGood-4   100000000    0.21s
 </tbody></table>
 </div>
 
-### Do not return a pointer from the function
+### Do not return a pointer from a function
 
 Returning a pointer from a function may cause the variable to escape to the heap(depending on the escape analysis result), increasing CPU usage and garbage
 collection pressure. Instead, return the value directly to avoid unnecessary heap allocations.
