@@ -20,28 +20,26 @@ These practices are based on my personal experiences and opinions. I am always o
   - [Use GOMEMLIMIT Instead of GOGC](#use-gomemlimit-instead-of-gogc)
   - [Use fiber for Web Framework](#use-fiber-for-web-framework)
   - [Use unsafe package to string byte conversion without copying](#use-unsafe-package-to-string-byte-conversion-without-copying)
-  - [Use jsoniter instead of encoding/json](#use-jsoniter-instead-of-encodingjson)
+  - [Use bytedance/sonic instead of encoding/json](#use-bytedancesonic-instead-of-encodingjson)
   - [Use sync.Pool to reduce heap allocations](#use-syncpool-to-reduce-heap-allocations)
   - [Prefer strconv over fmt](#prefer-strconv-over-fmt)
   - [Prefer specifying capacity for slices and maps](#prefer-specifying-capacity-for-slices-and-maps)
   - [Do not return a pointer from the function](#do-not-return-a-pointer-from-the-function)
+  - [Avoid Repeated String-to-Byte Conversions](#avoid-repeated-string-to-byte-conversions)
+- [Patterns](#patterns)
+    - [Functional Options](#functional-options)
 - [Testing](#testing)
   - [Unit Testing for Usecases](#unit-testing-for-usecases)
   - [Using Mockery for Mock Generation](#using-mockery-for-mock-generation)
   - [Using Table-Driven Tests](#using-table-driven-tests)
   - [Running Tests with the Race Detector](#running-tests-with-the-race-detector)
-- [Libraries](#libraries)
-  - [mhmtszr/concurrent-swiss-map](#mhmtszrconcurrent-swiss-map)
-  - [samber/lo](#samberlo)
-  - [samber/do](#samberdo)
-  - [json-iterator/go](#json-iteratorgo)
-  - [uber-go/zap](#uber-gozap)
-  - [uber-go/automaxprocs](#uber-goautomaxprocs)
-  - [destel/rill](#destelrill)
-  - [go-resty/resty](#go-restyresty)
-  - [go-playground/validator](#go-playgroundvalidator)
+  - [Parallel Tests](#parallel-tests)
+- [Error Handling](#error-handling)
+    - [Error Types](#error-types)
+    - [Error Wrapping](#error-wrapping)
+    - [Error Naming](#error-naming)
+    - [Handle Errors Once](#handle-errors-once)
 - [Pre-Production Checklist](#pre-production-checklist)
-- [Other Resources](#other-resources)
 
 ## Folder Structure
 
@@ -241,24 +239,34 @@ func BytesToString(b []byte) string {
 Libraries like `fasthttp` and `fiber` leverage this approach for better performance. Note: Avoid this if the underlying data may change, as it could lead to unexpected behavior.
 Note. If your byte or string values are likely to change later, do not use this feature.
 
-### Use `jsoniter` instead of `encoding/json`
+### Use `bytedance/sonic` instead of `encoding/json`
 
 Go's standard `encoding/json` is known for being slow due to excessive
-reflection. [jsoniter](https://github.com/json-iterator/go) is a drop-in replacement that offers significant performance
+reflection. [bytedance/sonic](https://github.com/bytedance/sonic) is a drop-in replacement that offers significant performance
 improvements.
 
-![img.png](/article/go-practices/img_2.png)
+<div className="flex items-start justify-between gap-4">
+  {/* Image 1 with Text Above */}
+  <div className="w-[49%] text-center">
+    <p className="text-sm font-medium mb-1">Small (400B, 11 keys, 3 layers)</p>
+    <img src="/article/go-practices/bench-small.png" className="block w-full h-auto rounded border" alt="Sonic Benchmark Small"/>
+  </div>
+  {/* Image 2 with Text Above */}
+  <div className="w-[49%] text-center">
+    <p className="text-sm font-medium mb-1">Large (635KB, 10000+ key, 6 layers)</p>
+    <img src="/article/go-practices/bench-large.png" className="block w-full h-auto rounded border" alt="Sonic Benchmark Large"/>
+  </div>
+</div>
 
-Benchmarks show that `jsoniter` provides faster serialization and deserialization with lower memory overhead.
+Benchmarks show that `bytedance/sonic` provides faster serialization and deserialization with lower memory overhead.
 
 **Example Usage**:
 
 ```go
-import jsoniter "github.com/json-iterator/go"
+import "github.com/bytedance/sonic"
 
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
-json.Marshal(&data)
-json.Unmarshal(input, &data)
+sonic.Marshal(&data)
+sonic.Unmarshal(input, &data)
 ```
 
 ### Use sync.Pool to reduce heap allocations
@@ -308,7 +316,7 @@ When converting primitives to/from strings, `strconv` is faster than `fmt`.
 
 <div className="overflow-x-auto my-6">
 <table>
-<thead><tr><th>Bad</th><th>Good</th></tr></thead>
+<thead><tr><th className="text-center">Bad</th><th className="text-center">Good</th></tr></thead>
 <tbody>
 <tr><td>
 
@@ -350,7 +358,7 @@ When creating slices and maps, specifying the capacity can improve performance b
 
 <div className="overflow-x-auto my-6">
 <table>
-<thead><tr><th>Bad</th><th>Good</th></tr></thead>
+<thead><tr><th className="text-center">Bad</th><th className="text-center">Good</th></tr></thead>
 <tbody>
 <tr><td>
 
@@ -398,7 +406,7 @@ collection pressure. Instead, return the value directly to avoid unnecessary hea
 
 <div className="overflow-x-auto my-6">
 <table>
-<thead><tr><th>Bad</th><th>Good</th></tr></thead>
+<thead><tr><th className="text-center">Bad</th><th className="text-center">Good</th></tr></thead>
 <tbody>
 <tr><td>
 
@@ -429,6 +437,202 @@ type Reader interface {
 
 That's why the built-in Go Reader interface's Read function does not return a []byte; instead, it takes the buffer as a
 parameter to avoid heap allocation.
+
+### Avoid repeated string-to-byte conversions
+
+Do not create byte slices from a fixed string repeatedly. Instead, perform the
+conversion once and capture the result.
+
+<table>
+<thead><tr><th className="text-center">Bad</th><th className="text-center">Good</th></tr></thead>
+<tbody>
+<tr><td>
+
+```go
+for i := 0; i < b.N; i++ {
+  w.Write([]byte("Hello world"))
+}
+```
+
+</td><td>
+
+```go
+data := []byte("Hello world")
+for i := 0; i < b.N; i++ {
+  w.Write(data)
+}
+```
+
+</td></tr>
+<tr><td>
+
+```plain
+BenchmarkBad-4   50000000   22.2 ns/op
+```
+
+</td><td>
+
+```plain
+BenchmarkGood-4  500000000   3.25 ns/op
+```
+
+</td></tr>
+</tbody></table>
+
+## Patterns
+
+### Functional Options
+
+Functional options is a pattern in which you declare an opaque `Option` type
+that records information in some internal struct. You accept a variadic number
+of these options and act upon the full information recorded by the options on
+the internal struct.
+
+Use this pattern for optional arguments in constructors and other public APIs
+that you foresee needing to expand, especially if you already have three or
+more arguments on those functions.
+
+<table>
+<thead><tr><th className="text-center">Bad</th><th className="text-center">Good</th></tr></thead>
+<tbody>
+<tr><td>
+
+```go
+// package db
+
+func Open(
+  addr string,
+  cache bool,
+  logger *zap.Logger
+) (*Connection, error) {
+  // ...
+}
+```
+
+</td><td>
+
+```go
+// package db
+
+type Option interface {
+  // ...
+}
+
+func WithCache(c bool) Option {
+  // ...
+}
+
+func WithLogger(log *zap.Logger) Option {
+  // ...
+}
+
+// Open creates a connection.
+func Open(
+  addr string,
+  opts ...Option,
+) (*Connection, error) {
+  // ...
+}
+```
+
+</td></tr>
+<tr><td>
+
+The cache and logger parameters must always be provided, even if the user
+wants to use the default.
+
+```go
+db.Open(addr, db.DefaultCache, zap.NewNop())
+db.Open(addr, db.DefaultCache, log)
+db.Open(addr, false /* cache */, zap.NewNop())
+db.Open(addr, false /* cache */, log)
+```
+
+</td><td>
+
+Options are provided only if needed.
+
+```go
+db.Open(addr)
+db.Open(addr, db.WithLogger(log))
+db.Open(addr, db.WithCache(false))
+db.Open(
+  addr,
+  db.WithCache(false),
+  db.WithLogger(log),
+)
+```
+
+</td></tr>
+</tbody></table>
+
+Our suggested way of implementing this pattern is with an `Option` interface
+that holds an unexported method, recording options on an unexported `options`
+struct.
+
+```go
+type options struct {
+  cache  bool
+  logger *zap.Logger
+}
+
+type Option interface {
+  apply(*options)
+}
+
+type cacheOption bool
+
+func (c cacheOption) apply(opts *options) {
+  opts.cache = bool(c)
+}
+
+func WithCache(c bool) Option {
+  return cacheOption(c)
+}
+
+type loggerOption struct {
+  Log *zap.Logger
+}
+
+func (l loggerOption) apply(opts *options) {
+  opts.logger = l.Log
+}
+
+func WithLogger(log *zap.Logger) Option {
+  return loggerOption{Log: log}
+}
+
+// Open creates a connection.
+func Open(
+  addr string,
+  opts ...Option,
+) (*Connection, error) {
+  options := options{
+    cache:  defaultCache,
+    logger: zap.NewNop(),
+  }
+
+  for _, o := range opts {
+    o.apply(&options)
+  }
+
+  // ...
+}
+```
+
+Note that there's a method of implementing this pattern with closures but we
+believe that the pattern above provides more flexibility for authors and is
+easier to debug and test for users. In particular, it allows options to be
+compared against each other in tests and mocks, versus closures where this is
+impossible. Further, it lets options implement other interfaces, including
+`fmt.Stringer` which allows for user-readable string representations of the
+options.
+
+See also,
+
+- [Self-referential functions and the design of options](https://commandcenter.blogspot.com/2014/01/self-referential-functions-and-design.html)
+- [Functional options for friendly APIs](https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis)
+
 
 ## Testing
 
@@ -493,37 +697,436 @@ go test ./... -race
 This helps detect potential data races, ensuring our code is safe for concurrent execution.
 
 
-## Libraries
+### Parallel Tests
 
-### [mhmtszr/concurrent-swiss-map](https://github.com/mhmtszr/concurrent-swiss-map)
-A high-performance, thread-safe generic concurrent hash map implementation based on Swiss Map.
+Parallel tests, like some specialized loops (for example, those that spawn
+goroutines or capture references as part of the loop body),
+must take care to explicitly assign loop variables within the loop's scope to
+ensure that they hold the expected values.
 
-### [samber/lo](https://github.com/samber/lo)
-A collection of functional utilities for Go, inspired by Lodash.
+```go
+tests := []struct{
+  give string
+  // ...
+}{
+  // ...
+}
 
-### [samber/do](https://github.com/samber/do)
-A lightweight dependency injection framework for Go.
+for _, tt := range tests {
+  tt := tt // for t.Parallel
+  t.Run(tt.give, func(t *testing.T) {
+    t.Parallel()
+    // ...
+  })
+}
+```
 
-### [json-iterator/go](https://github.com/json-iterator/go)
-A high-performance 100% compatible drop-in replacement of "encoding/json".
+In the example above, we must declare a `tt` variable scoped to the loop
+iteration because of the use of `t.Parallel()` below.
+If we do not do that, most or all tests will receive an unexpected value for
+`tt`, or a value that changes as they're running.
 
-### [uber-go/zap](https://github.com/uber-go/zap)
-A fast, structured, and leveled logging library for Go.
+## Error Handling
 
-### [uber-go/automaxprocs](https://github.com/uber-go/automaxprocs)
-Automatically sets `GOMAXPROCS` to match the container CPU quota.
+The error message must be in all lowercase letters. This is consistent with the Go standard library and helps
+maintain a uniform style across the codebase.
 
-### [destel/rill](https://github.com/destel/rill)
-Go toolkit for clean, composable, channel-based concurrency.
+### Error Types
 
-### [go-resty/resty](https://github.com/go-resty/resty)
-A simple and powerful HTTP client for Go.
+There are few options for declaring errors.
+Consider the following before picking the option best suited for your use case.
 
-### [go-playground/validator](https://github.com/go-playground/validator)
-A comprehensive and fast validation library for Go structs and fields.
+- Does the caller need to match the error so that they can handle it?
+  If yes, we must support the [`errors.Is`](https://pkg.go.dev/errors#Is) or [`errors.As`](https://pkg.go.dev/errors#As) functions
+  by declaring a top-level error variable or a custom type.
+- Is the error message a static string,
+  or is it a dynamic string that requires contextual information?
+  For the former, we can use [`errors.New`](https://pkg.go.dev/errors#New), but for the latter we must
+  use [`fmt.Errorf`](https://pkg.go.dev/fmt#Errorf) or a custom error type.
+- Are we propagating a new error returned by a downstream function?
+  If so, see the [section on error wrapping](#error-wrapping).
 
 
-## Pre-Production Checklist
+<table>
+  <thead>
+    <tr>
+      <th>Error matching?</th>
+      <th>Error Message</th>
+      <th>Guidance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>No</td>
+      <td>static</td>
+      <td><a href="https://pkg.go.dev/errors#New" target="_blank" rel="noopener noreferrer"><code>errors.New</code></a></td>
+    </tr>
+    <tr>
+      <td>No</td>
+      <td>dynamic</td>
+      <td><a href="https://pkg.go.dev/fmt#Errorf" target="_blank" rel="noopener noreferrer"><code>fmt.Errorf</code></a></td>
+    </tr>
+    <tr>
+      <td>Yes</td>
+      <td>static</td>
+      <td>top-level <code>var</code> with <a href="https://pkg.go.dev/errors#New" target="_blank" rel="noopener noreferrer"><code>errors.New</code></a></td>
+    </tr>
+    <tr>
+      <td>Yes</td>
+      <td>dynamic</td>
+      <td>custom <code>error</code> type</td>
+    </tr>
+  </tbody>
+</table>
+
+
+For example,
+use [`errors.New`](https://pkg.go.dev/errors#New) for an error with a static string.
+Export this error as a variable to support matching it with `errors.Is`
+if the caller needs to match and handle this error.
+
+<table>
+<thead><tr><th className="text-center">No error matching</th><th className="text-center">Error matching</th></tr></thead>
+<tbody>
+<tr><td>
+
+```go
+// package foo
+
+func Open() error {
+  return errors.New("could not open")
+}
+
+// package bar
+
+if err := foo.Open(); err != nil {
+  // Can't handle the error.
+  panic("unknown error")
+}
+```
+
+</td><td>
+
+```go
+// package foo
+
+var ErrCouldNotOpen = errors.New("could not open")
+
+func Open() error {
+  return ErrCouldNotOpen
+}
+
+// package bar
+
+if err := foo.Open(); err != nil {
+  if errors.Is(err, foo.ErrCouldNotOpen) {
+    // handle the error
+  } else {
+    panic("unknown error")
+  }
+}
+```
+
+</td></tr>
+</tbody></table>
+
+For an error with a dynamic string,
+use [`fmt.Errorf`](https://pkg.go.dev/fmt#Errorf) if the caller does not need to match it,
+and a custom `error` if the caller does need to match it.
+
+<table>
+<thead><tr><th className="text-center">No error matching</th><th className="text-center">Error matching</th></tr></thead>
+<tbody>
+<tr><td>
+
+```go
+// package foo
+
+func Open(file string) error {
+  return fmt.Errorf("file %q not found", file)
+}
+
+// package bar
+
+if err := foo.Open("testfile.txt"); err != nil {
+  // Can't handle the error.
+  panic("unknown error")
+}
+```
+
+</td><td>
+
+```go
+// package foo
+
+type NotFoundError struct {
+  File string
+}
+
+func (e *NotFoundError) Error() string {
+  return fmt.Sprintf("file %q not found", e.File)
+}
+
+func Open(file string) error {
+  return &NotFoundError{File: file}
+}
+
+
+// package bar
+
+if err := foo.Open("testfile.txt"); err != nil {
+  var notFound *NotFoundError
+  if errors.As(err, &notFound) {
+    // handle the error
+  } else {
+    panic("unknown error")
+  }
+}
+```
+
+</td></tr>
+</tbody></table>
+
+Note that if you export error variables or types from a package,
+they will become part of the public API of the package.
+
+### Error Wrapping
+
+There are three main options for propagating errors if a call fails:
+
+- return the original error as-is
+- add context with `fmt.Errorf` and the `%w` verb
+
+Return the original error as-is if there is no additional context to add.
+This maintains the original error type and message.
+This is well suited for cases when the underlying error message
+has sufficient information to track down where it came from.
+
+Otherwise, add context to the error message where possible
+so that instead of a vague error such as "connection refused",
+you get more useful errors such as "call service foo: connection refused".
+
+Use `fmt.Errorf` and `%w` to add context to your errors,
+
+- Use `%w` if the caller should have access to the underlying error.
+  This is a good default for most wrapped errors,
+  but be aware that callers may begin to rely on this behavior.
+  So for cases where the wrapped error is a known `var` or type,
+  document and test it as part of your function's contract.
+
+When adding context to returned errors, keep the context succinct by avoiding
+phrases like "failed to", which state the obvious and pile up as the error
+percolates up through the stack:
+
+<table>
+<thead><tr><th className="text-center">Bad</th><th className="text-center">Good</th></tr></thead>
+<tbody>
+<tr><td>
+
+```go
+s, err := store.New()
+if err != nil {
+    return fmt.Errorf(
+        "failed to create new store: %w", err)
+}
+```
+
+</td><td>
+
+```go
+s, err := store.New()
+if err != nil {
+    return fmt.Errorf(
+        "new store: %w", err)
+}
+```
+
+</td></tr><tr><td>
+
+```plain
+failed to x: failed to y: failed to create new store: the error
+```
+
+</td><td>
+
+```plain
+x: y: new store: the error
+```
+
+</td></tr>
+</tbody></table>
+
+However once the error is sent to another system, it should be clear the
+message is an error (e.g. an `err` tag or "Failed" prefix in logs).
+
+See also [Don't just check errors, handle them gracefully](https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully).
+
+### Error Naming
+
+For error values stored as global variables,
+use the prefix `Err` or `err` depending on whether they're exported.
+This guidance supersedes the [Prefix Unexported Globals with _](#prefix-unexported-globals-with-_).
+
+```go
+var (
+  // The following two errors are exported
+  // so that users of this package can match them
+  // with errors.Is.
+
+  ErrBrokenLink = errors.New("link is broken")
+  ErrCouldNotOpen = errors.New("could not open")
+
+  // This error is not exported because
+  // we don't want to make it part of our public API.
+  // We may still use it inside the package
+  // with errors.Is.
+
+  errNotFound = errors.New("not found")
+)
+```
+
+For custom error types, use the suffix `Error` instead.
+
+```go
+// Similarly, this error is exported
+// so that users of this package can match it
+// with errors.As.
+
+type NotFoundError struct {
+  File string
+}
+
+func (e *NotFoundError) Error() string {
+  return fmt.Sprintf("file %q not found", e.File)
+}
+
+// And this error is not exported because
+// we don't want to make it part of the public API.
+// We can still use it inside the package
+// with errors.As.
+
+type resolveError struct {
+  Path string
+}
+
+func (e *resolveError) Error() string {
+  return fmt.Sprintf("resolve %q", e.Path)
+}
+```
+
+### Handle Errors Once
+
+When a caller receives an error from a callee,
+it can handle it in a variety of different ways
+depending on what it knows about the error.
+
+These include, but not are limited to:
+
+- if the callee contract defines specific errors,
+  matching the error with `errors.Is` or `errors.As`
+  and handling the branches differently
+- if the error is recoverable,
+  logging the error and degrading gracefully
+- if the error represents a domain-specific failure condition,
+  returning a well-defined error
+- returning the error, either [wrapped](#error-wrapping) or verbatim
+
+Regardless of how the caller handles the error,
+it should typically handle each error only once.
+The caller should not, for example, log the error and then return it,
+because *its* callers may handle the error as well.
+
+For example, consider the following cases:
+
+<table>
+<thead><tr><th className="text-center">Description</th><th className="text-center">Code</th></tr></thead>
+<tbody>
+<tr><td>
+
+**Bad**: Log the error and return it
+
+Callers further up the stack will likely take a similar action with the error.
+Doing so causing a lot of noise in the application logs for little value.
+
+</td><td>
+
+```go
+u, err := getUser(id)
+if err != nil {
+  // BAD: See description
+  log.Printf("Could not get user %q: %v", id, err)
+  return err
+}
+```
+
+</td></tr>
+<tr><td>
+
+**Good**: Wrap the error and return it
+
+Callers further up the stack will handle the error.
+Use of `%w` ensures they can match the error with `errors.Is` or `errors.As`
+if relevant.
+
+</td><td>
+
+```go
+u, err := getUser(id)
+if err != nil {
+  return fmt.Errorf("get user %q: %w", id, err)
+}
+```
+
+</td></tr>
+<tr><td>
+
+**Good**: Log the error and degrade gracefully
+
+If the operation isn't strictly necessary,
+we can provide a degraded but unbroken experience
+by recovering from it.
+
+</td><td>
+
+```go
+if err := emitMetrics(); err != nil {
+  // Failure to write metrics should not
+  // break the application.
+  log.Printf("Could not emit metrics: %v", err)
+}
+
+```
+
+</td></tr>
+<tr><td>
+
+**Good**: Match the error and degrade gracefully
+
+If the callee defines a specific error in its contract,
+and the failure is recoverable,
+match on that error case and degrade gracefully.
+For all other cases, wrap the error and return it.
+
+Callers further up the stack will handle other errors.
+
+</td><td>
+
+```go
+tz, err := getUserTimeZone(id)
+if err != nil {
+  if errors.Is(err, ErrUserNotFound) {
+    // User doesn't exist. Use UTC.
+    tz = time.UTC
+  } else {
+    return fmt.Errorf("get user %q: %w", id, err)
+  }
+}
+```
+
+</td></tr>
+</tbody></table>
+
+## Pre-Production Check
 
 - ✅ **Optimize CPU Utilization**: If running in a containerized environment, integrate [`automaxprocs`](https://github.com/uber-go/automaxprocs) to automatically adjust `GOMAXPROCS` based on available CPU resources.
 - ✅ **Health Checks**: Ensure proper configuration of **liveness** and **readiness** probes in Kubernetes to improve service reliability and automated recovery.
@@ -532,10 +1135,3 @@ A comprehensive and fast validation library for Go structs and fields.
 - ✅ **Logging, Monitoring & Alerts**: Define structured logs, alerts, and metrics to track application health and performance.
 - ✅ **Escape Analysis**: Review escape analysis reports to identify variables that unnecessarily escape to the heap, optimizing memory usage.
 - ✅ **Profiling & Leak Detection**: Use `pprof` for CPU and memory profiling to detect performance bottlenecks and memory leaks before deployment.
-
-## Other Resources
-
-- [Uber Go Style](https://github.com/uber-go/guide/blob/master/style.md)
-- [Effective Go](https://go.dev/doc/effective_go)
-- [100 Go Mistakes](https://www.oreilly.com/library/view/100-go-mistakes/9781617299599/)
-
