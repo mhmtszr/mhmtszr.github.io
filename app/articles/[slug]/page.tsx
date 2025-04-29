@@ -6,6 +6,7 @@ import { Calendar } from 'lucide-react'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import { CodeCopyWrapper } from '@/components/ui/code-copy-wrapper'
+import { ScrollToHash } from '@/components/ui/ScrollToHash'
 
 interface ArticlePageProps {
   params: Promise<{
@@ -86,6 +87,7 @@ export default async function ArticlePage(
 
   return (
     <article className="container py-8">
+      <ScrollToHash />
       <div className="flex flex-col gap-4">
         {article.meta.image && (
           <div className="relative w-full flex items-center justify-center mb-6">
@@ -100,18 +102,20 @@ export default async function ArticlePage(
           </div>
         )}
         <h1 className="text-4xl font-bold">{article.meta.title}</h1>
-        <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-muted-foreground" />
-          <time className="text-sm text-muted-foreground">
-            {new Date(article.meta.date).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            })}
-          </time>
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 text-muted-foreground" />
+            <time className="text-sm text-muted-foreground">
+              {new Date(article.meta.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+          </div>
         </div>
         {article.meta.tags && article.meta.tags.length > 0 && (
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             {article.meta.tags.map((tag) => (
               <Badge key={tag} variant="secondary">
                 {tag}

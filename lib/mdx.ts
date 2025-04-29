@@ -3,6 +3,8 @@ import fs from 'fs'
 import path from 'path'
 import { compileMDX } from 'next-mdx-remote/rsc'
 import rehypePrettyCode from 'rehype-pretty-code'
+import rehypeSlug from 'rehype-slug'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 
 // Configure for static generation
 export const dynamic = 'force-static'
@@ -78,7 +80,14 @@ export async function getArticleBySlug(slug: string): Promise<Article> {
       options: {
         parseFrontmatter: true,
         mdxOptions: {
-          rehypePlugins: [[rehypePrettyCode, prettyCodeOptions]],
+          rehypePlugins: [
+            rehypeSlug,
+            [
+              rehypeAutolinkHeadings,
+              { behavior: 'append' }
+            ],
+            [rehypePrettyCode, prettyCodeOptions]
+          ],
         }
       }
     })
