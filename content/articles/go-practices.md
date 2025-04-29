@@ -443,6 +443,7 @@ parameter to avoid heap allocation.
 Do not create byte slices from a fixed string repeatedly. Instead, perform the
 conversion once and capture the result.
 
+<div className="overflow-x-auto my-6">
 <table>
 <thead><tr><th className="text-center">Bad</th><th className="text-center">Good</th></tr></thead>
 <tbody>
@@ -478,6 +479,7 @@ BenchmarkGood-4  500000000   3.25 ns/op
 
 </td></tr>
 </tbody></table>
+</div>
 
 ## Patterns
 
@@ -492,6 +494,7 @@ Use this pattern for optional arguments in constructors and other public APIs
 that you foresee needing to expand, especially if you already have three or
 more arguments on those functions.
 
+<div className="overflow-x-auto my-6">
 <table>
 <thead><tr><th className="text-center">Bad</th><th className="text-center">Good</th></tr></thead>
 <tbody>
@@ -565,6 +568,7 @@ db.Open(
 
 </td></tr>
 </tbody></table>
+</div>
 
 Our suggested way of implementing this pattern is with an `Option` interface
 that holds an unexported method, recording options on an unexported `options`
@@ -747,37 +751,39 @@ Consider the following before picking the option best suited for your use case.
   If so, see the [section on error wrapping](#error-wrapping).
 
 
-<table>
-  <thead>
-    <tr>
-      <th>Error matching?</th>
-      <th>Error Message</th>
-      <th>Guidance</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>No</td>
-      <td>static</td>
-      <td><a href="https://pkg.go.dev/errors#New" target="_blank" rel="noopener noreferrer"><code>errors.New</code></a></td>
-    </tr>
-    <tr>
-      <td>No</td>
-      <td>dynamic</td>
-      <td><a href="https://pkg.go.dev/fmt#Errorf" target="_blank" rel="noopener noreferrer"><code>fmt.Errorf</code></a></td>
-    </tr>
-    <tr>
-      <td>Yes</td>
-      <td>static</td>
-      <td>top-level <code>var</code> with <a href="https://pkg.go.dev/errors#New" target="_blank" rel="noopener noreferrer"><code>errors.New</code></a></td>
-    </tr>
-    <tr>
-      <td>Yes</td>
-      <td>dynamic</td>
-      <td>custom <code>error</code> type</td>
-    </tr>
-  </tbody>
-</table>
+<div className="overflow-x-auto my-6">
+  <table>
+    <thead>
+      <tr>
+        <th className="text-center">Error matching?</th>
+        <th className="text-center">Error Message</th>
+        <th className="text-center">Guidance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>No</td>
+        <td>static</td>
+        <td><a href="https://pkg.go.dev/errors#New" target="_blank" rel="noopener noreferrer"><code>errors.New</code></a></td>
+      </tr>
+      <tr>
+        <td>No</td>
+        <td>dynamic</td>
+        <td><a href="https://pkg.go.dev/fmt#Errorf" target="_blank" rel="noopener noreferrer"><code>fmt.Errorf</code></a></td>
+      </tr>
+      <tr>
+        <td>Yes</td>
+        <td>static</td>
+        <td>top-level <code>var</code> with <a href="https://pkg.go.dev/errors#New" target="_blank" rel="noopener noreferrer"><code>errors.New</code></a></td>
+      </tr>
+      <tr>
+        <td>Yes</td>
+        <td>dynamic</td>
+        <td>custom <code>error</code> type</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 
 For example,
@@ -785,6 +791,7 @@ use [`errors.New`](https://pkg.go.dev/errors#New) for an error with a static str
 Export this error as a variable to support matching it with `errors.Is`
 if the caller needs to match and handle this error.
 
+<div className="overflow-x-auto my-6">
 <table>
 <thead><tr><th className="text-center">No error matching</th><th className="text-center">Error matching</th></tr></thead>
 <tbody>
@@ -829,11 +836,13 @@ if err := foo.Open(); err != nil {
 
 </td></tr>
 </tbody></table>
+</div>
 
 For an error with a dynamic string,
 use [`fmt.Errorf`](https://pkg.go.dev/fmt#Errorf) if the caller does not need to match it,
 and a custom `error` if the caller does need to match it.
 
+<div className="overflow-x-auto my-6">
 <table>
 <thead><tr><th className="text-center">No error matching</th><th className="text-center">Error matching</th></tr></thead>
 <tbody>
@@ -886,6 +895,7 @@ if err := foo.Open("testfile.txt"); err != nil {
 
 </td></tr>
 </tbody></table>
+</div>
 
 Note that if you export error variables or types from a package,
 they will become part of the public API of the package.
@@ -918,6 +928,7 @@ When adding context to returned errors, keep the context succinct by avoiding
 phrases like "failed to", which state the obvious and pile up as the error
 percolates up through the stack:
 
+<div className="overflow-x-auto my-6">
 <table>
 <thead><tr><th className="text-center">Bad</th><th className="text-center">Good</th></tr></thead>
 <tbody>
@@ -955,6 +966,7 @@ x: y: new store: the error
 
 </td></tr>
 </tbody></table>
+</div>
 
 However once the error is sent to another system, it should be clear the
 message is an error (e.g. an `err` tag or "Failed" prefix in logs).
@@ -1038,6 +1050,7 @@ because *its* callers may handle the error as well.
 
 For example, consider the following cases:
 
+<div className="overflow-x-auto my-6">
 <table>
 <thead><tr><th className="text-center">Description</th><th className="text-center">Code</th></tr></thead>
 <tbody>
@@ -1125,6 +1138,7 @@ if err != nil {
 
 </td></tr>
 </tbody></table>
+</div>
 
 ## Pre-Production Check
 
