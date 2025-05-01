@@ -187,10 +187,16 @@ export function TableOfContents() {
                           e.preventDefault()
                           scrollToSection(item.id)
                         }}
-                        className={`block py-1 px-2 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-800 ${
+                        className={`flex items-center gap-2 py-1 px-2 rounded text-sm hover:bg-gray-100 dark:hover:bg-gray-800 ${
                           activeId === item.id
                             ? "bg-primary/10 text-primary font-medium border-l-2 border-primary"
                             : "text-gray-700 dark:text-gray-300"
+                        } ${
+                          item.level === 1 
+                            ? "font-semibold text-base border-b border-gray-200 dark:border-gray-700 pb-2 mb-1" 
+                            : item.level === 2 
+                            ? "font-medium text-sm before:content-['•'] before:text-gray-400 before:mr-1"
+                            : "font-normal text-sm opacity-90 before:content-['◦'] before:text-gray-400 before:mr-1"
                         }`}
                       >
                         {item.text}
