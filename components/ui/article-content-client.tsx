@@ -7,6 +7,8 @@ import { CodeCopyWrapper } from '@/components/ui/code-copy-wrapper'
 import { ScrollToHash } from '@/components/ui/ScrollToHash'
 import { ArticleImageEnhancer } from '@/components/ui/article-image-enhancer'
 import { TableOfContents } from '@/components/ui/table-of-contents'
+import { HeaderLinks } from '@/components/ui/header-link'
+import { Toaster } from 'sonner'
 
 interface ArticleContentProps {
   article: any
@@ -17,6 +19,8 @@ export function ArticleContentClient({ article }: ArticleContentProps) {
     <article className="container py-8">
       <ScrollToHash />
       <TableOfContents />
+      <HeaderLinks />
+      <Toaster position="bottom-right" />
       <div className="flex flex-col gap-4">
         {article.meta.image && (
           <div className="relative w-full flex items-center justify-center mb-6">

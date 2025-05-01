@@ -402,3 +402,23 @@ pre > code.has-grid {
   font-weight: 500;
   border-left: 2px solid hsl(var(--primary));
 }
+
+/* Header link styling */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  position: relative;
+  scroll-margin-top: 5rem;
+}
+
+.prose h1:hover .header-link-container,
+.prose h2:hover .header-link-container,
+.prose h3:hover .header-link-container,
+.prose h4:hover .header-link-container,
+.prose h5:hover .header-link-container,
+.prose h6:hover .header-link-container {
+  opacity: 1;
+}
