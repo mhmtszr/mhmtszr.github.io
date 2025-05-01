@@ -15,7 +15,7 @@ export function TableOfContents() {
   const [tocItems, setTocItems] = useState<TOCItem[]>([])
   const [activeId, setActiveId] = useState<string>("")
   const observer = useRef<IntersectionObserver | null>(null)
-  const [buttonPosition, setButtonPosition] = useState({ left: '20px' })
+  const [headerPosition, setHeaderPosition] = useState({ top: '4rem', left: '1rem' })
 
   // Extract headings from the article and calculate button position
   useEffect(() => {
@@ -24,10 +24,23 @@ export function TableOfContents() {
 
     // Calculate button position based on article content position
     const updateButtonPosition = () => {
+      // For mobile, position below the navbar
+      if (window.innerWidth < 768) {
+        setHeaderPosition({
+          top: '4rem', // Keep mobile position below navbar
+          left: '1rem'
+        })
+        return
+      }
+
+      // For desktop, we'll align with the container
       const container = document.querySelector('.container')
       if (container) {
         const rect = container.getBoundingClientRect()
-        setButtonPosition({ left: `${Math.max(20, rect.left + 20)}px` })
+        setHeaderPosition({
+          top: '1rem', // Higher position for desktop
+          left: `${Math.max(16, rect.left)}px`
+        })
       }
     }
 
@@ -105,14 +118,15 @@ export function TableOfContents() {
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating button at top left */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed z-30 flex items-center justify-center p-3 rounded-full shadow-md bg-primary text-white bottom-20 hover:bg-primary/90 transition-all duration-300"
-        style={{ left: buttonPosition.left }}
+        className="fixed z-40 flex items-center justify-center gap-1 px-3 py-2 md:px-2 md:py-1.5 rounded-md bg-background/95 shadow-md border border-border hover:bg-accent hover:text-accent-foreground text-foreground/80 transition-all duration-200"
+        style={{ top: headerPosition.top, left: headerPosition.left }}
         aria-label="Table of Contents"
       >
-        {isOpen ? <X size={20} /> : <List size={20} />}
+        <List size={16} className="md:w-4 md:h-4" />
+        <span className="text-sm md:text-xs font-medium">Table of Contents</span>
       </button>
       
       {/* TOC Sidebar */}
@@ -132,7 +146,7 @@ export function TableOfContents() {
             <motion.div
               initial={{ 
                 opacity: 0,
-                x: -50 
+                x: 50 
               }}
               animate={{ 
                 opacity: 1,
@@ -140,7 +154,7 @@ export function TableOfContents() {
               }}
               exit={{ 
                 opacity: 0,
-                x: -50 
+                x: 50 
               }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="fixed top-0 right-0 z-40 h-full w-64 md:w-72 bg-white dark:bg-gray-900 shadow-xl overflow-y-auto p-4"
