@@ -1,7 +1,7 @@
 ---
 title: "Go Practices"
 description: "Go practices, patterns, and solutions for better code quality."
-date: "2024-04-28"
+date: "2025-04-28"
 image: "/article/go-practices/preview.png"
 tags: ["Go"]
 ---
@@ -88,7 +88,7 @@ By integrating `automaxprocs`, we can achieve:
 - **Improved stability** in multi-tenant Kubernetes clusters.
 - **Automatic scaling** based on defined resource constraints without manual configuration.
 
-### Implementation
+#### Implementation
 
 To enable `automaxprocs`, simply import the package in your application:
 
