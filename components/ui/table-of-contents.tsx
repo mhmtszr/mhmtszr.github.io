@@ -159,7 +159,7 @@ export function TableOfContents() {
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="fixed top-0 right-0 z-40 h-full w-64 md:w-72 bg-white dark:bg-gray-900 shadow-xl overflow-y-auto p-4"
             >
-              <div className="sticky top-0 bg-white dark:bg-gray-900 pt-4 pb-2 border-b mb-3 flex justify-between items-center">
+              <div className="sticky top-0 bg-white dark:bg-gray-900 pt-4 pb-2 mb-3 flex justify-between items-center">
                 <h3 className="text-lg font-bold">Table of Contents</h3>
                 <button
                   onClick={() => setIsOpen(false)}
