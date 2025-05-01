@@ -9,43 +9,6 @@ tags: ["Go"]
 
 These practices are based on my personal experiences and opinions. I am always open to better suggestions and would love to hear your thoughts for improvement!
 
-## Table of Contents
-- [Folder Structure](#folder-structure)
-  - [pkg](#pkg)
-  - [internal](#internal)
-  - [container](#container)
-- [Performance](#performance)
-  - [Use Automaxprocs for GOMAXPROCS](#use-automaxprocs-for-gomaxprocs)
-  - [Optimizing Struct Memory Layout](#optimizing-struct-memory-layout)
-  - [Use GOMEMLIMIT Instead of GOGC](#use-gomemlimit-instead-of-gogc)
-  - [Use Goroutine Pool by Using ants](#use-goroutine-pool-by-using-ants)
-  - [Avoid Large Value Copies by Using Pointers](#avoid-large-value-copies-by-using-pointers)
-  - [Use fiber for Web Framework](#use-fiber-for-web-framework)
-  - [Use unsafe Package to String Byte Conversion without Copying](#use-unsafe-package-to-string-byte-conversion-without-copying)
-  - [Use bytedance/sonic instead of encoding/json](#use-bytedancesonic-instead-of-encodingjson)
-  - [Use sync.Pool to reduce heap allocations](#use-syncpool-to-reduce-heap-allocations)
-  - [Prefer strconv over fmt](#prefer-strconv-over-fmt)
-  - [Prefer specifying capacity for slices and maps](#prefer-specifying-capacity-for-slices-and-maps)
-  - [Do not return a pointer from the function](#do-not-return-a-pointer-from-the-function)
-  - [Avoid Repeated String-to-Byte Conversions](#avoid-repeated-string-to-byte-conversions)
-  - [Use Buffered Channels for Better Performance](#use-buffered-channels-for-better-performance)
-- [Patterns](#patterns)
-    - [Functional Options](#functional-options)
-- [Testing](#testing)
-  - [Unit Testing for Usecases](#unit-testing-for-usecases)
-  - [Using Mockery for Mock Generation](#using-mockery-for-mock-generation)
-  - [Using Table-Driven Tests](#using-table-driven-tests)
-  - [Running Tests with the Race Detector](#running-tests-with-the-race-detector)
-  - [Parallel Tests](#parallel-tests)
-  - [Detecting Goroutine Leaks with goleak](#detecting-goroutine-leaks-with-goleak)
-  - [Fuzz Testing](#fuzz-testing)
-- [Error Handling](#error-handling)
-    - [Error Types](#error-types)
-    - [Error Wrapping](#error-wrapping)
-    - [Error Naming](#error-naming)
-    - [Handle Errors Once](#handle-errors-once)
-- [Pre-Production Checklist](#pre-production-checklist)
-
 ## Folder Structure
 
 A well-organized Go project should follow a structured layout:

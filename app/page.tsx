@@ -11,7 +11,7 @@ export default function AboutPage() {
         <div className="space-y-6 text-lg">
           <p>
             Passionate about building scalable systems and solving complex problems. Specializing in distributed
-            systems, cloud architecture, and high-performance applications.
+            systems, and high-performance applications.
           </p>
 
           <p>

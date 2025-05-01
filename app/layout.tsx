@@ -184,7 +184,6 @@ export default function RootLayout({
                 'Distributed Systems',
                 'Software Architecture',
                 'High-Performance Computing',
-                'Cloud Architecture',
                 'System Design'
               ],
               award: [

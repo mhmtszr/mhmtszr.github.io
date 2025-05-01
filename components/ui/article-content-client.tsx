@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { CodeCopyWrapper } from '@/components/ui/code-copy-wrapper'
 import { ScrollToHash } from '@/components/ui/ScrollToHash'
 import { ArticleImageEnhancer } from '@/components/ui/article-image-enhancer'
+import { TableOfContents } from '@/components/ui/table-of-contents'
 
 interface ArticleContentProps {
   article: any
@@ -15,6 +16,7 @@ export function ArticleContentClient({ article }: ArticleContentProps) {
   return (
     <article className="container py-8">
       <ScrollToHash />
+      <TableOfContents />
       <div className="flex flex-col gap-4">
         {article.meta.image && (
           <div className="relative w-full flex items-center justify-center mb-6">

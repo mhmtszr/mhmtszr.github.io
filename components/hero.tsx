@@ -16,7 +16,7 @@ export default function Hero() {
             <div className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
               <p className="mb-4">
                 Passionate about building scalable systems and solving complex problems. Specializing in distributed
-                systems, cloud architecture, and high-performance applications.
+                systems, and high-performance applications.
               </p>
               <p className="mb-4">
                 Graduated from Hacettepe University in Computer Science with a 3.72/4.00 GPA, ranking 3rd highest in

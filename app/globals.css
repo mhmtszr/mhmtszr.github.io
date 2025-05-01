@@ -374,3 +374,31 @@ pre > code.has-grid {
   outline: none !important;
   box-shadow: none !important;
 }
+
+/* Table of Contents styles */
+.toc ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.toc ul li {
+  margin-bottom: 0.25rem;
+}
+
+.toc ul li a {
+  display: block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.toc ul li a:hover {
+  background-color: rgba(var(--primary), 0.05);
+}
+
+.toc ul li a.active {
+  background-color: rgba(var(--primary), 0.1);
+  color: hsl(var(--primary));
+  font-weight: 500;
+  border-left: 2px solid hsl(var(--primary));
+}

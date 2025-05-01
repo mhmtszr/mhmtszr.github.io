@@ -9,7 +9,7 @@ export default function Footer() {
           <div>
             <h3 className="text-xl font-bold mb-4">Mehmet Sezer</h3>
             <p className="text-gray-400">
-              Senior Software Engineer specializing in distributed systems and cloud architecture.
+              Senior Software Engineer specializing in distributed systems and database internals.
             </p>
           </div>
 

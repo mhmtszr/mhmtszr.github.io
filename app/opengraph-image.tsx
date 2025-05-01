@@ -81,7 +81,7 @@ export default async function Image() {
               lineHeight: 1.4,
             }}
           >
-            Specializing in distributed systems and cloud architecture
+            Specializing in distributed systems and database internals
           </div>
         </div>
       </div>
