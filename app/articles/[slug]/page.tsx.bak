@@ -1,4 +1,5 @@
-// Server Component (no "use client" directive)
+// This is a server component - NO "use client" directive
+
 import { getArticleBySlug, getAllArticles } from '@/lib/mdx'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
@@ -6,11 +7,9 @@ import { ArticleContentClient } from '@/components/ui/article-content-client'
 
 // Generate metadata for the article page
 export async function generateMetadata(
-  { params }: { params: Promise<{ slug: string }> | { slug: string } }
+  { params }: { params: { slug: string } }
 ): Promise<Metadata> {
-  // Ensure params are awaited before accessing
-  const resolvedParams = await Promise.resolve(params)
-  const { slug } = resolvedParams
+  const { slug } = params
   
   try {
     const article = await getArticleBySlug(slug)
@@ -50,49 +49,31 @@ export async function generateMetadata(
       },
     }
   } catch (error) {
-    console.error('Error generating metadata:', error)
     return {}
   }
 }
 
 // Generate all possible article slugs at build time
 export async function generateStaticParams() {
-  try {
-    const articles = await getAllArticles()
-    return articles.map((article) => ({
-      slug: article.slug,
-    }))
-  } catch (error) {
-    console.error('Error generating static params:', error)
-    return []
-  }
+  const articles = await getAllArticles()
+  return articles.map((article) => ({
+    slug: article.slug,
+  }))
 }
 
 // Server component for data fetching
-export default async function ArticlePage({ 
-  params 
-}: { 
-  params: Promise<{ slug: string }> | { slug: string } 
-}) {
-  // Ensure params are awaited before accessing
-  const resolvedParams = await Promise.resolve(params)
-  const { slug } = resolvedParams
+export default async function ArticlePage({ params }: { params: { slug: string } }) {
+  const { slug } = params
   
   if (!slug) {
     notFound()
   }
 
-  try {
-    const article = await getArticleBySlug(slug)
-    
-    if (!article) {
-      notFound()
-    }
+  const article = await getArticleBySlug(slug)
   
-    // Render the client component with the article data
-    return <ArticleContentClient article={article} />
-  } catch (error) {
-    console.error(`Error rendering article page for slug: ${slug}`, error)
+  if (!article) {
     notFound()
   }
+
+  return <ArticleContentClient article={article} />
 } 

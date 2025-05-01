@@ -361,3 +361,16 @@ pre > code.has-grid {
 .dark pre > code.has-grid {
   background-image: linear-gradient(to bottom, transparent 50%, rgba(255, 255, 255, 0.02) 50%);
 }
+
+/* Remove highlight from clickable images */
+.no-highlight {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.no-highlight:focus,
+.no-highlight:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
