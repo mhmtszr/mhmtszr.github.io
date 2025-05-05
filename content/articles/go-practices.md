@@ -444,6 +444,84 @@ WebSockets, and routing optimizations.
   <img src="/article/go-practices/img_4.png" width="49%" alt="Go Practice Image 4"/>
 </div>
 
+### Use Concurrent Swiss Map for High-Performance Thread-Safe Maps
+
+When working with maps in concurrent environments, the standard approach is to use either a map with a mutex/RWMutex or `sync.Map`. However, both solutions have performance limitations in high-concurrency scenarios.
+
+[Concurrent Swiss Map](https://github.com/mhmtszr/concurrent-swiss-map) is a high-performance, thread-safe generic concurrent hash map implementation that delivers exceptional performance in concurrent access scenarios.
+
+**Key Features:**
+- Thread-safe with minimal lock contention through map sharding
+- High-performance for both read and write operations
+- Lower memory usage compared to other concurrent map implementations
+- Generic support (Go 1.18+)
+- Simple API similar to built-in maps
+
+**Architecture:**
+
+<div className="text-center my-6">
+  <img src="/article/go-practices/concurrent-swiss-map-arch.png" className="mx-auto max-w-full h-auto" alt="Concurrent Swiss Map Architecture"/>
+</div>
+
+The diagram illustrates how the Concurrent Swiss Map divides a single map into multiple shards, with each shard protected by its own mutex. This approach significantly reduces lock contention in multi-threaded applications.
+
+**Example Usage:**
+
+```go
+package main
+
+import (
+	"hash/fnv"
+
+	csmap "github.com/mhmtszr/concurrent-swiss-map"
+)
+
+func main() {
+	myMap := csmap.New[string, int](
+		// Set the number of map shards (default is 32)
+		csmap.WithShardCount[string, int](32),
+
+		// Optional custom hasher (defaults to built-in maphash)
+		csmap.WithCustomHasher[string, int](func(key string) uint64 {
+			hash := fnv.New64a()
+			hash.Write([]byte(key))
+			return hash.Sum64()
+		}),
+
+		// Set initial capacity
+		csmap.WithSize[string, int](1000),
+	)
+
+	// Basic operations
+	myMap.Store("key", 42)           // Store a value
+	value, exists := myMap.Load("key") // Load a value
+	count := myMap.Count()           // Get item count
+	myMap.Delete("key")             // Delete a key
+
+	// Iterate over all entries
+	myMap.Range(func(key string, value int) (stop bool) {
+		// Process each key-value pair
+		return false // Return true to stop iteration
+	})
+}
+```
+
+**Benchmark Results:**
+
+Benchmark tests show that Concurrent Swiss Map outperforms other map implementations in high-concurrency scenarios and uses less memory in all tested scenarios:
+
+<div className="text-center my-6">
+  <img src="/article/go-practices/concurrent-swiss-map-benchmark.png" className="mx-auto max-w-full h-auto" alt="Concurrent Swiss Map Benchmark Results"/>
+</div>
+
+Key findings:
+- Memory usage of the Concurrent Swiss Map is better than other map implementations in all test scenarios
+- In highly concurrent systems, Concurrent Swiss Map is significantly faster than alternatives
+- In systems with few concurrent operations, it offers performance similar to RWMutexMap
+
+The implementation uses a sharding technique that divides the map into multiple segments, each with its own lock, dramatically reducing contention when multiple goroutines access different parts of the map simultaneously.
+
+
 ### Use unsafe Package to String Byte Conversion without Copying
 
 In Go, converting between `string` and `[]byte` typically involves a memory copy. However, since both types internally use
