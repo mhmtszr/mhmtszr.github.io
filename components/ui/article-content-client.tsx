@@ -36,7 +36,7 @@ export function ArticleContentClient({ article }: ArticleContentProps) {
             </div>
           </div>
         )}
-        <h1 className="text-4xl font-bold">{article.meta.title}</h1>
+        <h1 className="text-4xl font-bold dark:text-[#f0f0f5]">{article.meta.title}</h1>
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center gap-2">
             <Calendar className="w-4 h-4 text-muted-foreground" />
@@ -59,7 +59,7 @@ export function ArticleContentClient({ article }: ArticleContentProps) {
           </div>
         )}
       </div>
-      <div className="prose dark:prose-invert max-w-none mt-8">
+      <div className="prose dark:prose-invert max-w-none mt-8 dark:text-[#d1d5db] [&_p]:dark:text-[#d1d5db] [&_h1]:dark:text-[#f0f0f5] [&_h2]:dark:text-[#f0f0f5] [&_h3]:dark:text-[#f0f0f5] [&_h4]:dark:text-[#f0f0f5] [&_h5]:dark:text-[#f0f0f5] [&_h6]:dark:text-[#f0f0f5] [&_li]:dark:text-[#d1d5db] [&_strong]:dark:text-[#f0f0f5] [&_b]:dark:text-[#f0f0f5] [&_em]:dark:text-[#d1d5db] [&_blockquote]:dark:text-[#d1d5db]">
         <CodeCopyWrapper>{article.content}</CodeCopyWrapper>
       </div>
       

@@ -9,18 +9,18 @@ export default function AboutPage() {
         <h1 className="text-3xl font-bold mb-6">About Me 👋</h1>
 
         <div className="space-y-6 text-lg">
-          <p>
+          <p className="dark:text-[#d1d5db]">
             Passionate about building scalable systems and solving complex problems. Specializing in distributed
             systems, and high-performance applications.
           </p>
 
-          <p>
+          <p className="dark:text-[#d1d5db]">
             Graduated from Hacettepe University in Computer Science with a 3.72/4.00 GPA, ranking 3rd highest in both
             the faculty and department.
           </p>
 
-          <p>
-            Senior Software Engineer at <b>Trendyol Group</b>, specializing in designing and building scalable,
+          <p className="dark:text-[#d1d5db]">
+            Senior Software Engineer at <b className="dark:text-[#d1d5db]">Trendyol Group</b>, specializing in designing and building scalable,
             high-performance, and fault-tolerant distributed systems. Skilled in addressing complex challenges in
             microservices architecture and database management while ensuring reliability and efficiency. Actively
             contributes to open-source projects and explores emerging technologies.
@@ -28,7 +28,7 @@ export default function AboutPage() {
 
           <div>
             <h2 className="text-xl font-semibold mb-3">Personal Interests</h2>
-            <p>
+            <p className="dark:text-[#d1d5db]">
               I enjoy playing the piano, exploring diverse cultures through travel, and playing football.
             </p>
           </div>
