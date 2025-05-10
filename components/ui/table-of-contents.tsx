@@ -50,8 +50,8 @@ export function TableOfContents() {
     // Update on resize
     window.addEventListener('resize', updateButtonPosition)
 
-    // Find all headings (h2, h3, h4) in the article
-    const headings = articleContent.querySelectorAll("h2, h3, h4")
+    // Find all headings (h2, h3, h4, h5) in the article
+    const headings = articleContent.querySelectorAll("h2, h3, h4, h5")
     
     const items: TOCItem[] = []
     
@@ -104,8 +104,14 @@ export function TableOfContents() {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
     if (element) {
+      // Scroll to the element
       element.scrollIntoView({ behavior: "smooth" })
       setActiveId(id)
+      
+      // Update the URL hash without causing a page jump
+      const url = new URL(window.location.href)
+      url.hash = id
+      window.history.pushState({}, '', url.toString())
       
       // On mobile, close the TOC after clicking
       if (window.innerWidth < 768) {
@@ -162,7 +168,11 @@ export function TableOfContents() {
               <div className="sticky top-0 bg-white dark:bg-gray-900 pt-4 pb-2 mb-3 flex justify-between items-center">
                 <h3 className="text-lg font-bold">Table of Contents</h3>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsOpen(false);
+                  }}
                   className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                   aria-label="Close Table of Contents"
                 >
@@ -196,7 +206,9 @@ export function TableOfContents() {
                             ? "font-semibold text-base border-b border-gray-200 dark:border-gray-700 pb-2 mb-1" 
                             : item.level === 2 
                             ? "font-medium text-sm before:content-['•'] before:text-gray-400 before:mr-1"
-                            : "font-normal text-sm opacity-90 before:content-['◦'] before:text-gray-400 before:mr-1"
+                            : item.level === 3
+                            ? "font-normal text-sm opacity-90 before:content-['◦'] before:text-gray-400 before:mr-1"
+                            : "font-normal text-sm opacity-80 before:content-['-'] before:text-gray-400 before:mr-1 ml-2"
                         }`}
                       >
                         {item.text}

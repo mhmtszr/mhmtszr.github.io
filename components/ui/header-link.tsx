@@ -46,9 +46,13 @@ export function HeaderLinks() {
         const url = new URL(window.location.href)
         url.hash = header.id
         
+        // Copy to clipboard
         navigator.clipboard.writeText(url.toString()).then(() => {
           // Show success message
           toast.success('Link copied to clipboard')
+          
+          // Update the URL hash without causing a page jump
+          window.history.pushState({}, '', url.toString())
           
           // Briefly show the check icon
           copyIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`
@@ -71,6 +75,14 @@ export function HeaderLinks() {
       header.innerHTML = ''
       
       wrapper.innerHTML = headerContent
+      
+      // Add click handler for the header itself
+      wrapper.addEventListener('click', (e) => {
+        const url = new URL(window.location.href)
+        url.hash = header.id
+        window.history.pushState({}, '', url.toString())
+      })
+      
       header.appendChild(wrapper)
       header.appendChild(linkContainer)
     })
