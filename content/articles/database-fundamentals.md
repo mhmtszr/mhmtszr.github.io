@@ -8,6 +8,10 @@ tags: ["Databases", "Systems Design"]
 
 This article explores the fundamental concepts of database systems, from simple file-based storage to complex distributed architectures. We'll cover the core data structures, algorithms, and design principles that power modern databases, with practical examples and visualizations.
 
+## Who Should Read This
+
+Every software engineer who interacts with databases should understand how they work under the hood. Whether you're using MySQL, PostgreSQL, MongoDB, or Cassandra, knowing the underlying principles will help you make better design decisions, troubleshoot performance issues, and understand architectural trade-offs. This article takes you from simple storage concepts to sophisticated distributed systems patterns, giving you the mental models needed to work effectively with any database technology.
+
 ## Why Do We Need Databases?
 
 Let's start with the simplest possible "database" - a bash script that appends data to a file:
