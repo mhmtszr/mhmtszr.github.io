@@ -90,6 +90,45 @@ But we still have fundamental problems:
 
 These limitations are exactly why we need real database systems with efficient data structures and algorithms.
 
+## Buffer Management and Memory Caching
+
+Reading from disk is slow, so databases maintain an in-memory cache of frequently accessed pages, often called the buffer pool.
+
+<div className="text-center my-4">
+  <img src="/article/database-fundamentals/buffer-pool.png" className="mx-auto max-w-full h-auto" alt="Database Buffer Pool"/>
+  <p className="text-sm text-gray-600 mt-0">Buffer pool architecture showing page table mapping disk pages to memory frames<br/>
+  <span className="text-xs italic">Source: Intel, "Optimizing Write Ahead Logging with Intel Optane Persistent Memory" (https://www.intel.com/content/www/us/en/developer/articles/technical/optimizing-write-ahead-logging-with-intel-optane-persistent-memory.html)</span></p>
+</div>
+
+The buffer pool manages:
+
+1. **Page Table**: Maps page IDs to their locations in memory
+2. **Replacement Policy**: Decides which pages to evict when memory is full (LRU, Clock, etc.)
+3. **Dirty Page Tracking**: Identifies pages that have been modified and need to be written back to disk
+
+### Optimizing Buffer Management
+
+- **Prefetching**: When accessing sequential pages, proactively load the next pages
+- **Scan Sharing**: Multiple queries can share scanned pages
+- **Buffer Pool Bypass**: For one-time large scans, avoid polluting the buffer pool
+
+### Write-Ahead Logging (WAL)
+
+Before we modify pages in memory, we need a way to ensure durability and atomicity in case of crashes. Write-Ahead Logging (WAL) is a technique used by databases to achieve this.
+
+The key principle of WAL is: **Before modifying any data on disk, first record the changes in a log.**
+
+Benefits of WAL:
+1. **Atomicity**: If a transaction is interrupted, we can roll back using the log
+2. **Durability**: Once a transaction commits, its changes are in the log even if the data pages haven't been written to disk
+3. **Performance**: We can batch data page writes while ensuring durability through the log
+
+During crash recovery, the database processes the WAL in three phases:
+1. **Analysis**: Determine which transactions were active at crash time
+2. **Redo**: Replay all changes for committed transactions
+3. **Undo**: Roll back changes for uncommitted transactions
+
+
 ## Storage Engines: The Heart of Database Systems
 
 A storage engine is responsible for organizing data on disk. The two main families of storage engines are:
@@ -626,7 +665,7 @@ func (lsm *LSMTree) Compact() error {
       • High-throughput ingestion systems
     </td>
     <td className="border border-gray-300 px-4 py-2">
-      • Read-heavy OLTP workloads<br/>
+      • Read-heavy workloads<br/>
       • Complex transactional systems<br/>
       • Applications requiring low read latency<br/>
       • Workloads with frequent small updates
@@ -636,43 +675,6 @@ func (lsm *LSMTree) Compact() error {
 </table>
 </div>
 
-## Buffer Management and Memory Caching
-
-Reading from disk is slow, so databases maintain an in-memory cache of frequently accessed pages, often called the buffer pool.
-
-<div className="text-center my-4">
-  <img src="/article/database-fundamentals/buffer-pool.png" className="mx-auto max-w-full h-auto" alt="Database Buffer Pool"/>
-  <p className="text-sm text-gray-600 mt-0">Buffer pool architecture showing page table mapping disk pages to memory frames<br/>
-  <span className="text-xs italic">Source: Intel, "Optimizing Write Ahead Logging with Intel Optane Persistent Memory" (https://www.intel.com/content/www/us/en/developer/articles/technical/optimizing-write-ahead-logging-with-intel-optane-persistent-memory.html)</span></p>
-</div>
-
-The buffer pool manages:
-
-1. **Page Table**: Maps page IDs to their locations in memory
-2. **Replacement Policy**: Decides which pages to evict when memory is full (LRU, Clock, etc.)
-3. **Dirty Page Tracking**: Identifies pages that have been modified and need to be written back to disk
-
-### Optimizing Buffer Management
-
-- **Prefetching**: When accessing sequential pages, proactively load the next pages
-- **Scan Sharing**: Multiple queries can share scanned pages
-- **Buffer Pool Bypass**: For one-time large scans, avoid polluting the buffer pool
-
-### Write-Ahead Logging (WAL)
-
-Before we modify pages in memory, we need a way to ensure durability and atomicity in case of crashes. Write-Ahead Logging (WAL) is a technique used by databases to achieve this.
-
-The key principle of WAL is: **Before modifying any data on disk, first record the changes in a log.**
-
-Benefits of WAL:
-1. **Atomicity**: If a transaction is interrupted, we can roll back using the log
-2. **Durability**: Once a transaction commits, its changes are in the log even if the data pages haven't been written to disk
-3. **Performance**: We can batch data page writes while ensuring durability through the log
-
-During crash recovery, the database processes the WAL in three phases:
-1. **Analysis**: Determine which transactions were active at crash time
-2. **Redo**: Replay all changes for committed transactions
-3. **Undo**: Roll back changes for uncommitted transactions
 
 ## Transaction Processing and Isolation Levels
 
@@ -1145,7 +1147,7 @@ One node is designated as the leader, handling all writes. Writes are propagated
 
 In asynchronous replication systems, replicas may lag behind the leader, causing several consistency problems for clients:
 
-#### Reading Your Own Writes
+##### **Reading Your Own Writes**
 
 If a user writes data to the leader and then tries to read it from a lagging follower, they might not see their own writes.
 
@@ -1158,7 +1160,7 @@ If a user writes data to the leader and then tries to read it from a lagging fol
 **Solution: Read-After-Write Consistency**:
 - Read from the leader
 
-#### Monotonic Reads
+##### **Monotonic Reads**
 
 A user might see data appear and then disappear if they read from different replicas that have different lag.
 
@@ -1173,7 +1175,7 @@ A user might see data appear and then disappear if they read from different repl
 - Session or user-based routing to a specific replica
 - Routing based on a consistent hash of the user ID
 
-#### Consistent Prefix Reads
+##### **Consistent Prefix Reads**
 
 If replicas process writes in different orders, a reader might see events out of order.
 
@@ -1192,59 +1194,81 @@ If replicas process writes in different orders, a reader might see events out of
 
 Several methods are used to implement leader-based replication:
 
-##### **1. Statement-Based Replication**
-
-The leader logs SQL statements (INSERT, UPDATE, DELETE) and sends them to followers to execute.
-
-**Pros**:
-- Compact log entries for simple statements
-- Logical replication independent of storage format
-
-**Cons**:
-- Non-deterministic functions (NOW(), RAND()) produce different values on replicas
-- Order-dependent statements may cause inconsistencies
-- Statements with side effects may not replicate reliably
-
-##### **2. Write-Ahead Log (WAL) Shipping**
-
-The leader sends its low-level storage engine write-ahead log to followers.
-
-**Pros**:
-- Exact reproduction of data structures on followers
-- Complete and detailed replication
-- Used in PostgreSQL and Oracle
-
-**Cons**:
-- Tightly coupled to storage engine internals
-- Cannot run different database versions between leader and followers
-- May require downtime for version upgrades
-
-##### **3. Logical (Row-Based) Log Replication**
-
-The leader creates a logical log of row-level changes that is separate from the storage engine.
-
-**Pros**:
-- Works with any SQL statements
-- Allows different database versions or storage engines
-- Easier for external applications to parse (useful for data warehousing)
-
-**Cons**:
-- Logs may be larger for wide tables
-- Less insight into intent of changes
-
-##### **4. Trigger-Based Replication**
-
-Uses database triggers to capture changes and apply them to different systems.
-
-**Pros**:
-- Flexible filtering and transformation
-- Can replicate between different database systems
-- Can selectively replicate subsets of data
-
-**Cons**:
-- Higher overhead than built-in replication
-- More prone to bugs and limitations
-- Can add significant load to the database
+<div className="overflow-x-auto my-6">
+<table className="w-full">
+<thead>
+  <tr>
+    <th className="border border-gray-300 px-4 py-2">Replication Method</th>
+    <th className="border border-gray-300 px-4 py-2">Description</th>
+    <th className="border border-gray-300 px-4 py-2">Pros</th>
+    <th className="border border-gray-300 px-4 py-2">Cons</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td className="border border-gray-300 px-4 py-2">**Statement-Based Replication**</td>
+    <td className="border border-gray-300 px-4 py-2">The leader logs SQL statements and sends them to followers to execute.<br/><br/>
+    <span className="italic text-xs">Example: `UPDATE users SET name = 'John' WHERE id = 123;`</span></td>
+    <td className="border border-gray-300 px-4 py-2">
+      • Compact log entries for simple statements<br/>
+      • Logical replication independent of storage format
+    </td>
+    <td className="border border-gray-300 px-4 py-2">
+      • Non-deterministic functions (NOW(), RAND()) produce different values on replicas<br/>
+      • Order-dependent statements may cause inconsistencies<br/>
+      • Statements with side effects may not replicate reliably
+    </td>
+  </tr>
+  <tr>
+    <td className="border border-gray-300 px-4 py-2">**Write-Ahead Log (WAL) Shipping**</td>
+    <td className="border border-gray-300 px-4 py-2">The leader sends its low-level storage engine write-ahead log to followers.<br/><br/>
+    <span className="italic text-xs">Example: `XID=12345 UPDATE rel=16385 off=234 len=42 data=...`</span></td>
+    <td className="border border-gray-300 px-4 py-2">
+      • Exact reproduction of data structures on followers<br/>
+      • Complete and detailed replication<br/>
+      • Used in PostgreSQL and Oracle
+    </td>
+    <td className="border border-gray-300 px-4 py-2">
+      • Tightly coupled to storage engine internals<br/>
+      • Cannot run different database versions between leader and followers<br/>
+      • May require downtime for version upgrades
+    </td>
+  </tr>
+  <tr>
+    <td className="border border-gray-300 px-4 py-2">**Logical (Row-Based) Log Replication**</td>
+    <td className="border border-gray-300 px-4 py-2">The leader creates a logical log of row-level changes separate from the storage engine.<br/><br/>
+    <span className="italic text-xs">Example: `table=users, id=123, column=name, old_value='Jim', new_value='John'`</span></td>
+    <td className="border border-gray-300 px-4 py-2">
+      • Works with any SQL statements<br/>
+      • Allows different database versions or storage engines<br/>
+      • Easier for external applications to parse (useful for data warehousing)
+    </td>
+    <td className="border border-gray-300 px-4 py-2">
+      • Logs may be larger for wide tables<br/>
+      • Less insight into intent of changes
+    </td>
+  </tr>
+  <tr>
+    <td className="border border-gray-300 px-4 py-2">**Trigger-Based Replication**</td>
+    <td className="border border-gray-300 px-4 py-2">Uses database triggers to capture changes and apply them to different systems.<br/><br/>
+    <span className="italic text-xs">Example: `CREATE TRIGGER replicate_trigger
+AFTER INSERT OR UPDATE ON source_table
+FOR EACH ROW
+EXECUTE FUNCTION replicate_to_replica();`</span></td>
+    <td className="border border-gray-300 px-4 py-2">
+      • Flexible filtering and transformation<br/>
+      • Can replicate between different database systems<br/>
+      • Can selectively replicate subsets of data
+    </td>
+    <td className="border border-gray-300 px-4 py-2">
+      • Higher overhead than built-in replication<br/>
+      • More prone to bugs and limitations<br/>
+      • Can add significant load to the database
+    </td>
+  </tr>
+</tbody>
+</table>
+</div>
 
 #### Multi-Leader Replication
 
