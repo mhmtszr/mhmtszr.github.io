@@ -398,6 +398,21 @@ pre > code.has-grid {
   box-shadow: none !important;
 }
 
+/* Fix image container and caption styling */
+.prose .text-center {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.prose .text-center img {
+  margin-bottom: 0 !important;
+}
+
+.prose .text-center p {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0 !important;
+}
+
 /* Table of Contents styles */
 .toc ul {
   list-style-type: none;

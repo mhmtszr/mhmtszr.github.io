@@ -149,32 +149,32 @@ While B-Trees are widely used, B+ Trees offer important optimizations for databa
 </thead>
 <tbody>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Data Storage</td>
+    <td className="border border-gray-300 px-4 py-2">**Data Storage**</td>
     <td className="border border-gray-300 px-4 py-2">Data can be stored in both internal and leaf nodes</td>
     <td className="border border-gray-300 px-4 py-2">Data is stored only in leaf nodes; internal nodes contain only keys</td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Leaf Nodes</td>
+    <td className="border border-gray-300 px-4 py-2">**Leaf Nodes**</td>
     <td className="border border-gray-300 px-4 py-2">Not linked to each other</td>
     <td className="border border-gray-300 px-4 py-2">All leaf nodes are linked in a sequential linked list</td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Node Structure</td>
+    <td className="border border-gray-300 px-4 py-2">**Node Structure**</td>
     <td className="border border-gray-300 px-4 py-2">Each node contains keys and data or keys and pointers</td>
     <td className="border border-gray-300 px-4 py-2">Internal nodes: keys and pointers only<br/>Leaf nodes: keys and data</td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Space Efficiency</td>
+    <td className="border border-gray-300 px-4 py-2">**Space Efficiency**</td>
     <td className="border border-gray-300 px-4 py-2">Less efficient as data is stored throughout the tree</td>
     <td className="border border-gray-300 px-4 py-2">More efficient as internal nodes only store keys</td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Range Queries</td>
+    <td className="border border-gray-300 px-4 py-2">**Range Queries**</td>
     <td className="border border-gray-300 px-4 py-2">Less efficient, may require traversing back up the tree</td>
     <td className="border border-gray-300 px-4 py-2">Very efficient due to linked leaf nodes</td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Height</td>
+    <td className="border border-gray-300 px-4 py-2">**Height**</td>
     <td className="border border-gray-300 px-4 py-2">Potentially shorter for the same data</td>
     <td className="border border-gray-300 px-4 py-2">May be slightly taller</td>
   </tr>
@@ -187,9 +187,10 @@ B+ Trees are preferred in most database systems because:
 2. They have better space utilization in internal nodes (more branching factor)
 3. They offer more consistent performance (all data is at the same level)
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/btrees-and-database-indexes.png" className="mx-auto max-w-full h-auto" alt="B-Trees and Database Indexes showing inner and leaf nodes"/>
-  <p className="text-sm text-gray-600 mt-2">B+ Tree structure showing inner nodes with keys/pointers and leaf nodes with actual data</p>
+  <p className="text-sm text-gray-600 mt-2">B+ Tree structure showing inner nodes with keys/pointers and leaf nodes with actual data<br/>
+  <span className="text-xs italic">Source: PlanetScale Blog, "B-trees and database indexes" (https://planetscale.com/blog/btrees-and-database-indexes)</span></p>
 </div>
 
 While B+ Trees excel in many scenarios, they have specific strengths and weaknesses for write-heavy workloads:
@@ -216,8 +217,10 @@ Log-Structured Merge Trees (LSM Trees) take a different approach, optimizing for
 
 ### LSM Tree Architecture
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/lsm-tree.png" className="mx-auto max-w-full h-auto" alt="LSM Tree Architecture"/>
+  <p className="text-sm text-gray-600 mt-0">LSM Tree architecture showing MemTable, WAL, and SSTables<br/>
+  <span className="text-xs italic">Source: Medium, "LSM Trees: The Go-To Data Structure for Databases, Search Engines, and More" (https://medium.com/@dwivedi.ankit21/lsm-trees-the-go-to-data-structure-for-databases-search-engines-and-more-c3a48fa469d2)</span></p>
 </div>
 
 LSM Trees have two main components:
@@ -362,8 +365,10 @@ func (lsm *LSMTree) Read(key string) ([]byte, bool) {
 
 A Bloom filter is a space-efficient probabilistic data structure that tells you if an element is definitely not in a set or might be in a set.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/bloom-filter.png" className="mx-auto max-w-full h-auto" alt="Bloom Filter"/>
+  <p className="text-sm text-gray-600 mt-0">Bloom filter data structure showing set membership testing with hash functions<br/>
+  <span className="text-xs italic">Source: Wikipedia, "Bloom filter" (https://en.wikipedia.org/wiki/Bloom_filter)</span></p>
 </div>
 
 In the illustration above, we see how a Bloom filter works in practice:
@@ -548,7 +553,7 @@ func (lsm *LSMTree) Compact() error {
 </thead>
 <tbody>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Write Performance</td>
+    <td className="border border-gray-300 px-4 py-2">**Write Performance**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Better for high-volume writes<br/>
       • Sequential writes to immutable files<br/>
@@ -561,7 +566,7 @@ func (lsm *LSMTree) Compact() error {
     </td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Read Performance</td>
+    <td className="border border-gray-300 px-4 py-2">**Read Performance**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Must check multiple files (MemTable + SSTables)<br/>
       • Read amplification increases with more SSTables<br/>
@@ -574,7 +579,7 @@ func (lsm *LSMTree) Compact() error {
     </td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Maintenance</td>
+    <td className="border border-gray-300 px-4 py-2">**Maintenance**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Background compaction required<br/>
       • Write stalls during heavy compaction<br/>
@@ -587,7 +592,7 @@ func (lsm *LSMTree) Compact() error {
     </td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Space Efficiency</td>
+    <td className="border border-gray-300 px-4 py-2">**Space Efficiency**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Better overall due to compaction<br/>
       • Removed/updated entries cleaned during compaction<br/>
@@ -600,7 +605,7 @@ func (lsm *LSMTree) Compact() error {
     </td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Crash Recovery</td>
+    <td className="border border-gray-300 px-4 py-2">**Crash Recovery**</td>
     <td className="border border-gray-300 px-4 py-2">
       • WAL (Write-Ahead Log) for durability<br/>
       • SSTables are immutable and consistent<br/>
@@ -613,7 +618,7 @@ func (lsm *LSMTree) Compact() error {
     </td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Ideal Use Cases</td>
+    <td className="border border-gray-300 px-4 py-2">**Ideal Use Cases**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Write-heavy workloads<br/>
       • Time-series data<br/>
@@ -635,9 +640,10 @@ func (lsm *LSMTree) Compact() error {
 
 Reading from disk is slow, so databases maintain an in-memory cache of frequently accessed pages, often called the buffer pool.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/buffer-pool.png" className="mx-auto max-w-full h-auto" alt="Database Buffer Pool"/>
-  <p className="text-sm text-gray-600 mt-2">Buffer pool architecture showing page table mapping disk pages to memory frames</p>
+  <p className="text-sm text-gray-600 mt-0">Buffer pool architecture showing page table mapping disk pages to memory frames<br/>
+  <span className="text-xs italic">Source: Intel, "Optimizing Write Ahead Logging with Intel Optane Persistent Memory" (https://www.intel.com/content/www/us/en/developer/articles/technical/optimizing-write-ahead-logging-with-intel-optane-persistent-memory.html)</span></p>
 </div>
 
 The buffer pool manages:
@@ -685,56 +691,70 @@ When multiple transactions run concurrently, several anomalies can occur:
 
 A dirty read occurs when one transaction reads data that has been modified but not yet committed by another transaction.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/dirty-read.png" className="mx-auto max-w-full h-auto" alt="Dirty Read Scenario"/>
+  <p className="text-sm text-gray-600 mt-0">Illustration of a dirty read concurrency anomaly where a transaction reads uncommitted data<br/>
+  <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
 
 #### 2. Dirty Writes
 
-<div className="text-center my-6">
-  <img src="/article/database-fundamentals/dirty-write.png" className="mx-auto max-w-full h-auto" alt="Dirty Write Scenario"/>
-</div>
-
 One transaction overwrites an uncommitted value written by another transaction
+
+<div className="text-center my-4">
+  <img src="/article/database-fundamentals/dirty-write.png" className="mx-auto max-w-full h-auto" alt="Dirty Write Scenario"/>
+  <p className="text-sm text-gray-600 mt-0">Illustration of a dirty write anomaly where a transaction overwrites uncommitted data from another transaction<br/>
+  <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
+</div>
 
 #### 3. Lost Updates
 
 A lost update occurs when two transactions read and then update the same data, with the second transaction "losing" the update of the first one.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/lost-update.png" className="mx-auto max-w-full h-auto" alt="Lost Update Scenario"/>
+  <p className="text-sm text-gray-600 mt-0">Illustration of a lost update anomaly where two transactions read and update the same data, with one change being lost<br/>
+  <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
 
 #### 4. Non-Repeatable Reads
 
 A non-repeatable read occurs when a transaction reads the same row twice and gets different values because another transaction modified and committed the data between reads.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/nonrepeatable-read.png" className="mx-auto max-w-full h-auto" alt="Non-Repeatable Read Scenario"/>
+  <p className="text-sm text-gray-600 mt-0">Illustration of a non-repeatable read anomaly where a transaction reads the same row twice but gets different values<br/>
+  <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
 
 #### 5. Read Skew
 
 Read skew occurs when a transaction reads related data that is updated by another transaction, causing a skewed view that violates data constraints.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/read-skew.png" className="mx-auto max-w-full h-auto" alt="Read Skew Scenario"/>
+  <p className="text-sm text-gray-600 mt-0">Illustration of a read skew anomaly where a transaction reads related data that is updated by another transaction<br/>
+  <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
 
 #### 6. Write Skew
 
 Write skew occurs when two transactions read an overlapping data set, make disjoint updates based on what they read, and jointly create an inconsistent result.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/write-skew.png" className="mx-auto max-w-full h-auto" alt="Write Skew Scenario"/>
+  <p className="text-sm text-gray-600 mt-0">Illustration of a write skew anomaly where two transactions read an overlapping data set and make disjoint updates<br/>
+  <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
 
 #### 7. Phantom Reads
 
 A phantom read occurs when a transaction executes a query twice, and the second result includes rows that weren't visible in the first result (or vice versa) because another transaction added or removed qualifying rows.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/phantom-read.png" className="mx-auto max-w-full h-auto" alt="Phantom Read Scenario"/>
+  <p className="text-sm text-gray-600 mt-0">Illustration of a phantom read anomaly where a transaction sees rows that weren't visible in a previous read<br/>
+  <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
 
 
@@ -757,7 +777,7 @@ Databases provide different isolation levels to balance consistency and performa
 </thead>
 <tbody>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">READ UNCOMMITTED</td>
+    <td className="border border-gray-300 px-4 py-2">**READ UNCOMMITTED**</td>
     <td className="border border-gray-300 px-4 py-2">Prevented</td>
     <td className="border border-gray-300 px-4 py-2">Possible</td>
     <td className="border border-gray-300 px-4 py-2">Possible</td>
@@ -766,7 +786,7 @@ Databases provide different isolation levels to balance consistency and performa
     <td className="border border-gray-300 px-4 py-2">Possible</td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">READ COMMITTED</td>
+    <td className="border border-gray-300 px-4 py-2">**READ COMMITTED**</td>
     <td className="border border-gray-300 px-4 py-2">Prevented</td>
     <td className="border border-gray-300 px-4 py-2">Prevented</td>
     <td className="border border-gray-300 px-4 py-2">Possible</td>
@@ -775,7 +795,7 @@ Databases provide different isolation levels to balance consistency and performa
     <td className="border border-gray-300 px-4 py-2">Possible</td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">REPEATABLE READ</td>
+    <td className="border border-gray-300 px-4 py-2">**REPEATABLE READ**</td>
     <td className="border border-gray-300 px-4 py-2">Prevented</td>
     <td className="border border-gray-300 px-4 py-2">Prevented</td>
     <td className="border border-gray-300 px-4 py-2">Prevented</td>
@@ -784,7 +804,7 @@ Databases provide different isolation levels to balance consistency and performa
     <td className="border border-gray-300 px-4 py-2">Possible</td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">SERIALIZABLE</td>
+    <td className="border border-gray-300 px-4 py-2">**SERIALIZABLE**</td>
     <td className="border border-gray-300 px-4 py-2">Prevented</td>
     <td className="border border-gray-300 px-4 py-2">Prevented</td>
     <td className="border border-gray-300 px-4 py-2">Prevented</td>
@@ -812,6 +832,21 @@ Prevents dirty reads by only showing committed data, but allows non-repeatable r
 
 Prevents both dirty reads and non-repeatable reads by using snapshot isolation.
 
+<div className="text-center my-6">
+  <img src="/article/database-fundamentals/snapshot-isolation.png" className="mx-auto max-w-full h-auto" alt="Snapshot Isolation and MVCC"/>
+  <p className="text-sm text-gray-600 mt-2">Snapshot isolation implemented with multi-version concurrency control (MVCC)<br/>
+  <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
+</div>
+
+**Implementation with MVCC (Multi-Version Concurrency Control)**:
+- Each transaction works with a consistent snapshot of the database as of the start time
+- Database maintains multiple versions of rows (hence "multi-version")
+- Readers never block writers and writers never block readers
+- Each version is timestamped or tagged with the transaction ID that created it
+- Transactions only see data from transactions that were committed before their start time
+- For snapshot isolation, each transaction is assigned a transaction ID (TID)
+- When a transaction reads data, it ignores versions created by transactions with higher TIDs
+
 **Anomalies Prevented**:
 - **Non-Repeatable Reads**: Each transaction operates on a consistent snapshot of the database
 
@@ -824,6 +859,24 @@ The strongest isolation level, preventing all concurrency anomalies.
 1. **Two-Phase Locking (2PL)**:
    - Locks are acquired during execution and only released at the end
    - Predicate locks or index-range locks prevent phantom reads
+
+   <div className="text-center my-4">
+     <img src="/article/database-fundamentals/two-phase-locking.png" className="mx-auto max-w-full h-auto" alt="Two-Phase Locking Process"/>
+     <p className="text-sm text-gray-600 mt-0">Two-phase locking example<br/>
+     <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
+   </div>
+
+   **Deadlocks in Two-Phase Locking:**
+   
+   A significant challenge with 2PL is deadlocks, which occur when two or more transactions are waiting for each other to release locks, resulting in a circular dependency. For example, if Transaction A holds a lock on resource X and waits for resource Y, while Transaction B holds a lock on Y and waits for X, neither can proceed.
+
+   <div className="text-center my-4">
+     <img src="/article/database-fundamentals/deadlock.png" className="mx-auto max-w-full h-auto" alt="Deadlock in Database Transactions"/>
+     <p className="text-sm text-gray-600 mt-0">Deadlock scenario where transactions are waiting for locks held by each other<br/>
+     <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
+   </div>
+
+   Database systems detect deadlocks by maintaining a wait-for graph and checking for cycles. When a deadlock is detected, one of the transactions is chosen as a victim and aborted, allowing others to proceed.
 
 2. **Serializable Snapshot Isolation (SSI)**:
    - Tracks dependencies between transactions
@@ -868,7 +921,7 @@ Lost updates occur when two transactions read and then update the same data conc
 </thead>
 <tbody>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Pessimistic Locking</td>
+    <td className="border border-gray-300 px-4 py-2">**Pessimistic Locking**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Never needs to abort transactions<br/>
       • Always prevents lost updates
@@ -880,7 +933,7 @@ Lost updates occur when two transactions read and then update the same data conc
     </td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Optimistic Concurrency Control</td>
+    <td className="border border-gray-300 px-4 py-2">**Optimistic Concurrency Control**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Higher concurrency for read-heavy workloads<br/>
       • No risk of deadlocks<br/>
@@ -916,6 +969,12 @@ func updateWithPessimisticLock(txn *Transaction, accountID int, amount int) erro
 
 #### Optimistic Concurrency Control Example
 
+<div className="text-center my-4">
+  <img src="/article/database-fundamentals/optimistic-locking.png" className="mx-auto max-w-full h-auto" alt="Optimistic Concurrency Control"/>
+  <p className="text-sm text-gray-600 mt-0">Optimistic locking workflow showing version checking during concurrent updates<br/>
+  <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
+</div>
+
 ```go
 func updateWithOptimisticCC(txn *Transaction, accountID int, amount int) error {
     // Read and remember the version
@@ -943,8 +1002,10 @@ Beyond row-based and document storage, specialized storage models optimize for p
 
 Inverted indexes are the core data structure behind search engines like Elasticsearch. They map terms to the documents that contain them, enabling efficient full-text search.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/inverted-index.png" className="mx-auto max-w-full h-auto" alt="Inverted Index"/>
+  <p className="text-sm text-gray-600 mt-0">Inverted index structure showing how words map to document references<br/>
+  <span className="text-xs italic">Source: GitHub repository "Inverted-index-python" by Noureldin2303 (https://github.com/Noureldin2303/Inverted-index-python)</span></p>
 </div>
 
 #### How Inverted Indexes Work
@@ -987,8 +1048,10 @@ This approach makes full-text search operations incredibly fast compared to scan
 
 Unlike row-oriented databases where all columns of a row are stored together, column stores group values from the same column together on disk.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/column-storage.png" className="mx-auto max-w-full h-auto" alt="Column vs Row Storage"/>
+  <p className="text-sm text-gray-600 mt-0">Comparison between row-oriented and column-oriented database storage models<br/>
+  <span className="text-xs italic">Source: QuestDB, "What Is a Columnar Database?" (https://questdb.com/glossary/columnar-database/)</span></p>
 </div>
 
 #### Key Characteristics
@@ -1032,8 +1095,10 @@ Problem: When you add or remove nodes, almost all keys need to be redistributed.
 
 Consistent hashing minimizes the number of keys that need to be moved when nodes are added or removed.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/consistent-hashing.png" className="mx-auto max-w-full h-auto" alt="Consistent Hashing"/>
+  <p className="text-sm text-gray-600 mt-0">Consistent hashing ring showing key and server distribution<br/>
+  <span className="text-xs italic">Source: Pratima Upadhyay, "Consistent Hashing" (https://www.linkedin.com/pulse/consistent-hashing-pratima-upadhyay/)</span></p>
 </div>
 
 1. Map both nodes and keys to positions on a ring
@@ -1045,8 +1110,10 @@ Consistent hashing minimizes the number of keys that need to be moved when nodes
 
 To distribute load more evenly, each physical node can be represented by multiple virtual nodes on the ring:
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/virtual-nodes.png" className="mx-auto max-w-full h-auto" alt="Virtual Nodes in Consistent Hashing"/>
+  <p className="text-sm text-gray-600 mt-0">Virtual nodes in consistent hashing for better load distribution<br/>
+  <span className="text-xs italic">Source: Medium, "System Design: Consistent Hashing" (https://medium.com/data-science/system-design-consistent-hashing-43ddf48d2d32)</span></p>
 </div>
 
 ### Replication
@@ -1057,8 +1124,10 @@ Replication stores copies of the same data on multiple nodes for fault tolerance
 
 One node is designated as the leader, handling all writes. Writes are propagated to follower nodes.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/single-leader.png" className="mx-auto max-w-full h-auto" alt="Single-Leader Replication"/>
+  <p className="text-sm text-gray-600 mt-0">Single-leader replication model showing write path through leader to followers<br/>
+  <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
 
 ##### **Synchronous Versus Asynchronous Replication:**
@@ -1080,8 +1149,10 @@ In asynchronous replication systems, replicas may lag behind the leader, causing
 
 If a user writes data to the leader and then tries to read it from a lagging follower, they might not see their own writes.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/reading-your-own-writes.png" className="mx-auto max-w-full h-auto" alt="Reading Your Own Writes Consistency Problem"/>
+  <p className="text-sm text-gray-600 mt-0">Illustration of the reading-your-own-writes consistency issue in asynchronous replication<br/>
+  <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
 
 **Solution: Read-After-Write Consistency**:
@@ -1091,8 +1162,10 @@ If a user writes data to the leader and then tries to read it from a lagging fol
 
 A user might see data appear and then disappear if they read from different replicas that have different lag.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/monotonic-reads.png" className="mx-auto max-w-full h-auto" alt="Monotonic Reads Consistency Problem"/>
+  <p className="text-sm text-gray-600 mt-0">Illustration of the monotonic reads consistency issue with different replicas<br/>
+  <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
 
 **Solution**:
@@ -1104,8 +1177,10 @@ A user might see data appear and then disappear if they read from different repl
 
 If replicas process writes in different orders, a reader might see events out of order.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/consistent-prefix-reads.png" className="mx-auto max-w-full h-auto" alt="Consistent Prefix Reads Consistency Problem"/>
+  <p className="text-sm text-gray-600 mt-0">Illustration of the consistent prefix reads problem with out-of-order processing<br/>
+  <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
 
 **Solution**:
@@ -1175,8 +1250,10 @@ Uses database triggers to capture changes and apply them to different systems.
 
 Multiple nodes can accept writes, which are then propagated to other nodes.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/multi-leader.png" className="mx-auto max-w-full h-auto" alt="Multi-Leader Replication"/>
+  <p className="text-sm text-gray-600 mt-0">Multi-leader replication model with writes coordinated between multiple leader nodes<br/>
+  <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
 
 **Use Cases for Multi-Leader Replication**:
@@ -1201,8 +1278,10 @@ Multiple nodes can accept writes, which are then propagated to other nodes.
 
 When multiple leaders accept writes to the same data simultaneously, conflicts can occur:
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/multi-leader-conflicts.png" className="mx-auto max-w-full h-auto" alt="Multi-Leader Write Conflicts"/>
+  <p className="text-sm text-gray-600 mt-0">Write conflicts in multi-leader replication when concurrent updates occur on different leaders<br/>
+  <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
 
 **Conflict Resolution Strategies**:
@@ -1230,8 +1309,10 @@ When multiple leaders accept writes to the same data simultaneously, conflicts c
 
 Any node can accept writes; clients coordinate with multiple nodes or any node in the cluster can act as a coordinator. This creates a highly available system without a single point of failure.
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/leaderless.png" className="mx-auto max-w-full h-auto" alt="Leaderless Replication"/>
+  <p className="text-sm text-gray-600 mt-0">Leaderless replication model where clients can write to any node in the cluster<br/>
+  <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
 
 ##### **Quorum Consensus**
@@ -1240,8 +1321,10 @@ In leaderless replication systems, we need a way to ensure consistency despite n
 
 With N replicas, each write must be confirmed by W nodes, and each read must query at least R nodes:
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/quorum-consensus.png" className="mx-auto max-w-full h-auto" alt="Quorum Consensus in Leaderless Replication"/>
+  <p className="text-sm text-gray-600 mt-0">Quorum consensus in leaderless replication to maintain consistency<br/>
+  <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
 
 When **W + R > N**, we ensure that there's always at least one node that participates in both the write and read operations, guaranteeing that a read will see the most recent write:
@@ -1276,8 +1359,10 @@ The replication system should ensure that eventually all the data is copied to e
 
 ##### **Concurrent Writes and Version Tracking**
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/concurrent-writes.png" className="mx-auto max-w-full h-auto" alt="Concurrent Writes in Distributed Systems"/>
+  <p className="text-sm text-gray-600 mt-0">Concurrent writes in distributed systems and version tracking<br/>
+  <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
 
 In leaderless systems, concurrent updates can occur without coordination, requiring careful conflict detection and resolution.
@@ -1303,8 +1388,10 @@ Time synchronization between distributed nodes is notoriously difficult:
 
 Vector clocks track causality between different versions of data:
 
-<div className="text-center my-6">
+<div className="text-center my-4">
   <img src="/article/database-fundamentals/vector-clocks.png" className="mx-auto max-w-full h-auto" alt="Vector Clocks"/>
+  <p className="text-sm text-gray-600 mt-0">Vector clocks tracking causality between events in a distributed system<br/>
+  <span className="text-xs italic">Source: Wikipedia, "Vector clock" (https://en.wikipedia.org/wiki/Vector_clock)</span></p>
 </div>
 
 Each node maintains a counter for every node in the system:
@@ -1315,7 +1402,7 @@ Each node maintains a counter for every node in the system:
 **Comparing Vector Clocks:**
 
 Looking at the image above, we can determine causality relationships:
-- **Causally Related**: When all values in one vector clock are equal to or greater than another, and at least one value is strictly greater, there is a causal relationship. For example, vector clock [3,0,0] happens after [2,0,0] because all elements are greater than or equal, and at least one is strictly greater.
+- **Causally Related**: When all values in one vector clock are equal to or greater than another, and at least one value is strictly greater, there is a causal relationship. For example, vector clock [3,0,0] happens after [2,0,0] because all elements are greater than or equal to the elements in [3,0,0]
 - **Concurrent Events**: When neither vector clock's values are all greater than or equal to the other, the events are concurrent. For example, [2,0,0] and [0,1,0] are concurrent because neither descends from the other.
 
 **Examples:**
@@ -1385,7 +1472,7 @@ In a distributed system, strict quorum requirements may not be possible during n
 </thead>
 <tbody>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Availability</td>
+    <td className="border border-gray-300 px-4 py-2">**Availability**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Leader failure requires failover<br/>
       • Temporary downtime during leader election<br/>
@@ -1398,7 +1485,7 @@ In a distributed system, strict quorum requirements may not be possible during n
     </td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Consistency</td>
+    <td className="border border-gray-300 px-4 py-2">**Consistency**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Simpler consistency model<br/>
       • Centralized ordering of operations<br/>
@@ -1411,7 +1498,7 @@ In a distributed system, strict quorum requirements may not be possible during n
     </td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Latency</td>
+    <td className="border border-gray-300 px-4 py-2">**Latency**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Writes must go to leader<br/>
       • Potentially higher latency for geographically distant clients<br/>
@@ -1424,7 +1511,7 @@ In a distributed system, strict quorum requirements may not be possible during n
     </td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Implementation</td>
+    <td className="border border-gray-300 px-4 py-2">**Implementation**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Simpler implementation<br/>
       • Easier to understand behavior<br/>
@@ -1437,7 +1524,7 @@ In a distributed system, strict quorum requirements may not be possible during n
     </td>
   </tr>
   <tr>
-    <td className="border border-gray-300 px-4 py-2">Use Cases</td>
+    <td className="border border-gray-300 px-4 py-2">**Use Cases**</td>
     <td className="border border-gray-300 px-4 py-2">
       • Traditional RDBMS (MySQL, PostgreSQL)<br/>
       • Systems requiring strong consistency<br/>
