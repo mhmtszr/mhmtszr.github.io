@@ -95,7 +95,7 @@ These limitations are exactly why we need real database systems with efficient d
 Reading from disk is slow, so databases maintain an in-memory cache of frequently accessed pages, often called the buffer pool.
 
 <div className="text-center my-4">
-  <img src="/article/database-fundamentals/buffer-pool.png" className="mx-auto max-w-full h-auto" alt="Database Buffer Pool"/>
+  <img src="/article/database-fundamentals/buffer-pool.png" className="mx-auto max-w-full h-auto" style={{maxWidth: "70%"}} alt="Database Buffer Pool"/>
   <p className="text-sm text-gray-600 mt-0">Buffer pool architecture showing page table mapping disk pages to memory frames<br/>
   <span className="text-xs italic">Source: Intel, "Optimizing Write Ahead Logging with Intel Optane Persistent Memory" (https://www.intel.com/content/www/us/en/developer/articles/technical/optimizing-write-ahead-logging-with-intel-optane-persistent-memory.html)</span></p>
 </div>
@@ -138,11 +138,11 @@ A storage engine is responsible for organizing data on disk. The two main famili
 
 Let's explore both approaches.
 
-## B-Tree: The Workhorse of Relational Databases
+### B-Tree: The Workhorse of Relational Databases
 
 B-Trees have been the dominant storage engine in databases since the 1970s. Unlike binary trees, B-Trees are specifically optimized for systems that read and write large blocks of data.
 
-### How B-Trees Work
+#### How B-Trees Work
 
 A B-Tree is a self-balancing tree data structure that:
 - Keeps data sorted
@@ -153,7 +153,7 @@ A B-Tree is a self-balancing tree data structure that:
   <img src="/article/database-fundamentals/btree.png" className="mx-auto max-w-full h-auto" alt="B-Tree Structure"/>
 </div>
 
-### B-Tree Nodes and Disk Blocks Relationship
+#### B-Tree Nodes and Disk Blocks Relationship
 
 A critical concept in understanding B-Trees is how they map to physical storage:
 
@@ -173,7 +173,7 @@ A critical concept in understanding B-Trees is how they map to physical storage:
    - Larger blocks = more keys per node = higher branching factor = shorter tree
    - For a 16KB page that can store 100 keys, a 3-level B-Tree can index about 1 million records (100³)
 
-### B-Tree vs B+ Tree: Key Differences
+#### B-Tree vs B+ Tree: Key Differences
 
 While B-Trees are widely used, B+ Trees offer important optimizations for database systems:
 
@@ -250,11 +250,11 @@ While B+ Trees excel in many scenarios, they have specific strengths and weaknes
 
 For applications with extremely high write volumes, especially those with sequential inserts or time-series data, alternative structures like LSM Trees may provide better performance characteristics.
 
-## LSM Trees: Optimizing for Write-Heavy Workloads
+### LSM Trees: Optimizing for Write-Heavy Workloads
 
 Log-Structured Merge Trees (LSM Trees) take a different approach, optimizing for write performance at some cost to reads.
 
-### LSM Tree Architecture
+#### LSM Tree Architecture
 
 <div className="text-center my-4">
   <img src="/article/database-fundamentals/lsm-tree.png" className="mx-auto max-w-full h-auto" alt="LSM Tree Architecture"/>
@@ -292,7 +292,7 @@ type SSTable struct {
 }
 ```
 
-### Write Path: How Data Gets Stored
+#### Write Path: How Data Gets Stored
 
 The write path in an LSM Tree follows these steps:
 
@@ -364,7 +364,7 @@ func (lsm *LSMTree) FlushMemTable() error {
 }
 ```
 
-### Read Path: How Data Is Retrieved
+#### Read Path: How Data Is Retrieved
 
 Reading from an LSM Tree involves checking multiple locations:
 
@@ -400,7 +400,7 @@ func (lsm *LSMTree) Read(key string) ([]byte, bool) {
 }
 ```
 
-### Optimization: Bloom Filters
+#### Optimization: Bloom Filters
 
 A Bloom filter is a space-efficient probabilistic data structure that tells you if an element is definitely not in a set or might be in a set.
 
@@ -448,7 +448,7 @@ func (bf *BloomFilter) Add(key string) {
 }
 ```
 
-### Optimization: Sparse Indices
+#### Optimization: Sparse Indices
 
 Sparse indices optimize disk access by storing the positions of only a subset of keys:
 
@@ -488,7 +488,7 @@ When looking for a key in an SSTable:
 
 This dramatically reduces the amount of data we need to scan through.
 
-### SSTable Format and Searching
+#### SSTable Format and Searching
 
 When we search within an SSTable, we use both the Bloom filter and sparse index:
 
@@ -537,7 +537,7 @@ func (sst *SSTable) Get(key string) ([]byte, bool) {
 }
 ```
 
-### Compaction: Managing SSTables
+#### Compaction: Managing SSTables
 
 Over time, many SSTables accumulate. Compaction merges them to:
 - Reclaim space from deleted/overwritten entries
