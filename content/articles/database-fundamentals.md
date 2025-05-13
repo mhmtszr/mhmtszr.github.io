@@ -1483,7 +1483,7 @@ In a distributed system, strict quorum requirements may not be possible during n
 - Ensures eventual consistency even after prolonged outages
 
 
-##### **Leader-Based Replication vs Leaderless Replication**
+#### **Leader-Based Replication vs Leaderless Replication**
 
 <div className="overflow-x-auto my-6">
 <table className="w-full">
