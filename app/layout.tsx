@@ -123,12 +123,9 @@ export default function RootLayout({
         {/* Inline Critical CSS */}
         <style dangerouslySetInnerHTML={{ __html: criticalCssContent }} />
         
-        {/* Remove preload link for globals.css */}
-        {/* <link
-          rel="preload"
-          href="/globals.css"
-          as="style"
-        /> */}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+        <meta name="google-site-verification" content="BJMSpiC_fy4HW6D8l2wxY75vzp2FTfAy4PC3vwb6NnU" />
+        <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
         
         <Script id="theme-script" strategy="beforeInteractive">
           {`
@@ -193,6 +190,7 @@ export default function RootLayout({
           }}
         />
         <link rel="icon" href="/favicon.png" />
+        <link rel="alternate" type="application/rss+xml" title="Mehmet Sezer's Blog" href="https://msezer.dev/rss.xml" />
       </head>
       <body className={inter.className}>
         <ThemeProvider defaultTheme="light">

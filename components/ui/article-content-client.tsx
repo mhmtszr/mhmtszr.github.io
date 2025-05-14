@@ -3,15 +3,31 @@
 import { Badge } from '@/components/ui/badge'
 import { Calendar } from 'lucide-react'
 import Image from 'next/image'
-import { CodeCopyWrapper } from '@/components/ui/code-copy-wrapper'
+import { CodeCopyWrapper } from './code-copy-wrapper'
 import { ScrollToHash } from '@/components/ui/ScrollToHash'
-import { ArticleImageEnhancer } from '@/components/ui/article-image-enhancer'
+import { ArticleImageEnhancer } from './article-image-enhancer'
 import { TableOfContents } from '@/components/ui/table-of-contents'
 import { HeaderLinks } from '@/components/ui/header-link'
 import { Toaster } from 'sonner'
+import { useEffect } from 'react'
+import Link from 'next/link'
+import { Breadcrumb } from './breadcrumb'
+import { generateArticleSchema } from '@/lib/schema'
 
 interface ArticleContentProps {
-  article: any
+  article: {
+    meta: {
+      title: string
+      description: string
+      date: string
+      image?: string
+      tags?: string[]
+      modified?: string
+      readingTime?: string
+    }
+    slug: string
+    content: any
+  }
 }
 
 export function ArticleContentClient({ article }: ArticleContentProps) {
@@ -21,33 +37,45 @@ export function ArticleContentClient({ article }: ArticleContentProps) {
       <TableOfContents />
       <HeaderLinks />
       <Toaster position="bottom-right" />
+      <Breadcrumb 
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Articles', href: '/articles' },
+          { label: article.meta.title, href: `/articles/${article.slug}`, isCurrent: true }
+        ]}
+      />
       <div className="flex flex-col gap-4">
         {article.meta.image && (
           <div className="relative w-full flex items-center justify-center mb-6">
             <div className="cursor-pointer" data-image-key="hero-image">
               <Image
                 src={article.meta.image}
-                alt={article.meta.title}
+                alt={article.meta.title || "Article featured image"}
                 width={1200}
                 height={630}
                 className="w-full max-h-[400px] md:max-h-[500px] object-contain"
                 priority
+                loading="eager"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
               />
             </div>
           </div>
         )}
         <h1 className="text-4xl font-bold dark:text-[#f0f0f5]">{article.meta.title}</h1>
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-muted-foreground" />
-            <time className="text-sm text-muted-foreground">
-              {new Date(article.meta.date).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </time>
-          </div>
+        <div className="flex items-center gap-2 mt-2 text-sm text-gray-600 dark:text-gray-400">
+          <Calendar className="h-4 w-4" />
+          <time dateTime={article.meta.date}>{new Date(article.meta.date).toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          })}</time>
+          
+          {article.meta.readingTime && (
+            <span className="inline-flex items-center gap-1 ml-3">
+              <span>•</span>
+              <span>{article.meta.readingTime}</span>
+            </span>
+          )}
         </div>
         {article.meta.tags && article.meta.tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
@@ -69,24 +97,7 @@ export function ArticleContentClient({ article }: ArticleContentProps) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BlogPosting',
-            headline: article.meta.title,
-            description: article.meta.description,
-            author: {
-              '@type': 'Person',
-              name: 'Mehmet Sezer',
-              url: 'https://msezer.dev'
-            },
-            datePublished: article.meta.date,
-            image: article.meta.image,
-            publisher: {
-              '@type': 'Person',
-              name: 'Mehmet Sezer',
-              url: 'https://msezer.dev'
-            }
-          })
+          __html: JSON.stringify(generateArticleSchema(article))
         }}
       />
     </article>

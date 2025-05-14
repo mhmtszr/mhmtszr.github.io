@@ -1,8 +1,13 @@
 import { Github, Linkedin, FileText, Mail, ExternalLink, Twitter } from "lucide-react"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
+import { generateWebsiteSchema, generatePersonSchema } from '@/lib/schema'
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  // Generate schema data
+  const websiteSchema = generateWebsiteSchema()
+  const personSchema = generatePersonSchema()
+  
   return (
     <section className="py-12 px-4 md:px-8 lg:px-12">
       <div className="max-w-4xl mx-auto">
@@ -108,6 +113,20 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(websiteSchema)
+        }}
+      />
+      
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(personSchema)
+        }}
+      />
     </section>
   )
 }

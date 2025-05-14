@@ -3,6 +3,7 @@ import { getArticleBySlug, getAllArticles } from '@/lib/mdx'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { ArticleContentClient } from '@/components/ui/article-content-client'
+import { generateArticleSchema } from '@/lib/schema'
 
 // Generate metadata for the article page
 export async function generateMetadata(
@@ -23,14 +24,18 @@ export async function generateMetadata(
     
     return {
       title: article.meta.title,
-      description: article.meta.description,
+      description: article.meta.metaDescription || article.meta.description,
       authors: [{ name: 'Mehmet Sezer' }],
-      keywords: article.meta.tags,
+      keywords: article.meta.keywords || article.meta.tags,
+      alternates: {
+        canonical: article.meta.canonical || `https://msezer.dev/articles/${slug}`,
+      },
       openGraph: {
         title: article.meta.title,
-        description: article.meta.description,
+        description: article.meta.metaDescription || article.meta.description,
         type: 'article',
         publishedTime: article.meta.date,
+        modifiedTime: article.meta.modified,
         authors: ['Mehmet Sezer'],
         tags: article.meta.tags,
         images: [
@@ -41,11 +46,12 @@ export async function generateMetadata(
             alt: article.meta.title,
           },
         ],
+        url: article.meta.canonical || `https://msezer.dev/articles/${slug}`,
       },
       twitter: {
         card: 'summary_large_image',
         title: article.meta.title,
-        description: article.meta.description,
+        description: article.meta.metaDescription || article.meta.description,
         images: [ogImage],
       },
     }
@@ -89,8 +95,21 @@ export default async function ArticlePage({
       notFound()
     }
   
+    // Generate schema.org JSON-LD data
+    const articleSchema = generateArticleSchema(article)
+  
     // Render the client component with the article data
-    return <ArticleContentClient article={article} />
+    return (
+      <>
+        <ArticleContentClient article={article} />
+        <script 
+          type="application/ld+json" 
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(articleSchema)
+          }}
+        />
+      </>
+    )
   } catch (error) {
     console.error(`Error rendering article page for slug: ${slug}`, error)
     notFound()

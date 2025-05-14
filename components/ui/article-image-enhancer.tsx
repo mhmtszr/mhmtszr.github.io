@@ -9,6 +9,39 @@ export function ArticleImageEnhancer() {
   const [selectedKey, setSelectedKey] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  // Function to enhance images with alt text
+  const enhanceImagesWithAltText = () => {
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+      // If the image doesn't have alt text, try to use caption or parent element text
+      if (!img.alt || img.alt === '') {
+        // Try to find a caption
+        const figcaption = img.closest('figure')?.querySelector('figcaption');
+        if (figcaption && figcaption.textContent) {
+          img.alt = figcaption.textContent.trim();
+        } else {
+          // Try to use parent heading or paragraph text
+          const parent = img.parentElement;
+          const prevHeading = parent?.previousElementSibling;
+          if (prevHeading && 
+              (prevHeading.tagName === 'H1' || 
+               prevHeading.tagName === 'H2' || 
+               prevHeading.tagName === 'H3') && 
+              prevHeading.textContent) {
+            img.alt = prevHeading.textContent.trim();
+          } else {
+            img.alt = 'Image in article content';
+          }
+        }
+      }
+      
+      // Add loading attribute for better performance
+      if (!img.getAttribute('loading')) {
+        img.setAttribute('loading', 'lazy');
+      }
+    });
+  };
+
   useEffect(() => {
     // Only run in the browser
     if (typeof window === "undefined") return
@@ -98,6 +131,9 @@ export function ArticleImageEnhancer() {
         })
       })
     }
+    
+    // Run the alt text enhancer
+    enhanceImagesWithAltText();
     
     setImageMappings(mappings)
     

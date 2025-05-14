@@ -5,6 +5,7 @@ import { compileMDX } from 'next-mdx-remote/rsc'
 import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import { estimateReadingTime } from './reading-time'
 
 // Configure for static generation
 export const dynamic = 'force-static'
@@ -18,6 +19,11 @@ export interface ArticleMetadata {
   tags: string[]
   author?: string
   draft?: boolean
+  modified?: string
+  canonical?: string
+  metaDescription?: string
+  keywords?: string[]
+  readingTime?: string
 }
 
 interface Article {
@@ -28,6 +34,11 @@ interface Article {
     image?: string
     tags?: string[]
     draft?: boolean
+    modified?: string
+    canonical?: string
+    metaDescription?: string
+    keywords?: string[]
+    readingTime?: string
   }
   slug: string
   content: any // MDX content
@@ -74,6 +85,9 @@ export async function getArticleBySlug(slug: string): Promise<Article> {
       throw new Error(`Article ${slug} is missing required metadata fields`)
     }
 
+    // Calculate reading time if not provided
+    const readingTime = meta.readingTime || estimateReadingTime(rawContent)
+
     // Compile MDX content with rehype-pretty-code
     const { content } = await compileMDX({
       source: rawContent,
@@ -99,7 +113,12 @@ export async function getArticleBySlug(slug: string): Promise<Article> {
         date: meta.date,
         image: meta.image,
         tags: meta.tags || [],
-        draft: meta.draft || false
+        draft: meta.draft || false,
+        modified: meta.modified,
+        canonical: meta.canonical,
+        metaDescription: meta.metaDescription,
+        keywords: meta.keywords || [],
+        readingTime: readingTime
       },
       slug,
       content

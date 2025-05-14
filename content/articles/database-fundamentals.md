@@ -1,9 +1,9 @@
 ---
 title: "Database Fundamentals"
 description: "A comprehensive guide to database concepts, architectures, and principles from the ground up."
-date: "2025-05-15"
+date: "2025-05-14"
 image: "/article/database-fundamentals/preview.png"
-tags: ["Databases", "Systems Design"]
+tags: ["Database Fundamentals", "Distributed System"]
 ---
 
 This article explores the fundamental concepts of database systems, from simple file-based storage to complex distributed architectures. We'll cover the core data structures, algorithms, and design principles that power modern databases, with practical examples and visualizations.
