@@ -11,7 +11,6 @@ import { HeaderLinks } from '@/components/ui/header-link'
 import { Toaster } from 'sonner'
 import { useEffect } from 'react'
 import Link from 'next/link'
-import { Breadcrumb } from './breadcrumb'
 import { generateArticleSchema } from '@/lib/schema'
 
 interface ArticleContentProps {
@@ -37,13 +36,6 @@ export function ArticleContentClient({ article }: ArticleContentProps) {
       <TableOfContents />
       <HeaderLinks />
       <Toaster position="bottom-right" />
-      <Breadcrumb 
-        items={[
-          { label: 'Home', href: '/' },
-          { label: 'Articles', href: '/articles' },
-          { label: article.meta.title, href: `/articles/${article.slug}`, isCurrent: true }
-        ]}
-      />
       <div className="flex flex-col gap-4">
         {article.meta.image && (
           <div className="relative w-full flex items-center justify-center mb-6">

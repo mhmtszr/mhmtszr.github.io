@@ -25,8 +25,6 @@ export default function ArticleLayout({
   children,
 }: ArticleLayoutProps) {
   return (
-    <div className="max-w-5xl mx-auto py-12 px-4 md:px-8 lg:px-12">
-      {children}
-    </div>
+    <>{children}</>
   )
 }

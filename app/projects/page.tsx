@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Github, ExternalLink } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams } from 'next/navigation'
+import { PageContainer } from "../components/page-container"
 
 const projects = [
   {
@@ -97,84 +98,80 @@ function ProjectsContent() {
   const filteredProjects = filter === "All" ? projects : projects.filter((p) => p.technologies.includes(filter))
 
   return (
-    <section className="py-12 px-4 md:px-8 lg:px-12">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6">Projects</h1>
-
-        {/* Filter buttons */}
-        <div className="mb-8 overflow-x-auto pb-2">
-          <div className="flex gap-2 flex-wrap">
-            {allTechnologies.map((tech) => (
-              <button
-                key={tech}
-                onClick={() => setFilter(tech)}
-                className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap ${
-                  filter === tech
-                    ? "bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-800"
-                    : "bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
-                }`}
-              >
-                {tech}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2">
-          {filteredProjects.map((project, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
+    <PageContainer title="Projects">
+      {/* Filter buttons */}
+      <div className="mb-8 overflow-x-auto pb-2">
+        <div className="flex gap-2 flex-wrap">
+          {allTechnologies.map((tech) => (
+            <button
+              key={tech}
+              onClick={() => setFilter(tech)}
+              className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap ${
+                filter === tech
+                  ? "bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-800"
+                  : "bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              }`}
             >
-              <Link href={project.github} target="_blank" rel="noopener noreferrer" className="block h-full">
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 h-full flex flex-col transition-all hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-600">
-                  <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">{project.description}</p>
-
-                  <div className="mt-auto">
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.technologies.map((tech, i) => (
-                        <Badge key={i} variant="outline" className="bg-gray-100 dark:bg-gray-700">
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    <div className="inline-flex items-center gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
-                      {project.github.includes("github.com") ? (
-                        <>
-                          <Github className="h-4 w-4" />
-                          <span>View on GitHub</span>
-                        </>
-                      ) : (
-                        <>
-                          <ExternalLink className="h-4 w-4" />
-                          <span>View Project</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
+              {tech}
+            </button>
           ))}
         </div>
-
-        {filteredProjects.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400">No projects found with the selected technology.</p>
-            <button
-              onClick={() => setFilter("All")}
-              className="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md transition-colors"
-            >
-              Show all projects
-            </button>
-          </div>
-        )}
       </div>
-    </section>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        {filteredProjects.map((project, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.05 }}
+          >
+            <Link href={project.github} target="_blank" rel="noopener noreferrer" className="block h-full">
+              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 h-full flex flex-col transition-all hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-600">
+                <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">{project.description}</p>
+
+                <div className="mt-auto">
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {project.technologies.map((tech, i) => (
+                      <Badge key={i} variant="outline" className="bg-gray-100 dark:bg-gray-700">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+
+                  <div className="inline-flex items-center gap-2 text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors">
+                    {project.github.includes("github.com") ? (
+                      <>
+                        <Github className="h-4 w-4" />
+                        <span>View on GitHub</span>
+                      </>
+                    ) : (
+                      <>
+                        <ExternalLink className="h-4 w-4" />
+                        <span>View Project</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+        ))}
+      </div>
+
+      {filteredProjects.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-gray-500 dark:text-gray-400">No projects found with the selected technology.</p>
+          <button
+            onClick={() => setFilter("All")}
+            className="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md transition-colors"
+          >
+            Show all projects
+          </button>
+        </div>
+      )}
+    </PageContainer>
   )
 }
 

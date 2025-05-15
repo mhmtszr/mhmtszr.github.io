@@ -4,6 +4,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Timeline, TimelineItem } from "../../components/ui/timeline"
 import { getYear } from "date-fns"
+import { PageContainer } from "../components/page-container"
 // import { Suspense } from 'react'
 // import { useSearchParams } from 'next/navigation'
 
@@ -26,7 +27,7 @@ const experiences: Experience[] = [
     position: "Senior Software Engineer",
     period: "Aug 2021 - Present",
     description:
-      "Progressed from Associate Developer to Senior Software Engineer, contributing to the Internal Developer Platform Database Team and the Product Team.",
+      "Progressed from Associate Developer to Senior Software Engineer, contributing to the SellerAds Team, Internal Developer Platform Database Team and the Product Team.",
     achievements: [
       "Automated routine database management tasks to enhance productivity.",
       "Collaborated with cross-functional teams to meet database needs and assist in capacity planning.",
@@ -88,57 +89,54 @@ export default async function ExperiencePage() {
   }
 
   return (
-    <section className="py-12 px-4 md:px-8 lg:px-12">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-12">Professional Experience</h1>
-        <Timeline>
-          {experiences.map((exp, index) => {
-            const currentStartYear = getStartYear(exp.period)
-            const nextStartYear = index + 1 < experiences.length 
-              ? getStartYear(experiences[index + 1].period)
-              : undefined
-            const year = currentStartYear !== nextStartYear ? currentStartYear : undefined
-            
-            return (
-              <TimelineItem 
-                key={index} 
-                isLeft={index % 2 === 0}
-                year={year}
-              >
-                <div className="space-y-4">
-                  <div>
-                    <h2 className="text-2xl font-bold">{exp.position}</h2>
-                    <p className="text-gray-500 dark:text-gray-400">
-                      {exp.company} | {exp.period}
-                    </p>
-                  </div>
-
-                  {exp.description && (
-                    <p className="text-gray-600 dark:text-gray-300">{exp.description}</p>
-                  )}
-
-                  <div>
-                    <h3 className="font-semibold mb-2">Key Achievements:</h3>
-                    <ul className="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-300">
-                      {exp.achievements.map((achievement, i) => (
-                        <li key={i}>{achievement}</li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    {exp.technologies.map((tech, i) => (
-                      <Badge key={i} variant="outline" className="bg-gray-100 dark:bg-gray-700">
-                        {tech}
-                      </Badge>
-                    ))}
-                  </div>
+    <PageContainer title="Professional Experience">
+      <Timeline>
+        {experiences.map((exp, index) => {
+          const currentStartYear = getStartYear(exp.period)
+          const nextStartYear = index + 1 < experiences.length 
+            ? getStartYear(experiences[index + 1].period)
+            : undefined
+          const year = currentStartYear !== nextStartYear ? currentStartYear : undefined
+          
+          return (
+            <TimelineItem 
+              key={index} 
+              isLeft={index % 2 === 0}
+              year={year}
+            >
+              <div className="space-y-4">
+                <div>
+                  <h2 className="text-2xl font-bold">{exp.position}</h2>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    {exp.company} | {exp.period}
+                  </p>
                 </div>
-              </TimelineItem>
-            )
-          })}
-        </Timeline>
-      </div>
-    </section>
+
+                {exp.description && (
+                  <p className="text-gray-600 dark:text-gray-300">{exp.description}</p>
+                )}
+
+                <div>
+                  <h3 className="font-semibold mb-2">Key Achievements:</h3>
+                  <ul className="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-300">
+                    {exp.achievements.map((achievement, i) => (
+                      <li key={i}>{achievement}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="flex flex-wrap gap-2 pt-2">
+                  {exp.technologies.map((tech, i) => (
+                    <Badge key={i} variant="outline" className="bg-gray-100 dark:bg-gray-700">
+                      {tech}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </TimelineItem>
+          )
+        })}
+      </Timeline>
+    </PageContainer>
   )
 }

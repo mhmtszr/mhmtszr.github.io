@@ -9,6 +9,7 @@ import { getMediumArticles, type MediumArticle } from "@/lib/medium"
 import { motion } from "framer-motion"
 import { useMediaQuery } from "../../hooks/use-media-query"
 import { useSearchParams } from 'next/navigation'
+import { PageContainer } from "../components/page-container"
 
 interface Article {
   title: string
@@ -132,75 +133,66 @@ function ArticlesContent() {
 
   if (isLoading) {
     return (
-      <div className="container py-8">
-        <div className="flex flex-col gap-8">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Articles</h1>
-            <ViewToggle />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-[350px] rounded-lg bg-muted animate-pulse" />
-            ))}
-          </div>
+      <PageContainer title="Articles">
+        <div className="flex justify-end mb-8">
+          <ViewToggle />
         </div>
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="h-[300px] rounded-lg bg-muted animate-pulse" />
+          ))}
+        </div>
+      </PageContainer>
     )
   }
 
   if (error) {
     return (
-      <div className="container py-8">
-        <div className="flex flex-col gap-8">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Articles</h1>
-            <ViewToggle />
-          </div>
-          <div className="rounded-lg border bg-card p-8 text-center">
-            <h2 className="text-2xl font-semibold mb-4">{error}</h2>
-            <p className="text-muted-foreground">
-              Please try again later or check the console for more details.
-            </p>
-          </div>
+      <PageContainer title="Articles">
+        <div className="flex justify-end mb-8">
+          <ViewToggle />
         </div>
-      </div>
+        <div className="rounded-lg border bg-card p-8 text-center">
+          <h2 className="text-2xl font-semibold mb-4">{error}</h2>
+          <p className="text-muted-foreground">
+            Please try again later or check the console for more details.
+          </p>
+        </div>
+      </PageContainer>
     )
   }
 
   return (
-    <div className="container py-8">
-      <div className="flex flex-col gap-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Articles</h1>
-          <ViewToggle />
-        </div>
-        <motion.div
-          variants={container}
-          initial="hidden"
-          animate="show"
-          className={
-            isListView && isDesktop 
-              ? "flex flex-col gap-6" 
-              : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          }
-        >
-          {articles.map((article, index) => (
-            <motion.div key={article.url} variants={item}>
-              <ArticleCard
-                title={article.title}
-                description={article.description}
-                date={article.date}
-                imageUrl={article.imageUrl}
-                url={article.url}
-                tags={article.tags || []}
-                source={article.source}
-                isListView={isListView && isDesktop}
-              />
-            </motion.div>
-          ))}
-        </motion.div>
+    <PageContainer title="Articles">
+      <div className="flex justify-end mb-8">
+        <ViewToggle />
       </div>
-    </div>
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className={
+          isListView && isDesktop 
+            ? "flex flex-col gap-6" 
+            : "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+        }
+      >
+        {articles.map((article, index) => (
+          <motion.div key={article.url} variants={item}>
+            <ArticleCard
+              title={article.title}
+              description={article.description}
+              date={article.date}
+              imageUrl={article.imageUrl}
+              url={article.url}
+              tags={article.tags || []}
+              source={article.source}
+              isListView={isListView && isDesktop}
+            />
+          </motion.div>
+        ))}
+      </motion.div>
+    </PageContainer>
   )
 }
 

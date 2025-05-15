@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { ArticleContentClient } from '@/components/ui/article-content-client'
 import { generateArticleSchema } from '@/lib/schema'
+import { PageContainer } from "../../components/page-container"
+import { Breadcrumb } from "@/components/ui/breadcrumb"
 
 // Generate metadata for the article page
 export async function generateMetadata(
@@ -100,15 +102,24 @@ export default async function ArticlePage({
   
     // Render the client component with the article data
     return (
-      <>
-        <ArticleContentClient article={article} />
+      <PageContainer>
+        <Breadcrumb 
+          items={[
+            { label: 'Home', href: '/' },
+            { label: 'Articles', href: '/articles' },
+            { label: article.meta.title, href: `/articles/${article.slug}`, isCurrent: true }
+          ]}
+        />
+        <div className="space-y-8">
+          <ArticleContentClient article={article} />
+        </div>
         <script 
           type="application/ld+json" 
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(articleSchema)
           }}
         />
-      </>
+      </PageContainer>
     )
   } catch (error) {
     console.error(`Error rendering article page for slug: ${slug}`, error)
