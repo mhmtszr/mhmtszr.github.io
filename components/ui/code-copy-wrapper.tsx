@@ -45,12 +45,10 @@ export function CodeCopyWrapper({ children }: CodeCopyWrapperProps) {
         try {
           await navigator.clipboard.writeText(codeText)
           iconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><polyline points="20 6 9 17 4 12"/></svg>` // Check icon SVG
-          pre.classList.add('opacity-75'); // Fade code slightly on desktop hover
 
           if (copyTimeout) clearTimeout(copyTimeout)
           copyTimeout = setTimeout(() => {
              iconContainer.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>` // Revert to Copy icon
-             pre.classList.remove('opacity-75');
           }, 2000)
 
         } catch (err) {
@@ -59,18 +57,7 @@ export function CodeCopyWrapper({ children }: CodeCopyWrapperProps) {
         }
       })
       
-      // Add hover effect for desktop to fade the code
-      container.addEventListener('mouseenter', () => {
-        // Check if it's not a touch device essentially
-        if (window.matchMedia('(hover: hover)').matches) {
-           pre.classList.add('opacity-75', 'transition-opacity');
-        }
-      });
-      container.addEventListener('mouseleave', () => {
-         if (window.matchMedia('(hover: hover)').matches) {
-           pre.classList.remove('opacity-75');
-         }
-      });
+      // Removed hover effect that faded the code
 
       // Wrap pre element and add button
       pre.parentNode?.insertBefore(container, pre)

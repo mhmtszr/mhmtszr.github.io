@@ -81,7 +81,7 @@ db_get() {
 
 We've addressed some issues:
 - Added file locking for isolation
-- Added syncing for durability
+- Added syncing for durability (but partial/corrupt writes are still possible if a crash happens during the write operation)
 
 But we still have fundamental problems:
 - The `O(n)` read performance
