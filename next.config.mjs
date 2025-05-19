@@ -9,6 +9,16 @@ const nextConfig = {
   // Configure base path for GitHub Pages
   basePath: '',
   assetPrefix: '',
+  // Redirect configuration
+  async redirects() {
+    return [
+      {
+        source: '/articles/database-fundamentals',
+        destination: '/articles/database-architecture-storage-engines-distributed-systems',
+        permanent: true,
+      },
+    ];
+  },
   // Disable linting and type checking during build (optional)
   eslint: {
     ignoreDuringBuilds: true,
