@@ -144,7 +144,7 @@
   }
 
   .prose pre > code > [data-line]:hover {
-    @apply bg-gray-100 dark:bg-gray-800;
+    /* Removed bg-gray-100 dark:bg-gray-800 to disable hover highlighting */
   }
 
   .prose code:not(pre code) {
@@ -344,6 +344,11 @@ pre code .line {
 
 pre code .line.highlighted {
   @apply bg-slate-500 bg-opacity-10;
+}
+
+/* Disable line hover effect */
+pre code .line:hover {
+  background-color: transparent !important;
 }
 
 pre code .line .word {
