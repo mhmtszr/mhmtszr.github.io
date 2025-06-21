@@ -58,7 +58,7 @@ export default async function AboutPage() {
                 </Link>
 
                 <Link
-                  href="https://linkedin.com/in/mehmetsezer"
+                  href="https://linkedin.com/in/mehmetsezerr"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-all"

@@ -115,7 +115,7 @@ export default function Sidebar() {
                       <span className="sr-only">GitHub</span>
                     </Link>
                     <Link
-                      href="https://linkedin.com/in/mehmetsezer"
+                      href="https://linkedin.com/in/mehmetsezerr"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
@@ -214,7 +214,7 @@ export default function Sidebar() {
                 <span className="sr-only">GitHub</span>
               </Link>
               <Link
-                href="https://linkedin.com/in/mehmetsezer"
+                href="https://linkedin.com/in/mehmetsezerr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"

@@ -39,7 +39,7 @@ export function generatePersonSchema() {
     description: 'Senior Software Engineer at Trendyol specializing in microservice architecture and distributed systems. Building scalable and reliable software solutions.',
     sameAs: [
       'https://github.com/mhmtszr',
-      'https://linkedin.com/in/mehmetsezer',
+      'https://linkedin.com/in/mehmetsezerr',
       'https://x.com/_mehmetsezer',
       'https://medium.com/@mehmet.sezer'
     ],
