@@ -62,7 +62,7 @@ const photos = [
     url: '/photography/hogwarts.jpg',
     title: 'Hogwarts',
     city: 'London',
-    country: 'Scotland'
+    country: 'England'
   },
   {
     url: '/photography/edinburgh.jpg',
