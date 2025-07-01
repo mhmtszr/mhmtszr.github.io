@@ -14,73 +14,73 @@ const photos = [
     url: '/photography/london.jpg',
     title: 'London',
     city: 'London',
-    country: 'United Kingdom'
+    country: 'England'
   },
   {
     url: '/photography/bigben.jpg',
     title: 'Big Ben',
     city: 'London',
-    country: 'United Kingdom'
+    country: 'England'
   },
   {
     url: '/photography/bigben2.jpg',
     title: 'Big Ben',
     city: 'London',
-    country: 'United Kingdom'
+    country: 'England'
   },
   {
     url: '/photography/bigben3.jpg',
     title: 'Big Ben',
     city: 'London',
-    country: 'United Kingdom'
+    country: 'England'
   },
   {
     url: '/photography/bankstation.jpg',
     title: 'Bank Station',
     city: 'London',
-    country: 'United Kingdom'
+    country: 'England'
   },
   {
     url: '/photography/bloomberg.jpg',
     title: 'Bloomberg Office',
     city: 'London',
-    country: 'United Kingdom'
+    country: 'England'
   },
   {
     url: '/photography/towerbridge.jpg',
     title: 'Tower Bridge',
     city: 'London',
-    country: 'United Kingdom'
+    country: 'England'
   },
   {
     url: '/photography/londoneye.jpg',
     title: 'London Eye',
     city: 'London',
-    country: 'United Kingdom'
+    country: 'England'
   },
   {
     url: '/photography/hogwarts.jpg',
     title: 'Hogwarts',
-    city: 'Edinburgh',
-    country: 'United Kingdom'
+    city: 'London',
+    country: 'Scotland'
   },
   {
     url: '/photography/edinburgh.jpg',
     title: 'Edinburgh',
     city: 'Edinburgh',
-    country: 'United Kingdom'
+    country: 'Scotland'
   },
   {
     url: '/photography/newtontree.jpg',
     title: 'Newton Tree',
     city: 'Cambridge',
-    country: 'United Kingdom'
+    country: 'England'
   },
   {
     url: '/photography/cambridgecollege.jpg',
     title: 'Cambridge College',
     city: 'Cambridge',
-    country: 'United Kingdom'
+    country: 'England'
   },
   {
     url: '/photography/phuket.jpg',
