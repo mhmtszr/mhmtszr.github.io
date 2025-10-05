@@ -1,0 +1,110 @@
+/* Critical styles for initial render */
+@tailwind base;
+
+/* Essential theme variables */
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --primary: 221.2 83.2% 53.3%;
+  --primary-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+}
+
+.dark {
+  --background: 220 14% 10%;
+  --foreground: 210 40% 98%;
+  --primary: 217.2 91.2% 59.8%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+  --border: 217.2 32.6% 17.5%;
+}
+
+/* Essential base styles */
+body {
+  margin: 0;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Essential layout styles */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.min-h-screen { min-height: 100vh; }
+.w-full { width: 100%; }
+
+@media (min-width: 768px) {
+  .md\:ml-64 { margin-left: 16rem; }
+}
+
+/* Critical Timeline Styles (Basic structure) */
+/* Add styles derived from inspecting Timeline/TimelineItem components if needed */
+.timeline-container { /* Assuming Timeline wraps items */
+  position: relative;
+  /* Add basic layout like padding if consistent */
+}
+
+.timeline-item { /* Assuming TimelineItem structure */
+  position: relative;
+  padding-left: 2rem; /* Example: space for line/dot */
+  margin-bottom: 1rem; /* Example: spacing */
+}
+
+.timeline-line { /* Example: If there's a connecting line */
+  position: absolute;
+  left: 0.5rem; /* Adjust based on inspection */
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: hsl(var(--border));
+}
+
+.timeline-dot { /* Example: If there's a dot marker */
+  position: absolute;
+  left: 0; /* Adjust based on inspection */
+  top: 0.5rem; /* Adjust based on inspection */
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  background-color: hsl(var(--primary));
+}
+
+/* Critical Project Card Styles (Basic structure) */
+.project-grid { /* Assuming a container for the grid */
+  display: grid;
+  gap: 1.5rem; /* Match gap-6 */
+}
+
+@media (min-width: 768px) { /* Match md:grid-cols-2 */
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.project-card { /* Styles for the card container */
+  display: flex; 
+  flex-direction: column;
+  height: 100%; /* Match h-full */
+  border-radius: 0.5rem; /* Match rounded-lg */
+  border: 1px solid hsl(var(--border)); /* Basic border */
+  background-color: hsl(var(--background)); /* Basic background */
+  padding: 1.5rem; /* Match p-6 */
+}
+
+.project-card-content { /* Inner content wrapper if needed */
+  flex-grow: 1; /* Match flex-grow on description parent */
+}
+
+/* Basic badge styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px; /* Match rounded-full */
+  border: 1px solid hsl(var(--border)); 
+  padding: 0.25rem 0.75rem; /* Guess based on typical badge padding */
+  font-size: 0.75rem; /* Guess based on typical badge size */
+  line-height: 1rem;
+  font-weight: 500;
+}
+
+/* You might need more specific selectors based on your actual component output */
+
+/* You might need more specific selectors based on your actual Timeline component's output HTML */ 

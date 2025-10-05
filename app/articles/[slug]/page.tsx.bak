@@ -1,0 +1,79 @@
+// This is a server component - NO "use client" directive
+
+import { getArticleBySlug, getAllArticles } from '@/lib/mdx'
+import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
+import { ArticleContentClient } from '@/components/ui/article-content-client'
+
+// Generate metadata for the article page
+export async function generateMetadata(
+  { params }: { params: { slug: string } }
+): Promise<Metadata> {
+  const { slug } = params
+  
+  try {
+    const article = await getArticleBySlug(slug)
+    
+    if (!article) {
+      return {}
+    }
+
+    const ogImage = article.meta.image || '/images/placeholder-article.jpg'
+    
+    return {
+      title: article.meta.title,
+      description: article.meta.description,
+      authors: [{ name: 'Mehmet Sezer' }],
+      keywords: article.meta.tags,
+      openGraph: {
+        title: article.meta.title,
+        description: article.meta.description,
+        type: 'article',
+        publishedTime: article.meta.date,
+        authors: ['Mehmet Sezer'],
+        tags: article.meta.tags,
+        images: [
+          {
+            url: ogImage,
+            width: 1200,
+            height: 630,
+            alt: article.meta.title,
+          },
+        ],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: article.meta.title,
+        description: article.meta.description,
+        images: [ogImage],
+      },
+    }
+  } catch (error) {
+    return {}
+  }
+}
+
+// Generate all possible article slugs at build time
+export async function generateStaticParams() {
+  const articles = await getAllArticles()
+  return articles.map((article) => ({
+    slug: article.slug,
+  }))
+}
+
+// Server component for data fetching
+export default async function ArticlePage({ params }: { params: { slug: string } }) {
+  const { slug } = params
+  
+  if (!slug) {
+    notFound()
+  }
+
+  const article = await getArticleBySlug(slug)
+  
+  if (!article) {
+    notFound()
+  }
+
+  return <ArticleContentClient article={article} />
+} 
