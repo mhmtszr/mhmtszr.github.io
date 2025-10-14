@@ -1,0 +1,43 @@
+@tailwind utilities;
+
+/* Non-critical styles */
+.prose {
+  @apply max-w-none;
+}
+
+.prose pre {
+  @apply my-4 p-4 rounded-lg overflow-x-auto border relative;
+  background-color: var(--code-bg);
+  border-color: var(--code-border);
+  color: var(--code-fg);
+}
+
+/* Code block styles */
+.prose pre > code {
+  @apply grid font-mono text-[14px] leading-6;
+  color: inherit;
+}
+
+/* Syntax highlighting */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--syntax-comment);
+}
+
+.token.punctuation {
+  color: var(--code-fg);
+}
+
+/* Animation classes */
+.transition-colors {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Dark mode specific styles */
+.dark .bg-gray-950 {
+  background-color: rgb(3, 7, 18);
+} 

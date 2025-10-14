@@ -1,0 +1,468 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    /* Code block styles */
+    --code-bg: #fafafa;
+    --code-fg: #383a42;
+    --code-border: #e1e4e8;
+    --code-line-highlight: rgba(201, 167, 255, 0.2);
+    --code-word-highlight: rgba(201, 167, 255, 0.5);
+
+    /* Syntax highlighting for light theme */
+    --syntax-keyword: #a626a4;
+    --syntax-string: #50a14f;
+    --syntax-number: #986801;
+    --syntax-function: #4078f2;
+    --syntax-comment: #a0a1a7;
+    --syntax-operator: #383a42;
+    --syntax-variable: #e45649;
+    --syntax-class: #c18401;
+    --syntax-tag: #e45649;
+    --syntax-property: #383a42;
+  }
+
+  .dark {
+    --background: 220 14% 10%;
+    --foreground: 210 40% 98%;
+    --card: 220 14% 10%;
+    --card-foreground: 210 40% 98%;
+    --popover: 220 14% 10%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+
+    /* Code block styles for dark mode */
+    --code-bg: #282c34;
+    --code-fg: #abb2bf;
+    --code-border: #30363d;
+    --code-line-highlight: rgba(201, 167, 255, 0.15);
+    --code-word-highlight: rgba(201, 167, 255, 0.4);
+
+    /* Syntax highlighting for dark theme */
+    --syntax-keyword: #c678dd;
+    --syntax-string: #98c379;
+    --syntax-number: #d19a66;
+    --syntax-function: #61afef;
+    --syntax-comment: #7f848e;
+    --syntax-operator: #abb2bf;
+    --syntax-variable: #e06c75;
+    --syntax-class: #e5c07b;
+    --syntax-tag: #e06c75;
+    --syntax-property: #abb2bf;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+  }
+
+  /* Markdown content styles */
+  .prose {
+    @apply max-w-none;
+  }
+
+  .prose h2 {
+    @apply border-b pb-2 mb-4;
+  }
+
+  .prose pre {
+    @apply my-4 p-4 rounded-lg overflow-x-auto border relative;
+    background-color: hsl(var(--code-bg));
+    border-color: hsl(var(--code-border));
+    color: hsl(var(--code-fg));
+  }
+
+  .prose pre > code {
+    @apply grid font-mono text-[14px] leading-6;
+    color: inherit;
+  }
+
+  .prose pre > code > [data-line] {
+    @apply px-4 border-l-2 border-l-transparent;
+    counter-increment: line;
+  }
+
+  .prose pre > code > [data-line]::before {
+    @apply inline-block w-4 mr-4 text-right text-gray-500 dark:text-gray-400;
+    content: counter(line);
+  }
+
+  .prose pre > code > [data-line].highlighted {
+    @apply border-l-blue-500 bg-blue-500/10;
+  }
+
+  .prose pre > code > [data-line] .word {
+    @apply rounded-md bg-blue-500/10 p-1;
+  }
+
+  .prose pre > code > [data-line]:hover {
+    /* Removed bg-gray-100 dark:bg-gray-800 to disable hover highlighting */
+  }
+
+  .prose code:not(pre code) {
+    @apply px-1.5 py-0.5 rounded-md border text-sm;
+    background-color: hsl(var(--code-bg));
+    border-color: hsl(var(--code-border));
+  }
+
+  /* Syntax highlighting for light theme */
+  :root {
+    --syntax-keyword: 230 70% 40%;    /* Blue */
+    --syntax-string: 120 70% 25%;     /* Green */
+    --syntax-number: 20 90% 40%;      /* Orange */
+    --syntax-function: 270 70% 45%;   /* Purple */
+    --syntax-comment: 220 15% 50%;    /* Gray */
+    --syntax-operator: 0 70% 45%;     /* Red */
+    --syntax-variable: 200 70% 35%;   /* Blue-ish */
+  }
+
+  /* Syntax highlighting for dark theme */
+  .dark {
+    --syntax-keyword: 230 70% 70%;    /* Light Blue */
+    --syntax-string: 120 70% 70%;     /* Light Green */
+    --syntax-number: 20 90% 70%;      /* Light Orange */
+    --syntax-function: 270 70% 75%;   /* Light Purple */
+    --syntax-comment: 220 15% 60%;    /* Light Gray */
+    --syntax-operator: 0 70% 75%;     /* Light Red */
+    --syntax-variable: 200 70% 70%;   /* Light Blue-ish */
+  }
+
+  /* Syntax highlighting tokens */
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: hsl(var(--syntax-comment));
+  }
+
+  .token.punctuation {
+    color: hsl(var(--code-fg));
+  }
+
+  .token.namespace {
+    opacity: 0.7;
+  }
+
+  .token.property,
+  .token.tag,
+  .token.constant,
+  .token.symbol,
+  .token.deleted {
+    color: var(--syntax-tag);
+  }
+
+  .token.boolean,
+  .token.number {
+    color: hsl(var(--syntax-number));
+  }
+
+  .token.selector,
+  .token.attr-name,
+  .token.string,
+  .token.char,
+  .token.builtin,
+  .token.inserted {
+    color: hsl(var(--syntax-string));
+  }
+
+  .token.operator,
+  .token.entity,
+  .token.url,
+  .language-css .token.string,
+  .style .token.string {
+    color: hsl(var(--syntax-operator));
+  }
+
+  .token.atrule,
+  .token.attr-value,
+  .token.keyword {
+    color: hsl(var(--syntax-keyword));
+  }
+
+  .token.function,
+  .token.class-name {
+    color: hsl(var(--syntax-function));
+  }
+
+  .token.regex,
+  .token.important,
+  .token.variable {
+    color: hsl(var(--syntax-variable));
+  }
+
+  .token.important,
+  .token.bold {
+    font-weight: bold;
+  }
+
+  .token.italic {
+    font-style: italic;
+  }
+
+  .token.entity {
+    cursor: help;
+  }
+
+  /* Line highlighting */
+  .line {
+    @apply block px-4;
+  }
+
+  .line.highlighted {
+    @apply bg-muted border-l-2 border-l-primary;
+  }
+
+  .word.highlighted {
+    @apply bg-muted rounded px-1;
+  }
+
+  /* Language label */
+  pre[data-language]::before {
+    @apply absolute top-2 right-2 px-2 py-1 text-xs rounded bg-muted text-muted-foreground opacity-75;
+    content: attr(data-language);
+    text-transform: uppercase;
+  }
+}
+
+/* Dark mode styles */
+.dark {
+  background-color: #17191e;
+}
+
+.dark .bg-gray-950 {
+  background-color: #17191e;
+}
+
+/* Dark mode text color fix for articles */
+.dark .prose p,
+.dark .prose li,
+.dark .prose em,
+.dark .prose blockquote,
+.dark .prose a:not(:hover),
+.dark .prose td,
+.dark .prose th {
+  color: #d1d5db !important;
+}
+
+/* Make headings and bold text whiter */
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose h5,
+.dark .prose h6,
+.dark .prose strong,
+.dark .prose b {
+  color: #f0f0f5 !important;
+}
+
+/* Smooth transitions */
+.transition-colors,
+.hover\:bg-gray-100,
+.hover\:bg-gray-200,
+.hover\:bg-gray-300,
+.hover\:text-gray-900,
+.bg-white,
+.bg-gray-50,
+.bg-gray-100,
+.bg-gray-200,
+.text-gray-500,
+.text-gray-600,
+.text-gray-700,
+.text-gray-800,
+.text-gray-900,
+.border-gray-100,
+.border-gray-200,
+.border-gray-300 {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Code block styling */
+pre {
+  @apply overflow-x-auto rounded-lg border p-4 my-4;
+  background-color: var(--code-bg);
+}
+
+pre > code {
+  @apply grid min-w-full break-words rounded-none border-0 bg-transparent p-0;
+  font-size: 0.875rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  line-height: 1.7142857;
+}
+
+pre code .line {
+  @apply px-4 py-0.5;
+}
+
+pre code .line.highlighted {
+  @apply bg-slate-500 bg-opacity-10;
+}
+
+/* Disable line hover effect */
+pre code .line:hover {
+  background-color: transparent !important;
+}
+
+pre code .line .word {
+  @apply rounded-md bg-slate-500 bg-opacity-10 p-1;
+}
+
+/* Inline code styling */
+:not(pre) > code {
+  @apply rounded-md bg-slate-100 px-1.5 py-0.5 text-slate-900 dark:bg-slate-800 dark:text-slate-100;
+  font-size: 0.875em;
+}
+
+/* Language label */
+pre[data-language]::before {
+  @apply absolute right-4 top-0 rounded-b-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400;
+  content: attr(data-language);
+}
+
+/* Line numbers */
+pre > code {
+  counter-reset: line;
+}
+
+pre > code > .line::before {
+  @apply mr-4 inline-block w-4 text-right text-slate-400;
+  counter-increment: line;
+  content: counter(line);
+}
+
+/* Grid background */
+pre > code.has-grid {
+  @apply bg-slate-50 dark:bg-slate-900;
+  background-image: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.02) 50%);
+  background-size: 3em 3em;
+  background-position: 0 0;
+}
+
+/* Dark mode adjustments */
+.dark pre > code.has-grid {
+  background-image: linear-gradient(to bottom, transparent 50%, rgba(255, 255, 255, 0.02) 50%);
+}
+
+/* Remove highlight from clickable images */
+.no-highlight {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+.no-highlight:focus,
+.no-highlight:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Fix image container and caption styling */
+.prose .text-center {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.prose .text-center img {
+  margin-bottom: 0 !important;
+}
+
+.prose .text-center p {
+  margin-top: 0.25rem !important;
+  margin-bottom: 0 !important;
+}
+
+/* Table of Contents styles */
+.toc ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.toc ul li {
+  margin-bottom: 0.25rem;
+}
+
+.toc ul li a {
+  display: block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.toc ul li a:hover {
+  background-color: rgba(var(--primary), 0.05);
+}
+
+.toc ul li a.active {
+  background-color: rgba(var(--primary), 0.1);
+  color: hsl(var(--primary));
+  font-weight: 500;
+  border-left: 2px solid hsl(var(--primary));
+}
+
+/* Header link styling */
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  position: relative;
+  scroll-margin-top: 5rem;
+}
+
+.prose h1:hover .header-link-container,
+.prose h2:hover .header-link-container,
+.prose h3:hover .header-link-container,
+.prose h4:hover .header-link-container,
+.prose h5:hover .header-link-container,
+.prose h6:hover .header-link-container {
+  opacity: 1;
+}
