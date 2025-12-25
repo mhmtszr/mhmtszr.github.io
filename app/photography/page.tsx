@@ -10,6 +10,36 @@ import {PageContainer} from "../components/page-container"
 // Photography data with actual photos
 const photos = [
     {
+        url: '/photography/tokyo.jpg',
+        title: 'Shibuya Crossing',
+        city: 'Tokyo',
+        country: 'Japan'
+    },
+    {
+        url: '/photography/kyoto.jpg',
+        title: 'Hokan-ji',
+        city: 'Kyoto',
+        country: 'Japan'
+    },
+    {
+        url: '/photography/kyoto2.jpg',
+        title: 'Fushimi Inari Taisha',
+        city: 'Kyoto',
+        country: 'Japan'
+    },
+    {
+        url: '/photography/nara.jpg',
+        title: 'Nara',
+        city: 'Nara',
+        country: 'Japan'
+    },
+    {
+        url: '/photography/universalstudios.jpg',
+        title: 'Universal Studios Japan',
+        city: 'Osaka',
+        country: 'Japan'
+    },
+    {
         url: '/photography/london.jpg',
         title: 'London',
         city: 'London',
