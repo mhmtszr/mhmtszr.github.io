@@ -88,14 +88,26 @@ const photos = [
         country: 'England'
     },
     {
-        url: '/photography/hogwarts.jpg',
-        title: 'Hogwarts',
-        city: 'London',
-        country: 'England'
-    },
-    {
         url: '/photography/edinburgh.jpg',
         title: 'Edinburgh',
+        city: 'Edinburgh',
+        country: 'Scotland'
+    },
+    {
+        url: '/photography/victoria_street.jpg',
+        title: 'Victoria Street',
+        city: 'Edinburgh',
+        country: 'Scotland'
+    },
+    {
+        url: '/photography/dean_village.jpg',
+        title: 'Dean Village',
+        city: 'Edinburgh',
+        country: 'Scotland'
+    },
+    {
+        url: '/photography/waverley_bridge.jpg',
+        title: 'Waverley Bridge',
         city: 'Edinburgh',
         country: 'Scotland'
     },
