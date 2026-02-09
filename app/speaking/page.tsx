@@ -8,7 +8,6 @@ import Link from "next/link"
 import Image from "next/image"
 import { Timeline, TimelineItem } from "../../components/ui/timeline"
 import { YouTubeFacade } from "@/components/ui/youtube-facade"
-import { useSearchParams } from 'next/navigation'
 import { PageContainer } from "../components/page-container"
 
 const talks = [
@@ -115,7 +114,6 @@ const talks = [
 
 function SpeakingContent() {
   const [filter, setFilter] = useState("All")
-  const searchParams = useSearchParams()
 
   // Define filter options
   const filterOptions = ["All", "2025", "2024", "2023", "2022", "2019"]

@@ -153,28 +153,6 @@
     border-color: hsl(var(--code-border));
   }
 
-  /* Syntax highlighting for light theme */
-  :root {
-    --syntax-keyword: 230 70% 40%;    /* Blue */
-    --syntax-string: 120 70% 25%;     /* Green */
-    --syntax-number: 20 90% 40%;      /* Orange */
-    --syntax-function: 270 70% 45%;   /* Purple */
-    --syntax-comment: 220 15% 50%;    /* Gray */
-    --syntax-operator: 0 70% 45%;     /* Red */
-    --syntax-variable: 200 70% 35%;   /* Blue-ish */
-  }
-
-  /* Syntax highlighting for dark theme */
-  .dark {
-    --syntax-keyword: 230 70% 70%;    /* Light Blue */
-    --syntax-string: 120 70% 70%;     /* Light Green */
-    --syntax-number: 20 90% 70%;      /* Light Orange */
-    --syntax-function: 270 70% 75%;   /* Light Purple */
-    --syntax-comment: 220 15% 60%;    /* Light Gray */
-    --syntax-operator: 0 70% 75%;     /* Light Red */
-    --syntax-variable: 200 70% 70%;   /* Light Blue-ish */
-  }
-
   /* Syntax highlighting tokens */
   .token.comment,
   .token.prolog,
@@ -390,6 +368,54 @@ pre > code.has-grid {
 .dark pre > code.has-grid {
   background-image: linear-gradient(to bottom, transparent 50%, rgba(255, 255, 255, 0.02) 50%);
 }
+
+/* Hero gradient text */
+.hero-gradient {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #1a1a2e 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 8s ease infinite;
+}
+
+.dark .hero-gradient {
+  background: linear-gradient(135deg, #e2e8f0 0%, #a5b4fc 25%, #818cf8 50%, #c4b5fd 75%, #e2e8f0 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 8s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.animation-delay-100 { animation-delay: 0.1s; }
+.animation-delay-200 { animation-delay: 0.2s; }
+.animation-delay-300 { animation-delay: 0.3s; }
+.animation-delay-400 { animation-delay: 0.4s; }
+.animation-delay-500 { animation-delay: 0.5s; }
+.animation-delay-600 { animation-delay: 0.6s; }
 
 /* Remove highlight from clickable images */
 .no-highlight {

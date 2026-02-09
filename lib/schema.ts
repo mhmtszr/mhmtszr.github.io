@@ -1,6 +1,9 @@
-/**
- * Utility functions for generating Schema.org structured data
- */
+import { type ArticleMetadata } from './mdx'
+
+interface ArticleWithSlug {
+  meta: ArticleMetadata
+  slug: string
+}
 
 // Basic website schema
 export function generateWebsiteSchema() {
@@ -9,14 +12,6 @@ export function generateWebsiteSchema() {
     '@type': 'WebSite',
     name: 'Mehmet Sezer - Senior Software Engineer',
     url: 'https://msezer.dev',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: 'https://msezer.dev/search?q={search_term_string}'
-      },
-      'query-input': 'required name=search_term_string'
-    },
     description: 'Senior Software Engineer at Trendyol specializing in microservice architecture and distributed systems. Building scalable and reliable software solutions.',
     inLanguage: 'en-US',
     copyrightYear: new Date().getFullYear()
@@ -61,7 +56,7 @@ export function generatePersonSchema() {
 }
 
 // BlogPosting schema for articles
-export function generateArticleSchema(article: any) {
+export function generateArticleSchema(article: ArticleWithSlug) {
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -74,7 +69,7 @@ export function generateArticleSchema(article: any) {
     },
     datePublished: article.meta.date,
     dateModified: article.meta.modified || article.meta.date,
-    image: article.meta.image || 'https://msezer.dev/opengraph-image.png',
+    image: article.meta.image?.startsWith('http') ? article.meta.image : `https://msezer.dev${article.meta.image || '/opengraph-image.png'}`,
     url: `https://msezer.dev/articles/${article.slug}`,
     publisher: {
       '@type': 'Person',

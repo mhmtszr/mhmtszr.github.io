@@ -22,7 +22,8 @@ export async function generateMetadata(
       return {}
     }
 
-    const ogImage = article.meta.image || '/images/placeholder-article.jpg'
+    const rawImage = article.meta.image || '/opengraph-image.png'
+    const ogImage = rawImage.startsWith('http') ? rawImage : `https://msezer.dev${rawImage}`
     
     return {
       title: article.meta.title,

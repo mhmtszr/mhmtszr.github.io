@@ -1,12 +1,6 @@
-// "use client"
-
-// import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Timeline, TimelineItem } from "../../components/ui/timeline"
-import { getYear } from "date-fns"
 import { PageContainer } from "../components/page-container"
-// import { Suspense } from 'react'
-// import { useSearchParams } from 'next/navigation'
 
 interface Experience {
   company: string

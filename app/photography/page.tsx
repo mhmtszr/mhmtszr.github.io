@@ -4,7 +4,6 @@ import {Suspense, useCallback, useEffect, useMemo, useRef, useState} from "react
 import {motion} from "framer-motion"
 import {PhotoDetail} from "@/components/ui/photo-detail"
 import Image from "next/image"
-import {useSearchParams} from 'next/navigation'
 import {PageContainer} from "../components/page-container"
 
 // Photography data with actual photos
@@ -541,7 +540,6 @@ const uniqueCountries = ["All", ...Array.from(
 const BATCH_SIZE = 12;
 
 function PhotographyContent() {
-    const searchParams = useSearchParams()
     const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null)
     const [filter, setFilter] = useState("All")
     const [displayCount, setDisplayCount] = useState(BATCH_SIZE)
@@ -742,7 +740,7 @@ function PhotographyContent() {
                                         width={800}
                                         height={800}
                                         className="h-full w-auto object-contain transform-gpu"
-                                        priority={index < BATCH_SIZE}
+                                        priority={index < 4}
                                         sizes="100vw"
                                     />
                                 }

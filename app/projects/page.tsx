@@ -5,7 +5,6 @@ import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Github, ExternalLink } from "lucide-react"
 import Link from "next/link"
-import { useSearchParams } from 'next/navigation'
 import { PageContainer } from "../components/page-container"
 
 const projects = [
@@ -88,7 +87,6 @@ const projects = [
 ]
 
 function ProjectsContent() {
-  const searchParams = useSearchParams()
   const [filter, setFilter] = useState("All")
 
   // Get unique technologies for filter options

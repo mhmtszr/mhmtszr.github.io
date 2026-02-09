@@ -1,38 +1,30 @@
 import type React from "react"
-import fs from 'fs';
-import path from 'path';
-// Remove critical.css import here, we will inline it
-// import "./critical.css" 
+import fs from 'fs'
+import path from 'path'
+import './globals.css'
 import { Inter } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import Sidebar from "@/components/sidebar"
 import Script from "next/script"
 import ScrollReset from "@/components/scroll-reset"
 
-// Remove manual loading functions
-// const preloadNonCriticalCSS = () => { ... }
-// const loadNonCriticalCSS = () => { ... }
-
 const inter = Inter({ 
   subsets: ["latin"],
-  display: 'swap', // Optimize font loading
-  preload: true // Ensure font is preloaded
+  display: 'swap',
+  preload: true
 })
 
-// Function to read critical CSS - ensure this runs server-side only
 const readCriticalCss = () => {
   try {
-    // Adjust the path according to your project structure if needed
     const cssPath = path.join(process.cwd(), 'app', 'critical.css'); 
     return fs.readFileSync(cssPath, 'utf8');
   } catch (error) {
     console.error("Error reading critical CSS:", error);
-    return ''; // Return empty string on error
+    return '';
   }
 };
 
 const criticalCssContent = readCriticalCss();
-
 
 export const metadata = {
   title: {
@@ -64,7 +56,9 @@ export const metadata = {
     telephone: false,
   },
   metadataBase: new URL('https://msezer.dev'),
-  alternates: {},
+  alternates: {
+    canonical: '/',
+  },
   icons: {
     icon: 'https://msezer.dev/favicon.png'
   },
@@ -95,7 +89,6 @@ export const metadata = {
   robots: {
     index: true,
     follow: true,
-    nocache: true,
     googleBot: {
       index: true,
       follow: true,
@@ -117,16 +110,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Add the standard manifest link tag */}
         <link rel="manifest" href="/site.webmanifest" />
-        
-        {/* Inline Critical CSS */}
         <style dangerouslySetInnerHTML={{ __html: criticalCssContent }} />
-        
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
         <meta name="google-site-verification" content="BJMSpiC_fy4HW6D8l2wxY75vzp2FTfAy4PC3vwb6NnU" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#17191e" media="(prefers-color-scheme: dark)" />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
-        
         <Script id="theme-script" strategy="beforeInteractive">
           {`
             (function() {
@@ -137,68 +127,23 @@ export default function RootLayout({
                 } else {
                   document.documentElement.classList.remove('dark');
                 }
-              } catch (e) {
-                console.error('Error applying theme:', e);
-              }
+              } catch (e) {}
             })();
           `}
         </Script>
-        
-        {/* Remove script that loads non-critical CSS */}
-        {/* <Script id="load-css" strategy="afterInteractive"> ... </Script> */}
-        
-        <Script
-          id="schema-script"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Person',
-              name: 'Mehmet Sezer',
-              jobTitle: 'Senior Software Engineer',
-              url: 'https://msezer.dev',
-              alumniOf: {
-                '@type': 'CollegeOrUniversity',
-                name: 'Hacettepe University',
-                department: 'Computer Science'
-              },
-              description: 'Senior Software Engineer at Trendyol specializing in microservice architecture and distributed systems. Building scalable and reliable software solutions.',
-              sameAs: [
-                'https://github.com/mhmtszr',
-                'https://linkedin.com/in/mehmetsezerr',
-                'https://x.com/_mehmetsezer',
-                'https://medium.com/@mehmet.sezer'
-              ],
-              worksFor: {
-                '@type': 'Organization',
-                name: 'Trendyol',
-                url: 'https://trendyol.com',
-                description: 'Turkey\'s leading e-commerce platform'
-              },
-              knowsAbout: [
-                'Software Engineering',
-                'Microservices',
-                'Distributed Systems',
-                'Software Architecture',
-                'High-Performance Computing',
-                'System Design'
-              ],
-              award: [
-                '3rd Highest GPA in Computer Science Department at Hacettepe University'
-              ]
-            })
-          }}
-        />
         <link rel="icon" href="/favicon.png" />
         <link rel="alternate" type="application/rss+xml" title="Mehmet Sezer's Blog" href="https://msezer.dev/rss.xml" />
       </head>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-black dark:focus:bg-gray-900 dark:focus:text-white">
+          Skip to content
+        </a>
         <ThemeProvider defaultTheme="light">
           <ScrollReset />
           <div className="flex min-h-screen flex-col">
             <Sidebar />
             <div className="flex-1 md:ml-64">
-              <main className="min-h-screen w-full">{children}</main>
+              <main id="main-content" className="min-h-screen w-full overflow-x-hidden">{children}</main>
             </div>
           </div>
         </ThemeProvider>
@@ -206,6 +151,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-
-import './globals.css' // Keep this import for Next.js to handle non-critical CSS

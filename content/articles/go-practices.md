@@ -1,9 +1,11 @@
 ---
-title: "Go Practices"
-description: "Go practices, patterns, and solutions for better code quality."
+title: "Go Practices: Patterns and Solutions for Better Code Quality"
+description: "A comprehensive guide to Go best practices covering folder structure, performance optimization, concurrency patterns, error handling, testing strategies, and clean code principles."
+metaDescription: "Learn Go best practices, patterns, and solutions for writing clean, performant, and maintainable Go code. Covers folder structure, concurrency, error handling, testing, and performance tips."
 date: "2025-04-28"
 image: "/article/go-practices/preview.png"
-tags: ["Go"]
+tags: ["Go", "Golang", "Best Practices", "Clean Code", "Concurrency", "Performance", "Testing", "Error Handling"]
+keywords: ["go best practices", "golang patterns", "go concurrency", "go performance optimization", "go error handling", "go testing", "golang clean code", "go folder structure", "go project layout"]
 ---
 
 
