@@ -153,12 +153,12 @@ export default async function HomePage() {
                   <p className="pl-4"><span className="text-blue-400">&quot;role&quot;</span>: <span className="text-amber-300">&quot;Sr. Software Engineer&quot;</span>,</p>
                   <p className="pl-4"><span className="text-blue-400">&quot;company&quot;</span>: <span className="text-amber-300">&quot;Trendyol&quot;</span>,</p>
                   <p className="pl-4"><span className="text-blue-400">&quot;focus&quot;</span>: [</p>
-                  <p className="pl-8"><span className="text-amber-300">&quot;distributed-systems&quot;</span>,</p>
-                  <p className="pl-8"><span className="text-amber-300">&quot;database-internals&quot;</span>,</p>
-                  <p className="pl-8"><span className="text-amber-300">&quot;microservice-architecture&quot;</span></p>
+                  <p className="pl-8"><span className="text-amber-300">&quot;Distributed Systems&quot;</span>,</p>
+                  <p className="pl-8"><span className="text-amber-300">&quot;Database Internals&quot;</span>,</p>
+                  <p className="pl-8"><span className="text-amber-300">&quot;Microservice Architecture&quot;</span></p>
                   <p className="pl-4">],</p>
                   <p className="pl-4"><span className="text-blue-400">&quot;languages&quot;</span>: [<span className="text-amber-300">&quot;Go&quot;</span>, <span className="text-amber-300">&quot;Kotlin&quot;</span>, <span className="text-amber-300">&quot;Java&quot;</span>],</p>
-                  <p className="pl-4"><span className="text-blue-400">&quot;hobbies&quot;</span>: [<span className="text-amber-300">&quot;piano&quot;</span>, <span className="text-amber-300">&quot;tennis&quot;</span>, <span className="text-amber-300">&quot;travel&quot;</span>]</p>
+                  <p className="pl-4"><span className="text-blue-400">&quot;hobbies&quot;</span>: [<span className="text-amber-300">&quot;Piano&quot;</span>, <span className="text-amber-300">&quot;Tennis&quot;</span>, <span className="text-amber-300">&quot;Travel&quot;</span>]</p>
                   <p className="text-purple-400">{"}"}</p>
                   <p className="mt-1.5"><span className="text-green-400">$</span> <span className="animate-pulse">_</span></p>
                 </div>
