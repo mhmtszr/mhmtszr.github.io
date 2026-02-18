@@ -6,7 +6,9 @@ import { generateWebsiteSchema, generatePersonSchema } from "@/lib/schema"
 import { getAllArticles, getLatestArticles } from "@/lib/mdx"
 
 export const metadata: Metadata = {
-  title: "Home",
+  title: {
+    absolute: "Home | Mehmet Sezer",
+  },
   description: "Mehmet Sezer - Senior Software Engineer building scalable systems, sharing engineering lessons, and writing about distributed architecture.",
   alternates: {
     canonical: "/",

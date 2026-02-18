@@ -9,12 +9,12 @@ interface ArticleLayoutProps {
 
 export const metadata: Metadata = {
   title: {
-    default: "Articles by Mehmet Sezer - Software Engineering Insights",
-    template: "%s | Mehmet Sezer's Blog"
+    default: "Articles | Mehmet Sezer",
+    template: "%s | Mehmet Sezer",
   },
   description: "Technical articles and insights about software engineering, microservices, distributed systems, and software architecture by Mehmet Sezer.",
   openGraph: {
-    title: "Articles by Mehmet Sezer - Software Engineering Insights",
+    title: "Articles | Mehmet Sezer",
     description: "Technical articles and insights about software engineering, microservices, distributed systems, and software architecture.",
     type: 'article',
     authors: ['Mehmet Sezer']
