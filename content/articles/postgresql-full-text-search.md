@@ -1,18 +1,18 @@
 ---
 title: "PostgreSQL Full Text Search: Why We Replaced Elasticsearch at Trendyol DisplayAds"
 description: "How we moved from Couchbase N1QL through CDC-to-Elasticsearch to native PostgreSQL Full Text Search. A journey of simplification, consistency, and the right tool for the job."
-metaDescription: "Trendyol DisplayAds replaced Elasticsearch with PostgreSQL Full Text Search. Learn why we chose native FTS over CDC pipelines, benchmark results, and a practical PostgreSQL FTS tutorial."
+metaDescription: "Trendyol DisplayAds replaced Elasticsearch with PostgreSQL Full Text Search. Learn why we chose native FTS over CDC pipelines and a practical PostgreSQL FTS tutorial."
 date: "2026-02-22"
 image: "/article/postgresql-full-text-search/preview.png"
 tags: ["PostgreSQL", "Full Text Search", "Elasticsearch", "Couchbase", "CDC", "Trendyol", "DisplayAds", "GIN Index", "tsvector"]
 keywords: ["PostgreSQL full text search", "PostgreSQL vs Elasticsearch", "tsvector tsquery", "GIN index", "Couchbase to PostgreSQL migration", "CDC elasticsearch", "search without elasticsearch"]
 ---
 
-Adding full-text search to an application usually means spinning up Elasticsearch, OpenSearch, or Solr. That approach works, but it introduces another system to run, sync, and keep consistent. At Trendyol DisplayAds, we challenged that assumption and ended up replacing Elasticsearch with PostgreSQL's built-in full-text search. This article shares our journey, the benchmark results that convinced us, and a practical guide to using PostgreSQL FTS.
+Adding full-text search to an application usually means spinning up Elasticsearch, OpenSearch, or Solr. That approach works, but it introduces another system to run, sync, and keep consistent. At Trendyol DisplayAds, we challenged that assumption and ended up replacing Elasticsearch with PostgreSQL's built-in full-text search. This article shares our journey and a practical guide to using PostgreSQL FTS.
 
 ## Who Should Read This
 
-Engineers and architects considering search solutions for medium-scale applications will find this useful. If you already use PostgreSQL and your search volume is moderate—hundreds of thousands to a few million documents, tens to low hundreds of queries per second—PostgreSQL Full Text Search may be enough. We cover the trade-offs, benchmark data, and a step-by-step tutorial to evaluate it for your own use case.
+Engineers and architects considering search solutions for medium-scale applications will find this useful. If you already use PostgreSQL and your search volume is moderate—hundreds of thousands to a few million documents, tens to low hundreds of queries per second—PostgreSQL Full Text Search may be enough. We cover the trade-offs and a step-by-step tutorial to evaluate it for your own use case.
 
 **Why consider PostgreSQL FTS before Elasticsearch?** As [Miftahul Huda notes](https://iniakunhuda.medium.com/postgresql-full-text-search-a-powerful-alternative-to-elasticsearch-for-small-to-medium-d9524e001fe0), Elasticsearch is often overkill for small-to-medium apps. It requires additional expertise, complex deployment and monitoring, extra operational cost, and synchronization between your primary database and the search index. PostgreSQL's built-in search provides language support, simpler architecture, cost efficiency, and zero sync lag—all without extra infrastructure.
 
@@ -36,7 +36,7 @@ DisplayAds' document model—relational entities, clear schemas, and transaction
 
 Keeping it would mean another CDC pipeline, this time from PostgreSQL to Elasticsearch. Trendyol has [go-pq-cdc-elasticsearch](https://github.com/Trendyol/go-pq-cdc-elasticsearch) for this purpose, which streams PostgreSQL changes to Elasticsearch via logical replication. It solves the Couchbase-specific DCP replay limitation, but the fundamental challenges remain: Elasticsearch is eventually consistent, and the connector is another moving part to run and debug.
 
-Our Staff Engineer, Nurettin Bakkal, suggested we evaluate PostgreSQL Full Text Search first. Our workload—moderate data size and query volume—made this approach plausible. We ran a POC and benchmarks; the results were strong enough to adopt PostgreSQL FTS as our primary search solution.
+Our Staff Engineer, Nurettin Bakkal, suggested we evaluate PostgreSQL Full Text Search first. Our workload—moderate data size and query volume—made this approach plausible. We ran a POC and the results were strong enough to adopt PostgreSQL FTS as our primary search solution.
 
 ## LIKE, Regex, and Full-Text Search: Why They're Different
 
@@ -254,8 +254,7 @@ What we gained:
 - **Strong consistency**: No sync lag; read-your-writes by default. Every INSERT is immediately searchable.
 - **Simpler architecture**: One database instead of PostgreSQL + Elasticsearch + CDC pipeline.
 - **Lower operational load**: Fewer services to run, monitor, and debug at 3 AM.
-- **Write performance**: ~2.4× faster write throughput than Elasticsearch. The tsvector is computed at insert time via a generated column—lightweight compared to HTTP-based indexing.
-- **Competitive read performance**: At 10K documents, PostgreSQL actually outperforms Elasticsearch (~3,019 vs ~2,346 TPS). At our moderate scale, read latency is well within requirements.
+- **Good performance**: At our moderate scale, both read and write latency are well within requirements. The tsvector is computed at insert time via a generated column—lightweight and efficient.
 
 PostgreSQL FTS is not a replacement for Elasticsearch in every scenario. While PostgreSQL's full-text search is powerful, Elasticsearch may be the better choice when:
 
@@ -265,4 +264,4 @@ PostgreSQL FTS is not a replacement for Elasticsearch in every scenario. While P
 - You need advanced features like geospatial search or image search
 - Your search load exceeds thousands of queries per second
 
-For moderate scale and consistency needs, PostgreSQL Full Text Search is a powerful, built-in alternative. Before adding another system to your stack, benchmark the one you already have.
+For moderate scale and consistency needs, PostgreSQL Full Text Search is a powerful, built-in alternative. Before adding another system to your stack, evaluate the one you already have.
