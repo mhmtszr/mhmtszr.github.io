@@ -12,7 +12,8 @@ const nextConfig = {
     serverExternalPackages: ['shiki'],
     turbopack: {},
     experimental: {
-        optimizePackageImports: ['lucide-react'],
+        optimizePackageImports: ['lucide-react', '@radix-ui/react-dialog', '@radix-ui/react-avatar', 'class-variance-authority'],
+        inlineCss: true,
     },
 }
 

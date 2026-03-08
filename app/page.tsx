@@ -242,7 +242,7 @@ export default async function HomePage() {
                                         {article.meta.image ? (
                                             <div className="relative hidden sm:block h-28 w-full overflow-hidden lg:h-32">
                                                 <Image
-                                                    src={article.meta.image}
+                                                    src={article.meta.image.replace('preview.webp', 'preview-thumb.webp')}
                                                     alt={article.meta.title}
                                                     fill
                                                     priority={idx === 0}

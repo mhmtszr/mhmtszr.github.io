@@ -1,9 +1,4 @@
-"use client"
-
-import {useState} from "react"
 import Link from "next/link"
-import {usePathname} from "next/navigation"
-import {cn} from "@/lib/utils"
 import {
     BookOpenText,
     Briefcase,
@@ -12,150 +7,29 @@ import {
     Github,
     ImageIcon,
     Linkedin,
-    Menu,
     Presentation,
     Twitter,
     User,
 } from "lucide-react"
 import {MediumIcon} from "@/components/icons/medium"
-import {Button} from "@/components/ui/button"
-import {Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger} from "@/components/ui/sheet"
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {ThemeToggle} from "@/components/theme-toggle"
+import {NavLink} from "@/components/nav-link"
+import MobileNav from "@/components/mobile-nav"
 
 const navItems = [
-    {name: "About", href: "/", icon: User},
-    {name: "Experience", href: "/experience", icon: Briefcase},
-    {name: "Projects", href: "/projects", icon: Code},
-    {name: "Speaking", href: "/speaking", icon: Presentation},
-    {name: "Articles", href: "/articles", icon: BookOpenText},
-    {name: "Photography", href: "/photography", icon: ImageIcon},
+    {name: "About", href: "/", icon: <User className="h-5 w-5"/>},
+    {name: "Experience", href: "/experience", icon: <Briefcase className="h-5 w-5"/>},
+    {name: "Projects", href: "/projects", icon: <Code className="h-5 w-5"/>},
+    {name: "Speaking", href: "/speaking", icon: <Presentation className="h-5 w-5"/>},
+    {name: "Articles", href: "/articles", icon: <BookOpenText className="h-5 w-5"/>},
+    {name: "Photography", href: "/photography", icon: <ImageIcon className="h-5 w-5"/>},
 ]
 
 export default function Sidebar() {
-    const pathname = usePathname()
-    const [isMobileNavOpen, setIsMobileNavOpen] = useState(false)
-
     return (
         <>
             {/* Mobile Navigation */}
-            <div
-                className="sticky top-0 z-40 flex items-center justify-between px-4 h-16 border-b md:hidden! bg-white dark:bg-gray-950 font-sans">
-                <Link href="/" className="flex items-center gap-3">
-                    <Avatar className="h-9 w-9 border border-gray-200 dark:border-gray-700">
-                        <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer" fetchPriority="high"/>
-                        <AvatarFallback>MS</AvatarFallback>
-                    </Avatar>
-                    <span className="font-bold text-xl">Mehmet Sezer</span>
-                </Link>
-                <div className="flex items-center gap-2">
-                    <ThemeToggle/>
-                    <Sheet open={isMobileNavOpen} onOpenChange={setIsMobileNavOpen}>
-                        <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                                <Menu className="h-6 w-6"/>
-                                <span className="sr-only">Toggle menu</span>
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="left" className="w-[80%] max-w-[300px] p-0 flex flex-col">
-                            <div className="flex flex-col h-full min-h-0">
-                                <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-                                <SheetDescription className="sr-only">
-                                    Navigation menu containing links to different sections of the website and social
-                                    media profiles
-                                </SheetDescription>
-                                <div className="flex items-center gap-3 mt-4 mb-6 px-4">
-                                    <Avatar className="h-10 w-10 border border-gray-200 dark:border-gray-700">
-                                        <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer"/>
-                                        <AvatarFallback>MS</AvatarFallback>
-                                    </Avatar>
-                                    <span className="font-bold text-lg">Mehmet Sezer</span>
-                                </div>
-                                <nav className="flex-1 overflow-y-auto min-h-0">
-                                    <ul className="grid gap-0.5 px-2">
-                                        {navItems.map((item) => {
-                                            const IconComponent = item.icon
-                                            const isActive = pathname !== null && (pathname === item.href || pathname.startsWith(`${item.href}/`))
-                                            return (
-                                                <li key={item.name}>
-                                                    <Link
-                                                        href={item.href}
-                                                        onClick={() => setIsMobileNavOpen(false)}
-                                                        aria-current={isActive ? "page" : undefined}
-                                                        className={cn(
-                                                            "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50",
-                                                            isActive && "bg-blue-50 text-blue-700 border-l-2 border-blue-600 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-400",
-                                                        )}
-                                                    >
-                                                        <IconComponent
-                                                            className={cn("h-5 w-5 shrink-0", isActive && "text-blue-600 dark:text-blue-400")}/>
-                                                        <span className="truncate">{item.name}</span>
-                                                    </Link>
-                                                </li>
-                                            )
-                                        })}
-                                    </ul>
-                                </nav>
-                                {/* Mobile Social Links */}
-                                <footer
-                                    className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 py-8 shrink-0">
-                                    <div className="grid grid-cols-5 gap-2 px-4 mb-6">
-                                        <Link
-                                            href="https://github.com/mhmtszr"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                                        >
-                                            <Github className="h-5 w-5"/>
-                                            <span className="sr-only">GitHub</span>
-                                        </Link>
-                                        <Link
-                                            href="https://linkedin.com/in/mehmetsezerr"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                                        >
-                                            <Linkedin className="h-5 w-5"/>
-                                            <span className="sr-only">LinkedIn</span>
-                                        </Link>
-                                        <Link
-                                            href="https://x.com/_mehmetsezer"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                                        >
-                                            <Twitter className="h-5 w-5"/>
-                                            <span className="sr-only">Twitter</span>
-                                        </Link>
-                                        <Link
-                                            href="https://medium.com/@mehmet.sezer"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                                        >
-                                            <MediumIcon className="h-5 w-5"/>
-                                            <span className="sr-only">Medium</span>
-                                        </Link>
-                                        <a
-                                            href="/Mehmet_Sezer_Resume.pdf"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                                        >
-                                            <FileText className="h-5 w-5"/>
-                                            <span className="sr-only">CV</span>
-                                        </a>
-                                    </div>
-                                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center px-4"
-                                       suppressHydrationWarning>
-                                        &copy; {new Date().getFullYear()} Mehmet Sezer
-                                    </p>
-                                </footer>
-                            </div>
-                        </SheetContent>
-                    </Sheet>
-                </div>
-            </div>
+            <MobileNav/>
 
             {/* Desktop Sidebar */}
             <div className="hidden md:flex md:w-64 lg:w-72 md:flex-col md:fixed md:inset-y-0 font-sans">
@@ -164,39 +38,25 @@ export default function Sidebar() {
                     <div className="flex-1 flex flex-col pt-5 overflow-y-auto">
                         <div className="flex flex-col items-center px-6 mb-8">
                             <div className="mb-4">
-                                <Avatar className="h-24 w-24 border-2 border-gray-200 dark:border-gray-700">
-                                    <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer" fetchPriority="high"/>
-                                    <AvatarFallback>MS</AvatarFallback>
-                                </Avatar>
+                                <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full border-2 border-gray-200 dark:border-gray-700">
+                                    <img src="/photography/profile.jpg" alt="Mehmet Sezer"
+                                         className="aspect-square h-full w-full object-cover" fetchPriority="high"/>
+                                </div>
                             </div>
                             <span className="font-bold text-xl text-center">Mehmet Sezer</span>
-                            <span className="text-sm text-gray-500 dark:text-gray-400">Senior Software Engineer</span>
+                            <span
+                                className="text-sm text-gray-500 dark:text-gray-400">Senior Software Engineer</span>
                             <div className="mt-2">
                                 <ThemeToggle/>
                             </div>
                         </div>
                         <nav aria-label="Main navigation" className="flex-1 px-3 pb-4">
                             <ul className="grid gap-1">
-                                {navItems.map((item) => {
-                                    const IconComponent = item.icon
-                                    const isActive = pathname !== null && (pathname === item.href || pathname.startsWith(`${item.href}/`))
-                                    return (
-                                        <li key={item.name}>
-                                            <Link
-                                                href={item.href}
-                                                aria-current={isActive ? "page" : undefined}
-                                                className={cn(
-                                                    "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50",
-                                                    isActive && "bg-blue-50 text-blue-700 border-l-2 border-blue-600 dark:bg-blue-950/30 dark:text-blue-300 dark:border-blue-400",
-                                                )}
-                                            >
-                                                <IconComponent
-                                                    className={cn("h-5 w-5 shrink-0", isActive && "text-blue-600 dark:text-blue-400")}/>
-                                                <span className="truncate">{item.name}</span>
-                                            </Link>
-                                        </li>
-                                    )
-                                })}
+                                {navItems.map((item) => (
+                                    <NavLink key={item.name} href={item.href} icon={item.icon}>
+                                        {item.name}
+                                    </NavLink>
+                                ))}
                             </ul>
                         </nav>
                     </div>
