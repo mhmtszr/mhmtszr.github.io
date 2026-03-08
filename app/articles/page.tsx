@@ -33,6 +33,10 @@ const item = {
     show: {opacity: 1, y: 0}
 }
 
+function sortByDate(articles: Article[]) {
+    return [...articles].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+}
+
 function ArticlesContent() {
     const [isDesktop, setIsDesktop] = useState(true)
     const [isListView, setIsListView] = useState(false)
@@ -54,13 +58,13 @@ function ArticlesContent() {
         }
     }, [isDesktop, isListView])
 
+    // Load MDX articles immediately
     useEffect(() => {
-        async function loadArticles() {
+        async function loadMdxArticles() {
             try {
                 setIsLoading(true)
                 setError(null)
 
-                // Get MDX articles from API
                 const mdxResponse = await fetch('/api/articles')
                 if (!mdxResponse.ok) {
                     throw new Error('Failed to fetch MDX articles')
@@ -70,21 +74,36 @@ function ArticlesContent() {
                 const formattedMDXArticles: Article[] = mdxArticles.map((article: {
                     meta: ArticleMetadata,
                     slug: string
-                }) => {
-                    return {
-                        title: article.meta.title,
-                        description: article.meta.description || 'No description available',
-                        date: article.meta.date,
-                        imageUrl: article.meta.image || '/images/placeholder-article.jpg',
-                        url: `/articles/${article.slug}`,
-                        tags: article.meta.tags || [],
-                        source: "website" as const,
-                    }
-                })
+                }) => ({
+                    title: article.meta.title,
+                    description: article.meta.description || 'No description available',
+                    date: article.meta.date,
+                    imageUrl: article.meta.image || '/images/placeholder-article.jpg',
+                    url: `/articles/${article.slug}`,
+                    tags: article.meta.tags || [],
+                    source: "website" as const,
+                }))
 
+                setArticles(sortByDate(formattedMDXArticles))
+            } catch (error) {
+                console.error('Error loading MDX articles:', error)
+                setError('Failed to load articles')
+            } finally {
+                setIsLoading(false)
+            }
+        }
 
-                // Get Medium articles
+        loadMdxArticles()
+    }, [])
+
+    // Load Medium articles in the background
+    useEffect(() => {
+        let cancelled = false
+
+        async function loadMediumArticles() {
+            try {
                 const mediumArticles = await getMediumArticles()
+                if (cancelled) return
 
                 const formattedMediumArticles: Article[] = mediumArticles.map((article: MediumArticle) => ({
                     title: article.title,
@@ -96,25 +115,25 @@ function ArticlesContent() {
                     source: "medium" as const,
                 }))
 
-                const allArticles = [...formattedMDXArticles, ...formattedMediumArticles].sort((a, b) =>
-                    new Date(b.date).getTime() - new Date(a.date).getTime()
-                )
-
-                if (allArticles.length === 0) {
-                    setError('No articles found')
-                    return
+                if (formattedMediumArticles.length > 0) {
+                    setArticles(prev => {
+                        const existingUrls = new Set(prev.map(a => a.url))
+                        const existingTitles = new Set(prev.map(a => a.title.toLowerCase().trim()))
+                        const newArticles = formattedMediumArticles.filter(a =>
+                            !existingUrls.has(a.url) && !existingTitles.has(a.title.toLowerCase().trim())
+                        )
+                        return newArticles.length > 0 ? sortByDate([...prev, ...newArticles]) : prev
+                    })
                 }
-
-                setArticles(allArticles)
             } catch (error) {
-                console.error('Error loading articles:', error)
-                setError('Failed to load articles')
-            } finally {
-                setIsLoading(false)
+                if (!cancelled) {
+                    console.error('Error loading Medium articles:', error)
+                }
             }
         }
 
-        loadArticles()
+        loadMediumArticles()
+        return () => { cancelled = true }
     }, [])
 
     const ViewToggle = () => (

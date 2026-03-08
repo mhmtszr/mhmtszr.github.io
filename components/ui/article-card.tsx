@@ -40,11 +40,12 @@ export function ArticleCard({
             <div
                 className="overflow-hidden rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm transition-all hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 h-full">
                 <Link href={url} target={source === "medium" ? "_blank" : undefined} className="group flex h-full">
-                    <div className="relative w-60 shrink-0">
+                    <div className="relative w-60 shrink-0 bg-gray-100 dark:bg-gray-800">
                         <Image
                             src={imageUrl}
                             alt={title}
                             fill
+                            loading="lazy"
                             className="object-cover transition-transform duration-500 group-hover:scale-105"
                             sizes="(max-width: 768px) 100vw, 33vw"
                         />
@@ -88,14 +89,13 @@ export function ArticleCard({
         <div
             className="overflow-hidden rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm transition-all hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 h-full">
             <Link href={url} target={source === "medium" ? "_blank" : undefined} className="group flex flex-col h-full">
-                <div className="relative h-52 shrink-0">
+                <div className="relative h-52 shrink-0 bg-gray-100 dark:bg-gray-800">
                     <Image
                         src={imageUrl}
                         alt={title}
                         fill
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        priority={index < 4}
-                        loading={index < 4 ? "eager" : "lazy"}
+                        loading="lazy"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     />
                 </div>
