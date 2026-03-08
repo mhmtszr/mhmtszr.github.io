@@ -1,7 +1,6 @@
 "use client"
 
-import {useState} from "react"
-import {PhotoDetail} from "@/components/ui/photo-detail"
+import {lazy, Suspense, useState} from "react"
 import {Calendar, FileText} from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -9,6 +8,10 @@ import {DeferredImage} from "@/components/ui/deferred-image"
 import {Timeline, TimelineItem} from "../../components/ui/timeline"
 import {YouTubeFacade} from "@/components/ui/youtube-facade"
 import {PageContainer} from "../components/page-container"
+
+const LazyPhotoDetail = lazy(() =>
+    import("@/components/ui/photo-detail").then(mod => ({default: mod.PhotoDetail}))
+)
 
 const talks = [
     {
@@ -112,27 +115,76 @@ const talks = [
     }
 ];
 
+function TalkCard({talk, index, onClick}: {
+    talk: typeof talks[number],
+    index: number,
+    onClick: () => void
+}) {
+    return (
+        <button type="button" className="space-y-4 cursor-pointer text-left w-full" onClick={onClick}>
+            <div className="w-full">
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700">
+                    {index === 0 ? (
+                        <Image
+                            src={talk.url}
+                            alt={talk.title}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 450px"
+                            priority
+                            fetchPriority="high"
+                        />
+                    ) : (
+                        <DeferredImage
+                            placeholderClassName="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-xl"
+                            src={talk.url}
+                            alt={talk.title}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 450px"
+                        />
+                    )}
+                </div>
+            </div>
+            <div>
+                <h2 className="text-xl font-semibold">{talk.event}</h2>
+                <p className="text-gray-600 dark:text-gray-300 mt-1">{talk.title}</p>
+                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-2">
+                    <Calendar className="w-4 h-4"/>
+                    <span>{talk.date}</span>
+                </div>
+                <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm leading-relaxed line-clamp-3">{talk.description}</p>
+                {talk.slides && (
+                    <Link
+                        href={talk.slides}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline mt-2 font-sans text-sm"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <FileText className="w-4 h-4"/>
+                        View Slides
+                    </Link>
+                )}
+            </div>
+        </button>
+    )
+}
+
 function SpeakingContent() {
     const [filter, setFilter] = useState("All")
     const [openDialog, setOpenDialog] = useState<number | null>(null)
 
-    // Define filter options
     const filterOptions = ["All", "2025", "2024", "2023", "2022", "2019"]
-
-    // Filter talks based on selected year
     const filteredTalks = filter === "All" ? talks : talks.filter((talk) => talk.date.includes(filter))
 
-    // Function to get year from date string
     const getYear = (date: string) => date.split(" ").pop() || ""
+    const shouldShowYear = (currentYear: string, prevYear?: string) => currentYear !== prevYear
 
-    // Function to check if we should show the year marker
-    const shouldShowYear = (currentYear: string, prevYear?: string) => {
-        return currentYear !== prevYear
-    }
+    const selectedTalk = openDialog !== null ? filteredTalks[openDialog] : null
 
     return (
         <PageContainer title="Public Speaking">
-            {/* Filter buttons */}
             <div className="mb-8 overflow-x-auto pb-2">
                 <div className="flex gap-2 flex-wrap" role="group" aria-label="Filter by year">
                     {filterOptions.map((option) => (
@@ -192,72 +244,31 @@ function SpeakingContent() {
                                     </div>
                                 </div>
                             ) : (
-                                <PhotoDetail
-                                    isOpen={openDialog === index}
-                                    onOpenChange={(open) => setOpenDialog(open ? index : null)}
-                                    type="image"
-                                    url={talk.url || ""}
-                                    title={talk.title}
-                                    description={talk.description}
-                                    trigger={
-                                        <button type="button" className="space-y-4 cursor-pointer text-left w-full">
-                                            <div className="w-full">
-                                                <div
-                                                    className="relative aspect-video rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700">
-                                                    {index === 0 ? (
-                                                        <Image
-                                                            src={talk.url || `/placeholder.svg?height=200&width=400&text=${encodeURIComponent(talk.title)}`}
-                                                            alt={talk.title}
-                                                            fill
-                                                            className="object-cover"
-                                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                                            priority
-                                                            fetchPriority="high"
-                                                        />
-                                                    ) : (
-                                                        <DeferredImage
-                                                            placeholderClassName="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-xl"
-                                                            src={talk.url || `/placeholder.svg?height=200&width=400&text=${encodeURIComponent(talk.title)}`}
-                                                            alt={talk.title}
-                                                            fill
-                                                            className="object-cover"
-                                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                                        />
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <h2 className="text-xl font-semibold">{talk.event}</h2>
-                                                <p className="text-gray-600 dark:text-gray-300 mt-1">{talk.title}</p>
-                                                <div
-                                                    className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-2">
-                                                    <Calendar className="w-4 h-4"/>
-                                                    <span>{talk.date}</span>
-                                                </div>
-                                                <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm leading-relaxed line-clamp-3">{talk.description}</p>
-                                                {talk.slides && (
-                                                    <Link
-                                                        href={talk.slides}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline mt-2 font-sans text-sm"
-                                                        onClick={(e) => e.stopPropagation()}
-                                                    >
-                                                        <FileText className="w-4 h-4"/>
-                                                        View Slides
-                                                    </Link>
-                                                )}
-                                            </div>
-                                        </button>
-                                    }
-                                >
-                                    <></>
-                                </PhotoDetail>
+                                <TalkCard talk={talk} index={index} onClick={() => setOpenDialog(index)}/>
                             )}
                         </TimelineItem>
                     )
                 })}
             </Timeline>
+
+            {/* Single dialog instance - only mounted when needed */}
+            {selectedTalk && (
+                <Suspense fallback={null}>
+                    <LazyPhotoDetail
+                        isOpen={true}
+                        onOpenChange={(open) => {
+                            if (!open) setOpenDialog(null)
+                        }}
+                        type="image"
+                        url={selectedTalk.url || ""}
+                        title={selectedTalk.title}
+                        description={selectedTalk.description}
+                        trigger={<span/>}
+                    >
+                        <></>
+                    </LazyPhotoDetail>
+                </Suspense>
+            )}
         </PageContainer>
     )
 }
