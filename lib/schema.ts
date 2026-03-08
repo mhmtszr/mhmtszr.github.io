@@ -1,7 +1,7 @@
 import {type ArticleMetadata} from './mdx'
 
 interface ArticleWithSlug {
-    meta: ArticleMetadata
+    meta: Partial<ArticleMetadata> & { title: string; description: string; date: string }
     slug: string
 }
 

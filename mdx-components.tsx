@@ -1,3 +1,4 @@
+import type React from "react"
 import type {MDXComponents} from "mdx/types"
 import Image from "next/image"
 import Link from "next/link"
@@ -55,13 +56,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         ),
         hr: () => <hr className="my-8 border-gray-200 dark:border-gray-800"/>,
         // Add custom components
-        Callout: ({children, type = "info"}) => {
-            const styles = {
+        Callout: ({children, type = "info"}: { children?: React.ReactNode; type?: "info" | "warning" | "error" | "tip" }) => {
+            const styleMap = {
                 info: "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800",
                 warning: "bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800",
                 error: "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800",
                 tip: "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800",
-            }[type]
+            }
+            const styles = styleMap[type || "info"]
 
             return <div className={`${styles} border-l-4 p-4 my-6 rounded-r-lg`}>{children}</div>
         },

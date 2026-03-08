@@ -7,7 +7,6 @@ import {Calendar} from 'lucide-react'
 import {CodeCopyWrapper} from './code-copy-wrapper'
 import {ScrollToHash} from '@/components/ui/ScrollToHash'
 import {HeaderLinks} from '@/components/ui/header-link'
-import {generateArticleSchema} from '@/lib/schema'
 
 const TableOfContents = dynamic(() => import('@/components/ui/table-of-contents').then(m => ({default: m.TableOfContents})), {ssr: false})
 const ArticleImageEnhancer = dynamic(() => import('./article-image-enhancer').then(m => ({default: m.ArticleImageEnhancer})), {ssr: false})
@@ -96,13 +95,6 @@ export function ArticleContentClient({article}: ArticleContentProps) {
 
             {/* Image enhancer to make article images clickable with dialogs */}
             <ArticleImageEnhancer/>
-
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify(generateArticleSchema(article))
-                }}
-            />
         </article>
     )
 } 

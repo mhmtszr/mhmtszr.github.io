@@ -17,10 +17,11 @@ interface ArticleCardProps {
 }
 
 function ArticleImage({src, alt, index}: {src: string; alt: string; index: number}) {
+    const thumbSrc = src.replace('preview.webp', 'preview-thumb.webp')
     if (index < 3) {
         return (
             <Image
-                src={src}
+                src={thumbSrc}
                 alt={alt}
                 fill
                 priority={index === 0}
@@ -32,7 +33,7 @@ function ArticleImage({src, alt, index}: {src: string; alt: string; index: numbe
     }
     return (
         <DeferredImage
-            src={src}
+            src={thumbSrc}
             alt={alt}
             fill
             loading="lazy"
