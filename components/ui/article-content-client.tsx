@@ -54,7 +54,7 @@ export function ArticleContentClient({article}: ArticleContentProps) {
                         </div>
                     )}
 
-                    <h1 className="text-3xl sm:text-4xl font-bold font-serif leading-tight tracking-tight dark:text-gray-50">
+                    <h1 className="text-5xl sm:text-6xl font-bold font-serif leading-tight tracking-tight dark:text-white">
                         {article.meta.title}
                     </h1>
 

@@ -1,4 +1,4 @@
-import {getAllArticles} from '@/lib/mdx'
+import {getAllArticleMeta} from '@/lib/mdx'
 import {NextResponse} from 'next/server'
 
 // Configure for static generation
@@ -6,7 +6,7 @@ export const dynamic = "force-static"
 export const revalidate = false
 
 export async function GET() {
-    const articles = await getAllArticles()
+    const articles = getAllArticleMeta()
 
     // Filter out draft articles
     const publishedArticles = articles.filter(article => !article.meta.draft)

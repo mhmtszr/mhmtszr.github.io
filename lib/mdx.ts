@@ -125,37 +125,46 @@ export async function getArticleBySlug(slug: string): Promise<Article> {
     }
 }
 
-export async function getAllArticles(): Promise<Article[]> {
-    try {
-        const fileNames = fs.readdirSync(articlesDirectory)
-        const articles = await Promise.all(
-            fileNames
-                .filter(fileName => fileName.endsWith('.md') || fileName.endsWith('.mdx'))
-                .map(async fileName => {
-                    const slug = fileName.replace(/\.(md|mdx)$/, '')
-                    const article = await getArticleBySlug(slug)
-                    return {
-                        ...article,
-                        slug,
-                    }
-                })
-        )
-
-        // Sort articles by date in descending order
-        return articles.sort((a, b) => {
-            const dateA = new Date(a.meta.date).getTime()
-            const dateB = new Date(b.meta.date).getTime()
-            return dateB - dateA
-        })
-    } catch (error) {
-        console.error('Error getting all articles:', error)
-        throw error
-    }
+export interface ArticleMeta {
+    meta: Article['meta']
+    slug: string
 }
 
-export function getLatestArticles(allArticles: Article[], count: number): Article[] {
-    return [...allArticles]
-        .sort((a, b) => new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime())
+export function getAllArticleMeta(): ArticleMeta[] {
+    const fileNames = fs.readdirSync(articlesDirectory)
+    const articles = fileNames
+        .filter(fileName => fileName.endsWith('.md') || fileName.endsWith('.mdx'))
+        .map(fileName => {
+            const slug = fileName.replace(/\.(md|mdx)$/, '')
+            const fullPath = path.join(articlesDirectory, fileName)
+            const fileContents = fs.readFileSync(fullPath, 'utf8')
+            const {data: meta, content: rawContent} = matter(fileContents)
+
+            return {
+                meta: {
+                    title: meta.title,
+                    description: meta.description,
+                    date: meta.date,
+                    image: meta.image,
+                    tags: meta.tags || [],
+                    draft: meta.draft || false,
+                    modified: meta.modified,
+                    canonical: meta.canonical,
+                    metaDescription: meta.metaDescription,
+                    keywords: meta.keywords || [],
+                    readingTime: meta.readingTime || estimateReadingTime(rawContent),
+                },
+                slug,
+            }
+        })
+
+    return articles.sort((a, b) =>
+        new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime()
+    )
+}
+
+export function getLatestArticles(allArticles: ArticleMeta[], count: number): ArticleMeta[] {
+    return allArticles
         .filter((article) => !article.meta.draft)
         .slice(0, count)
 } 

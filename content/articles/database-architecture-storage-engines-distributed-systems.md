@@ -1143,7 +1143,7 @@ Partitioning divides the data into smaller subsets that can be stored on differe
 
 The simplest approach is to use `hash(key) % num_nodes`:
 
-```
+```go
 function determine_node(key, num_nodes):
     return hash(key) % num_nodes
 ```

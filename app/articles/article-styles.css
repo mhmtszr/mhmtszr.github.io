@@ -35,19 +35,19 @@
 /* Headings stay sans-serif for contrast */
 .article-body.prose h2 {
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    @apply text-[1.55rem] font-bold tracking-tight border-0 pb-0 mt-14 mb-5;
+    @apply text-[2.1rem] font-bold tracking-tight border-0 pb-0 mt-14 mb-5;
     line-height: 1.3;
 }
 
 .article-body.prose h3 {
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    @apply text-[1.3rem] font-semibold tracking-tight mt-10 mb-4;
+    @apply text-[1.75rem] font-semibold tracking-tight mt-10 mb-4;
     line-height: 1.35;
 }
 
 .article-body.prose h4 {
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    @apply text-[1.15rem] font-semibold mt-8 mb-3;
+    @apply text-[1.45rem] font-semibold mt-8 mb-3;
     line-height: 1.4;
 }
 
@@ -149,7 +149,7 @@
 }
 
 .prose thead th {
-    @apply px-4 py-3 text-left text-sm font-bold uppercase tracking-wider text-foreground border-b border-border;
+    @apply px-4 py-3 text-center text-sm font-bold uppercase tracking-wider text-foreground border-b border-border;
 }
 
 .prose tbody td {
@@ -358,7 +358,7 @@ pre[data-language]::before {
 .dark .article-body.prose h4,
 .dark .article-body.prose h5,
 .dark .article-body.prose h6 {
-    color: hsl(220 15% 93%);
+    color: #ffffff;
 }
 
 .dark .article-body.prose strong,

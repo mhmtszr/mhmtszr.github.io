@@ -165,8 +165,8 @@ the memory layout of your structs.
 
 To apply the optimization, simply run:
 
-```
-fieldalignment -fix ./... 
+```bash
+fieldalignment -fix ./...
 ```
 
 This tool helps improve memory efficiency in your Go code by rearranging struct fields based on memory padding rules.
@@ -187,7 +187,7 @@ limits of your application are not well understood, do not set GOGC=off.
 
 To set GOMEMLIMIT, use the following environment variable configuration:
 
-```
+```bash
 export GOMEMLIMIT=512MiB
 ```
 
@@ -195,7 +195,7 @@ This sets the memory limit to 512 MiB. Adjust the value based on your applicatio
 
 To disable GOGC and rely solely on GOMEMLIMIT, set GOGC to off:
 
-```
+```bash
 export GOGC=off
 ```
 
@@ -338,11 +338,11 @@ func BenchmarkByPointer(b *testing.B) {
 <div className="overflow-x-auto my-6">
 <table>
 <thead>
-<tr><th>Benchmark</th><th>Operations</th><th>ns/op</th></tr>
+<tr><th className="text-center">Benchmark</th><th className="text-center">Operations</th><th className="text-center">ns/op</th></tr>
 </thead>
 <tbody>
-<tr><td>BenchmarkByValue</td><td>2044063</td><td>572.9 ns/op</td></tr>
-<tr><td>BenchmarkByPointer</td><td>3079296</td><td>390.7 ns/op</td></tr>
+<tr><td className="text-center">BenchmarkByValue</td><td className="text-center">2044063</td><td className="text-center">572.9 ns/op</td></tr>
+<tr><td className="text-center">BenchmarkByPointer</td><td className="text-center">3079296</td><td className="text-center">390.7 ns/op</td></tr>
 </tbody></table>
 </div>
 
@@ -451,11 +451,11 @@ func BenchmarkBufferedChannel(b *testing.B) {
 <div className="overflow-x-auto my-6">
 <table>
 <thead>
-<tr><th>Benchmark</th><th>Operations</th><th>ns/op</th></tr>
+<tr><th className="text-center">Benchmark</th><th className="text-center">Operations</th><th className="text-center">ns/op</th></tr>
 </thead>
 <tbody>
-<tr><td>BenchmarkUnbufferedChannel</td><td>85735</td><td>13745 ns/op</td></tr>
-<tr><td>BenchmarkBufferedChannel</td><td>281250</td><td>4132 ns/op</td></tr>
+<tr><td className="text-center">BenchmarkUnbufferedChannel</td><td className="text-center">85735</td><td className="text-center">13745 ns/op</td></tr>
+<tr><td className="text-center">BenchmarkBufferedChannel</td><td className="text-center">281250</td><td className="text-center">4132 ns/op</td></tr>
 </tbody></table>
 </div>
 
@@ -601,12 +601,12 @@ improvements.
 <div className="flex items-start justify-between gap-4">
   {/* Image 1 with Text Above */}
   <div className="w-[49%] text-center">
-    <p className="text-sm font-medium mb-1">Small (400B, 11 keys, 3 layers)</p>
+    <p className="text-base font-semibold mb-1">Small (400B, 11 keys, 3 layers)</p>
     <img src="/article/go-practices/bench-small.webp" className="block w-full h-auto rounded border" alt="Sonic Benchmark Small"/>
   </div>
   {/* Image 2 with Text Above */}
   <div className="w-[49%] text-center">
-    <p className="text-sm font-medium mb-1">Large (635KB, 10000+ key, 6 layers)</p>
+    <p className="text-base font-semibold mb-1">Large (635KB, 10000+ key, 6 layers)</p>
     <img src="/article/go-practices/bench-large.webp" className="block w-full h-auto rounded border" alt="Sonic Benchmark Large"/>
   </div>
 </div>
@@ -1005,7 +1005,7 @@ interfaces to facilitate mocking.
 For generating mocks, we can use [Mockery](https://github.com/vektra/mockery). Below is a recommended `.mockery.yml`
 configuration:
 
-```
+```yaml
 with-expecter: true
 mockname: "{{.InterfaceName}}"
 outpkg: "mocks"
@@ -1015,7 +1015,6 @@ packages:
     config:
       dir: "mocks"
       recursive: true
-
 ```
 
 Mockery allows us to generate mock implementations from interfaces, making it easier to write isolated unit tests.
@@ -1147,7 +1146,7 @@ func TestWithOptions(t *testing.T) {
 When a leak is detected, goleak provides information about the leaking goroutines, including their stack traces. This
 helps identify the source of the leak:
 
-```
+```bash
 Found 1 unexpected goroutines:
 #1: created by example/service.StartWorker
         /path/to/your/code/service.go:42 +0x123
@@ -1306,24 +1305,24 @@ Consider the following before picking the option best suited for your use case.
     </thead>
     <tbody>
       <tr>
-        <td>No</td>
-        <td>static</td>
-        <td><a href="https://pkg.go.dev/errors#New" target="_blank" rel="noopener noreferrer"><code>errors.New</code></a></td>
+        <td className="text-center">No</td>
+        <td className="text-center">static</td>
+        <td className="text-center"><a href="https://pkg.go.dev/errors#New" target="_blank" rel="noopener noreferrer"><code>errors.New</code></a></td>
       </tr>
       <tr>
-        <td>No</td>
-        <td>dynamic</td>
-        <td><a href="https://pkg.go.dev/fmt#Errorf" target="_blank" rel="noopener noreferrer"><code>fmt.Errorf</code></a></td>
+        <td className="text-center">No</td>
+        <td className="text-center">dynamic</td>
+        <td className="text-center"><a href="https://pkg.go.dev/fmt#Errorf" target="_blank" rel="noopener noreferrer"><code>fmt.Errorf</code></a></td>
       </tr>
       <tr>
-        <td>Yes</td>
-        <td>static</td>
-        <td>top-level <code>var</code> with <a href="https://pkg.go.dev/errors#New" target="_blank" rel="noopener noreferrer"><code>errors.New</code></a></td>
+        <td className="text-center">Yes</td>
+        <td className="text-center">static</td>
+        <td className="text-center">top-level <code>var</code> with <a href="https://pkg.go.dev/errors#New" target="_blank" rel="noopener noreferrer"><code>errors.New</code></a></td>
       </tr>
       <tr>
-        <td>Yes</td>
-        <td>dynamic</td>
-        <td>custom <code>error</code> type</td>
+        <td className="text-center">Yes</td>
+        <td className="text-center">dynamic</td>
+        <td className="text-center">custom <code>error</code> type</td>
       </tr>
     </tbody>
   </table>

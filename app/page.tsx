@@ -4,7 +4,7 @@ import {MediumIcon} from "@/components/icons/medium"
 import Link from "next/link"
 import Image from "next/image"
 import {generatePersonSchema, generateWebsiteSchema} from "@/lib/schema"
-import {getAllArticles, getLatestArticles} from "@/lib/mdx"
+import {getAllArticleMeta, getLatestArticles} from "@/lib/mdx"
 
 export const metadata: Metadata = {
     title: {
@@ -46,7 +46,7 @@ export default async function HomePage() {
         slug: string
     }[] = []
     try {
-        const allArticles = await getAllArticles()
+        const allArticles = getAllArticleMeta()
         latestArticles = getLatestArticles(allArticles, 4)
     } catch {
         latestArticles = []

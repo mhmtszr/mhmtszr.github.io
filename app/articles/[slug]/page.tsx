@@ -1,5 +1,5 @@
 // Server Component (no "use client" directive)
-import {getAllArticles, getArticleBySlug} from '@/lib/mdx'
+import {getAllArticleMeta, getArticleBySlug} from '@/lib/mdx'
 import {notFound} from 'next/navigation'
 import {Metadata} from 'next'
 import {ArticleContentClient} from '@/components/ui/article-content-client'
@@ -67,7 +67,7 @@ export async function generateMetadata(
 // Generate all possible article slugs at build time
 export async function generateStaticParams() {
     try {
-        const articles = await getAllArticles()
+        const articles = getAllArticleMeta()
         return articles.map((article) => ({
             slug: article.slug,
         }))

@@ -1,31 +1,40 @@
-import {getAllArticles} from "@/lib/mdx"
+import {getAllArticleMeta} from "@/lib/mdx"
+import {getMediumArticlesServer} from "@/lib/medium-server"
 import {ArticlesContent} from "./articles-content"
 
 export default async function ArticlesPage() {
-    let initialArticles: {
-        title: string
-        description: string
-        date: string
-        imageUrl: string
-        url: string
-        tags: string[]
-        source: "medium" | "website"
-    }[] = []
+    const allArticles = getAllArticleMeta()
+    const mdArticles = allArticles.map((article) => ({
+        title: article.meta.title,
+        description: article.meta.description || 'No description available',
+        date: article.meta.date,
+        imageUrl: article.meta.image || '/images/placeholder-article.jpg',
+        url: `/articles/${article.slug}`,
+        tags: article.meta.tags || [],
+        source: "website" as const,
+    }))
 
+    let mediumArticles: { title: string; description: string; date: string; imageUrl: string; url: string; tags: string[]; source: "medium" | "website" }[] = []
     try {
-        const allArticles = await getAllArticles()
-        initialArticles = allArticles.map((article) => ({
-            title: article.meta.title,
-            description: article.meta.description || 'No description available',
-            date: article.meta.date,
-            imageUrl: article.meta.image || '/images/placeholder-article.jpg',
-            url: `/articles/${article.slug}`,
-            tags: article.meta.tags || [],
-            source: "website" as const,
+        const raw = await getMediumArticlesServer()
+        mediumArticles = raw.map((a) => ({
+            title: a.title,
+            description: a.description || a.title,
+            date: a.date,
+            imageUrl: a.imageUrl || '/images/placeholder-article.jpg',
+            url: a.url,
+            tags: a.tags || ['medium'],
+            source: "medium" as const,
         }))
     } catch {
-        initialArticles = []
+        // Medium fetch failed, continue with MD articles only
     }
+
+    const existingTitles = new Set(mdArticles.map(a => a.title.toLowerCase().trim()))
+    const uniqueMedium = mediumArticles.filter(a => !existingTitles.has(a.title.toLowerCase().trim()))
+    const initialArticles = [...mdArticles, ...uniqueMedium].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
 
     return <ArticlesContent initialArticles={initialArticles}/>
 }
