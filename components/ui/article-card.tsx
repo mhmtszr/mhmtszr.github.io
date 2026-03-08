@@ -24,6 +24,7 @@ function ArticleImage({src, alt, index}: {src: string; alt: string; index: numbe
                 alt={alt}
                 fill
                 priority={index === 0}
+                fetchPriority={index === 0 ? "high" : undefined}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
@@ -56,7 +57,8 @@ export function ArticleCard({
     const formattedDate = new Date(date).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
-        day: 'numeric'
+        day: 'numeric',
+        timeZone: 'UTC'
     })
 
     // Limit tags to 3 for smaller cards

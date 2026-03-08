@@ -537,7 +537,7 @@ const uniqueCountries = ["All", ...Array.from(
     new Set(photos.map(photo => photo.country))
 )]
 
-const BATCH_SIZE = 8;
+const BATCH_SIZE = 4;
 
 function PhotographyContent() {
     const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null)
@@ -762,7 +762,8 @@ function PhotographyContent() {
                                                     alt={photo.title || ""}
                                                     width={800}
                                                     height={600}
-                                                    priority={index === 0}
+                                                    priority
+                                                    fetchPriority={index === 0 ? "high" : undefined}
                                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                                 />
