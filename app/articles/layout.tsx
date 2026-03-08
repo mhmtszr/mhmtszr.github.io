@@ -1,30 +1,28 @@
 import type React from "react"
-import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
-import type { Metadata } from 'next'
+import type {Metadata} from 'next'
 
 interface ArticleLayoutProps {
-  children: React.ReactNode
+    children: React.ReactNode
 }
 
 export const metadata: Metadata = {
-  title: {
-    default: "Articles | Mehmet Sezer",
-    template: "%s | Mehmet Sezer",
-  },
-  description: "Technical articles and insights about software engineering, microservices, distributed systems, and software architecture by Mehmet Sezer.",
-  openGraph: {
-    title: "Articles | Mehmet Sezer",
-    description: "Technical articles and insights about software engineering, microservices, distributed systems, and software architecture.",
-    type: 'article',
-    authors: ['Mehmet Sezer']
-  }
+    title: {
+        default: "Articles",
+        template: "%s | Mehmet Sezer",
+    },
+    description: "Technical articles and insights about software engineering, microservices, distributed systems, and software architecture by Mehmet Sezer.",
+    openGraph: {
+        title: "Articles",
+        description: "Technical articles and insights about software engineering, microservices, distributed systems, and software architecture.",
+        type: 'article',
+        authors: ['Mehmet Sezer']
+    }
 }
 
 export default function ArticleLayout({
-  children,
-}: ArticleLayoutProps) {
-  return (
-    <>{children}</>
-  )
+                                          children,
+                                      }: ArticleLayoutProps) {
+    return (
+        <>{children}</>
+    )
 }

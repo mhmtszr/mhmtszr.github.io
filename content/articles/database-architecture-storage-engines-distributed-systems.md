@@ -8,11 +8,17 @@ tags: ["Database Architecture", "Database Design", "Storage Engines", "B-Tree", 
 keywords: ["database architecture", "storage engines explained", "b-tree vs lsm tree", "database indexing", "distributed databases", "database replication", "database sharding", "ACID transactions", "MVCC concurrency control", "database partitioning", "consistent hashing", "database design patterns"]
 ---
 
-This article explores the fundamental concepts of database systems, from simple file-based storage to complex distributed architectures. We'll cover the core data structures, algorithms, and design principles that power modern databases, with practical examples and visualizations.
+This article explores the fundamental concepts of database systems, from simple file-based storage to complex
+distributed architectures. We'll cover the core data structures, algorithms, and design principles that power modern
+databases, with practical examples and visualizations.
 
 ## Who Should Read This
 
-Every software engineer who interacts with databases should understand how they work under the hood. Whether you're using MySQL, PostgreSQL, MongoDB, or Cassandra, knowing the underlying principles will help you make better design decisions, troubleshoot performance issues, and understand architectural trade-offs. This article takes you from simple storage concepts to sophisticated distributed systems patterns, giving you the mental models needed to work effectively with any database technology.
+Every software engineer who interacts with databases should understand how they work under the hood. Whether you're
+using MySQL, PostgreSQL, MongoDB, or Cassandra, knowing the underlying principles will help you make better design
+decisions, troubleshoot performance issues, and understand architectural trade-offs. This article takes you from simple
+storage concepts to sophisticated distributed systems patterns, giving you the mental models needed to work effectively
+with any database technology.
 
 ## Why Do We Need Databases?
 
@@ -43,17 +49,21 @@ This tiny "database" actually works! But what's wrong with it? Let's examine its
 
 ### Performance Problems
 
-1. **Read Performance**: The `db_get` function scans the entire file using `grep`, making it `O(n)` where n is the total number of records. As your data grows, reads become painfully slow.
+1. **Read Performance**: The `db_get` function scans the entire file using `grep`, making it `O(n)` where n is the total
+   number of records. As your data grows, reads become painfully slow.
 
-2. **Write Performance**: Each write appends to the file, which works fine initially but leads to unbounded file growth, including duplicate keys.
+2. **Write Performance**: Each write appends to the file, which works fine initially but leads to unbounded file growth,
+   including duplicate keys.
 
 ### Reliability Issues
 
-1. **Durability**: The `echo` command writes to the file, but it doesn't guarantee that data has been flushed to stable storage. If your machine crashes, recent writes might be lost.
+1. **Durability**: The `echo` command writes to the file, but it doesn't guarantee that data has been flushed to stable
+   storage. If your machine crashes, recent writes might be lost.
 
 2. **Atomicity**: If the system crashes during the `echo` operation, you might end up with partially written data.
 
-3. **Isolation**: If multiple processes call `db_set` or `db_get` concurrently, they might interfere with each other, causing race conditions.
+3. **Isolation**: If multiple processes call `db_set` or `db_get` concurrently, they might interfere with each other,
+   causing race conditions.
 
 ### Basic Improvements
 
@@ -82,10 +92,13 @@ db_get() {
 ```
 
 We've addressed some issues:
+
 - Added file locking for isolation
-- Added syncing for durability (but partial/corrupt writes are still possible if a crash happens during the write operation)
+- Added syncing for durability (but partial/corrupt writes are still possible if a crash happens during the write
+  operation)
 
 But we still have fundamental problems:
+
 - The `O(n)` read performance
 - Unbounded file growth with duplicate keys
 - No efficient way to update or delete records
@@ -94,7 +107,8 @@ These limitations are exactly why we need real database systems with efficient d
 
 ## Buffer Management and Memory Caching
 
-Reading from disk is slow, so databases maintain an in-memory cache of frequently accessed pages, often called the buffer pool.
+Reading from disk is slow, so databases maintain an in-memory cache of frequently accessed pages, often called the
+buffer pool.
 
 <div className="text-center my-4">
   <img src="/article/database-architecture-storage-engines-distributed-systems/buffer-pool.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "40%", height: "auto"}} alt="Database Buffer Pool"/>
@@ -116,20 +130,23 @@ The buffer pool manages:
 
 ### Write-Ahead Logging (WAL)
 
-Before we modify pages in memory, we need a way to ensure durability and atomicity in case of crashes. Write-Ahead Logging (WAL) is a technique used by databases to achieve this.
+Before we modify pages in memory, we need a way to ensure durability and atomicity in case of crashes. Write-Ahead
+Logging (WAL) is a technique used by databases to achieve this.
 
 The key principle of WAL is: **Before modifying any data on disk, first record the changes in a log.**
 
 Benefits of WAL:
+
 1. **Atomicity**: If a transaction is interrupted, we can roll back using the log
-2. **Durability**: Once a transaction commits, its changes are in the log even if the data pages haven't been written to disk
+2. **Durability**: Once a transaction commits, its changes are in the log even if the data pages haven't been written to
+   disk
 3. **Performance**: We can batch data page writes while ensuring durability through the log
 
 During crash recovery, the database processes the WAL in three phases:
+
 1. **Analysis**: Determine which transactions were active at crash time
 2. **Redo**: Replay all changes for committed transactions
 3. **Undo**: Roll back changes for uncommitted transactions
-
 
 ## Storage Engines: The Heart of Database Systems
 
@@ -142,11 +159,13 @@ Let's explore both approaches.
 
 ### B-Tree: The Workhorse of Relational Databases
 
-B-Trees have been the dominant storage engine in databases since the 1970s. Unlike binary trees, B-Trees are specifically optimized for systems that read and write large blocks of data.
+B-Trees have been the dominant storage engine in databases since the 1970s. Unlike binary trees, B-Trees are
+specifically optimized for systems that read and write large blocks of data.
 
 #### How B-Trees Work
 
 A B-Tree is a self-balancing tree data structure that:
+
 - Keeps data sorted
 - Allows searches, sequential access, insertions, and deletions in logarithmic time
 - Is optimized for systems that read and write large blocks of data
@@ -160,20 +179,20 @@ A B-Tree is a self-balancing tree data structure that:
 A critical concept in understanding B-Trees is how they map to physical storage:
 
 1. **B-Tree Nodes vs. Disk Blocks**:
-   - A B-Tree node is a logical structure in the tree
-   - Each node typically maps to one disk block/page (or sometimes multiple)
-   - Disk blocks are the physical units of I/O (typically 4KB, 8KB, or 16KB)
+    - A B-Tree node is a logical structure in the tree
+    - Each node typically maps to one disk block/page (or sometimes multiple)
+    - Disk blocks are the physical units of I/O (typically 4KB, 8KB, or 16KB)
 
 2. **Optimizing for Block Devices**:
-   - B-Trees are designed to minimize disk I/O operations
-   - Node size is chosen to match disk block size
-   - This maximizes the fanout (number of children per node)
-   - Each disk read retrieves a complete node
+    - B-Trees are designed to minimize disk I/O operations
+    - Node size is chosen to match disk block size
+    - This maximizes the fanout (number of children per node)
+    - Each disk read retrieves a complete node
 
 3. **Branching Factor**:
-   - The branching factor (maximum number of children per node) is directly related to disk block size
-   - Larger blocks = more keys per node = higher branching factor = shorter tree
-   - For a 16KB page that can store 100 keys, a 3-level B-Tree can index about 1 million records (100³)
+    - The branching factor (maximum number of children per node) is directly related to disk block size
+    - Larger blocks = more keys per node = higher branching factor = shorter tree
+    - For a 16KB page that can store 100 keys, a 3-level B-Tree can index about 1 million records (100³)
 
 #### B-Tree vs B+ Tree: Key Differences
 
@@ -224,6 +243,7 @@ While B-Trees are widely used, B+ Trees offer important optimizations for databa
 </div>
 
 B+ Trees are preferred in most database systems because:
+
 1. They provide better scanning performance (all records are in leaf nodes linked together)
 2. They have better space utilization in internal nodes (more branching factor)
 3. They offer more consistent performance (all data is at the same level)
@@ -237,6 +257,7 @@ B+ Trees are preferred in most database systems because:
 While B+ Trees excel in many scenarios, they have specific strengths and weaknesses for write-heavy workloads:
 
 **Pros:**
+
 - **Predictable Performance**: Operations have guaranteed O(log n) time complexity
 - **Read Optimization**: Excellent for workloads that mix reads with writes
 - **Range Queries**: Efficient for range scans even under write load
@@ -244,17 +265,20 @@ While B+ Trees excel in many scenarios, they have specific strengths and weaknes
 - **Mature Implementation**: Well-understood algorithms with decades of optimization
 
 **Cons:**
+
 - **Random I/O**: Each write typically requires multiple random I/O operations
 - **Write Amplification**: Small updates can cause cascade of page splits and merges
 - **Fragmentation**: Over time, pages may become partially empty, wasting space
 - **Locking Overhead**: Traditional B+ Tree implementations often require locking for concurrent updates
 - **Write Bottlenecks**: All writes must update the tree structure, creating potential bottlenecks
 
-For applications with extremely high write volumes, especially those with sequential inserts or time-series data, alternative structures like LSM Trees may provide better performance characteristics.
+For applications with extremely high write volumes, especially those with sequential inserts or time-series data,
+alternative structures like LSM Trees may provide better performance characteristics.
 
 ### LSM Trees: Optimizing for Write-Heavy Workloads
 
-Log-Structured Merge Trees (LSM Trees) take a different approach, optimizing for write performance at some cost to reads.
+Log-Structured Merge Trees (LSM Trees) take a different approach, optimizing for write performance at some cost to
+reads.
 
 #### LSM Tree Architecture
 
@@ -404,7 +428,8 @@ func (lsm *LSMTree) Read(key string) ([]byte, bool) {
 
 #### Optimization: Bloom Filters
 
-A Bloom filter is a space-efficient probabilistic data structure that tells you if an element is definitely not in a set or might be in a set.
+A Bloom filter is a space-efficient probabilistic data structure that tells you if an element is definitely not in a set
+or might be in a set.
 
 <div className="text-center my-4">
   <img src="/article/database-architecture-storage-engines-distributed-systems/bloom-filter.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Bloom Filter"/>
@@ -413,13 +438,18 @@ A Bloom filter is a space-efficient probabilistic data structure that tells you 
 </div>
 
 In the illustration above, we see how a Bloom filter works in practice:
-1. **Adding elements**: When keys `x`, `y`, and `z` are added to the filter, each key is hashed using multiple hash functions.
+
+1. **Adding elements**: When keys `x`, `y`, and `z` are added to the filter, each key is hashed using multiple hash
+   functions.
 2. **Setting bits**: The hash results determine which positions in the bit array to set to `1`.
-3. **Membership test**: To check if key `w` exists, we hash it with the same functions and check if all corresponding bits are `1`.
-4. **False positives**: If all bits are `1` (like for key `w` in the diagram), the element *might* be in the set - this could be a false positive.
+3. **Membership test**: To check if key `w` exists, we hash it with the same functions and check if all corresponding
+   bits are `1`.
+4. **False positives**: If all bits are `1` (like for key `w` in the diagram), the element *might* be in the set - this
+   could be a false positive.
 5. **Definite negatives**: If any bit is `0`, the element is *definitely* not in the set (no false negatives).
 
-This property makes Bloom filters perfect for LSM Trees - we can quickly skip SSTables that definitely don't contain a key, avoiding expensive disk reads.
+This property makes Bloom filters perfect for LSM Trees - we can quickly skip SSTables that definitely don't contain a
+key, avoiding expensive disk reads.
 
 For each SSTable, we maintain a Bloom filter to avoid unnecessary disk reads:
 
@@ -542,6 +572,7 @@ func (sst *SSTable) Get(key string) ([]byte, bool) {
 #### Compaction: Managing SSTables
 
 Over time, many SSTables accumulate. Compaction merges them to:
+
 - Reclaim space from deleted/overwritten entries
 - Reduce the number of files to check during reads
 - Improve read performance
@@ -677,10 +708,10 @@ func (lsm *LSMTree) Compact() error {
 </table>
 </div>
 
-
 ## Transaction Processing and Isolation Levels
 
-A transaction is a sequence of operations that is treated as a single logical unit of work, which should maintain the ACID properties:
+A transaction is a sequence of operations that is treated as a single logical unit of work, which should maintain the
+ACID properties:
 
 - **Atomicity**: All operations complete successfully or none of them do
 - **Consistency**: The database moves from one valid state to another
@@ -713,7 +744,8 @@ One transaction overwrites an uncommitted value written by another transaction
 
 #### 3. Lost Updates
 
-A lost update occurs when two transactions read and then update the same data, with the second transaction "losing" the update of the first one.
+A lost update occurs when two transactions read and then update the same data, with the second transaction "losing" the
+update of the first one.
 
 <div className="text-center my-4">
   <img src="/article/database-architecture-storage-engines-distributed-systems/lost-update.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Lost Update Scenario"/>
@@ -723,7 +755,8 @@ A lost update occurs when two transactions read and then update the same data, w
 
 #### 4. Non-Repeatable Reads
 
-A non-repeatable read occurs when a transaction reads the same row twice and gets different values because another transaction modified and committed the data between reads.
+A non-repeatable read occurs when a transaction reads the same row twice and gets different values because another
+transaction modified and committed the data between reads.
 
 <div className="text-center my-4">
   <img src="/article/database-architecture-storage-engines-distributed-systems/nonrepeatable-read.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Non-Repeatable Read Scenario"/>
@@ -733,7 +766,8 @@ A non-repeatable read occurs when a transaction reads the same row twice and get
 
 #### 5. Read Skew
 
-Read skew occurs when a transaction reads related data that is updated by another transaction, causing a skewed view that violates data constraints.
+Read skew occurs when a transaction reads related data that is updated by another transaction, causing a skewed view
+that violates data constraints.
 
 <div className="text-center my-4">
   <img src="/article/database-architecture-storage-engines-distributed-systems/read-skew.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Read Skew Scenario"/>
@@ -743,7 +777,8 @@ Read skew occurs when a transaction reads related data that is updated by anothe
 
 #### 6. Write Skew
 
-Write skew occurs when two transactions read an overlapping data set, make disjoint updates based on what they read, and jointly create an inconsistent result.
+Write skew occurs when two transactions read an overlapping data set, make disjoint updates based on what they read, and
+jointly create an inconsistent result.
 
 <div className="text-center my-4">
   <img src="/article/database-architecture-storage-engines-distributed-systems/write-skew.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Write Skew Scenario"/>
@@ -753,14 +788,14 @@ Write skew occurs when two transactions read an overlapping data set, make disjo
 
 #### 7. Phantom Reads
 
-A phantom read occurs when a transaction executes a query twice, and the second result includes rows that weren't visible in the first result (or vice versa) because another transaction added or removed qualifying rows.
+A phantom read occurs when a transaction executes a query twice, and the second result includes rows that weren't
+visible in the first result (or vice versa) because another transaction added or removed qualifying rows.
 
 <div className="text-center my-4">
   <img src="/article/database-architecture-storage-engines-distributed-systems/phantom-read.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Phantom Read Scenario"/>
   <p className="text-sm text-gray-600 mt-0">Illustration of a phantom read anomaly where a transaction sees rows that weren't visible in a previous read<br/>
   <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
-
 
 ### Isolation Levels and Their Implementation
 
@@ -829,6 +864,7 @@ The weakest isolation level, allowing transactions to see uncommitted data from 
 Prevents dirty reads by only showing committed data, but allows non-repeatable reads.
 
 **Anomalies Prevented**:
+
 - **Dirty Writes**: Exclusive locks on modified rows until transaction commits
 - **Dirty Reads**: Maintains committed and uncommitted versions, with readers seeing only committed data
 
@@ -843,6 +879,7 @@ Prevents both dirty reads and non-repeatable reads by using snapshot isolation.
 </div>
 
 **Implementation with MVCC (Multi-Version Concurrency Control)**:
+
 - Each transaction works with a consistent snapshot of the database as of the start time
 - Database maintains multiple versions of rows (hence "multi-version")
 - Readers never block writers and writers never block readers
@@ -852,6 +889,7 @@ Prevents both dirty reads and non-repeatable reads by using snapshot isolation.
 - When a transaction reads data, it ignores versions created by transactions with higher TIDs
 
 **Anomalies Prevented**:
+
 - **Non-Repeatable Reads**: Each transaction operates on a consistent snapshot of the database
 
 #### 4. SERIALIZABLE
@@ -861,8 +899,8 @@ The strongest isolation level, preventing all concurrency anomalies.
 **Implementation Techniques**:
 
 1. **Two-Phase Locking (2PL)**:
-   - Locks are acquired during execution and only released at the end
-   - Predicate locks or index-range locks prevent phantom reads
+    - Locks are acquired during execution and only released at the end
+    - Predicate locks or index-range locks prevent phantom reads
 
    <div className="text-center my-4">
      <img src="/article/database-architecture-storage-engines-distributed-systems/two-phase-locking.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Two-Phase Locking Process"/>
@@ -871,8 +909,10 @@ The strongest isolation level, preventing all concurrency anomalies.
    </div>
 
    **Deadlocks in Two-Phase Locking:**
-   
-   A significant challenge with 2PL is deadlocks, which occur when two or more transactions are waiting for each other to release locks, resulting in a circular dependency. For example, if Transaction A holds a lock on resource X and waits for resource Y, while Transaction B holds a lock on Y and waits for X, neither can proceed.
+
+   A significant challenge with 2PL is deadlocks, which occur when two or more transactions are waiting for each other
+   to release locks, resulting in a circular dependency. For example, if Transaction A holds a lock on resource X and
+   waits for resource Y, while Transaction B holds a lock on Y and waits for X, neither can proceed.
 
    <div className="text-center my-4">
      <img src="/article/database-architecture-storage-engines-distributed-systems/deadlock.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Deadlock in Database Transactions"/>
@@ -880,39 +920,43 @@ The strongest isolation level, preventing all concurrency anomalies.
      <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
    </div>
 
-   Database systems detect deadlocks by maintaining a wait-for graph and checking for cycles. When a deadlock is detected, one of the transactions is chosen as a victim and aborted, allowing others to proceed.
+   Database systems detect deadlocks by maintaining a wait-for graph and checking for cycles. When a deadlock is
+   detected, one of the transactions is chosen as a victim and aborted, allowing others to proceed.
 
 2. **Serializable Snapshot Isolation (SSI)**:
-   - Tracks dependencies between transactions
-   - Detects potential serialization anomalies and aborts affected transactions
+    - Tracks dependencies between transactions
+    - Detects potential serialization anomalies and aborts affected transactions
 
 3. **Serial Execution**:
-   - Simply run one transaction at a time
-   - Only practical for in-memory databases with very fast transactions
+    - Simply run one transaction at a time
+    - Only practical for in-memory databases with very fast transactions
 
-**Anomalies Prevented**: All anomalies (dirty reads, dirty writes, non-repeatable reads, phantom reads, lost updates, read skew, write skew)
+**Anomalies Prevented**: All anomalies (dirty reads, dirty writes, non-repeatable reads, phantom reads, lost updates,
+read skew, write skew)
 
 ### Practical Considerations in Isolation Level Selection
 
 When choosing isolation levels for your application, consider:
 
 1. **Performance vs. Correctness Trade-offs**:
-   - Weaker isolation levels generally offer better performance but fewer guarantees
-   - Stronger isolation levels may cause more blocking or aborts
+    - Weaker isolation levels generally offer better performance but fewer guarantees
+    - Stronger isolation levels may cause more blocking or aborts
 
 2. **Application-Specific Requirements**:
-   - Some applications can tolerate certain anomalies but not others
-   - Consider what guarantees your business logic needs
+    - Some applications can tolerate certain anomalies but not others
+    - Consider what guarantees your business logic needs
 
 3. **Transaction Length**:
-   - Keep transactions as short as possible, especially at higher isolation levels
-   - Long-running transactions at SERIALIZABLE isolation can severely impact concurrency
+    - Keep transactions as short as possible, especially at higher isolation levels
+    - Long-running transactions at SERIALIZABLE isolation can severely impact concurrency
 
-Most applications use READ COMMITTED as a reasonable default, upgrading specific transactions that require stronger guarantees.
+Most applications use READ COMMITTED as a reasonable default, upgrading specific transactions that require stronger
+guarantees.
 
 ### Handling Lost Updates
 
-Lost updates occur when two transactions read and then update the same data concurrently. There are two main approaches to handle them:
+Lost updates occur when two transactions read and then update the same data concurrently. There are two main approaches
+to handle them:
 
 <div className="overflow-x-auto md:overflow-visible my-6">
 <table className="min-w-[400px] w-full max-w-full">
@@ -1004,7 +1048,8 @@ Beyond row-based and document storage, specialized storage models optimize for p
 
 ### Inverted Indexes: Powering Full-Text Search
 
-Inverted indexes are the core data structure behind search engines like Elasticsearch. They map terms to the documents that contain them, enabling efficient full-text search.
+Inverted indexes are the core data structure behind search engines like Elasticsearch. They map terms to the documents
+that contain them, enabling efficient full-text search.
 
 <div className="text-center my-4">
   <img src="/article/database-architecture-storage-engines-distributed-systems/inverted-index.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Inverted Index"/>
@@ -1014,20 +1059,25 @@ Inverted indexes are the core data structure behind search engines like Elastics
 
 #### How Inverted Indexes Work
 
-An inverted index reverses the relationship between documents and terms - instead of mapping documents to the words they contain, it maps words to the documents that contain them. This makes searching for documents by keywords extremely efficient.
+An inverted index reverses the relationship between documents and terms - instead of mapping documents to the words they
+contain, it maps words to the documents that contain them. This makes searching for documents by keywords extremely
+efficient.
 
 **Key components:**
+
 1. **Dictionary**: A sorted list of all unique terms in the corpus
 2. **Posting lists**: For each term, a list of document IDs containing that term
 3. **Term frequency information**: How often each term appears in each document
 4. **Position information**: Where in the document each term appears
 
 For example, with documents:
+
 - Doc1: "The quick brown fox"
 - Doc2: "Quick brown foxes leap"
 - Doc3: "Lazy dogs sleep"
 
 The inverted index would look like:
+
 ```
 brown  -> [Doc1, Doc2]
 dogs   -> [Doc3]
@@ -1041,6 +1091,7 @@ the    -> [Doc1]
 ```
 
 When a user searches for "quick brown", the search engine:
+
 1. Looks up "quick" → [Doc1, Doc2]
 2. Looks up "brown" → [Doc1, Doc2]
 3. Intersects these sets → [Doc1, Doc2]
@@ -1050,7 +1101,8 @@ This approach makes full-text search operations incredibly fast compared to scan
 
 ### Column-Oriented Storage
 
-Unlike row-oriented databases where all columns of a row are stored together, column stores group values from the same column together on disk.
+Unlike row-oriented databases where all columns of a row are stored together, column stores group values from the same
+column together on disk.
 
 <div className="text-center my-4">
   <img src="/article/database-architecture-storage-engines-distributed-systems/column-storage.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Column vs Row Storage"/>
@@ -1061,16 +1113,19 @@ Unlike row-oriented databases where all columns of a row are stored together, co
 #### Key Characteristics
 
 **Advantages:**
+
 - **Analytical Queries**: Efficiently reads specific columns across many rows
 - **Compression**: Better compression ratios (10:1) as column values are often similar
 - **Vectorized Processing**: Column operations can leverage CPU SIMD instructions
 
 **Disadvantages:**
+
 - **Write Performance**: Less efficient for frequent small updates
 - **Row Lookups**: Retrieving complete rows requires reading from multiple column files
 - **Transaction Complexity**: More challenging to implement ACID transactions
 
 **Example**: To find the average employee age:
+
 - Row store: Load all employee records, extract age from each, then calculate
 - Column store: Load only the "Ages" column and calculate directly
 
@@ -1109,7 +1164,6 @@ Consistent hashing minimizes the number of keys that need to be moved when nodes
 2. For each key, go clockwise from the key's position and use the first node encountered
 3. When a node is added/removed, only keys between that node and its predecessor need to be moved
 
-
 #### Implementation: Virtual Nodes
 
 To distribute load more evenly, each physical node can be represented by multiple virtual nodes on the ring:
@@ -1137,21 +1191,24 @@ One node is designated as the leader, handling all writes. Writes are propagated
 ##### **Synchronous Versus Asynchronous Replication:**
 
 **Synchronous**: Leader waits for follower acknowledgment before confirming write.
+
 - **Pros**: Guarantees up-to-date replicas, no data loss if leader fails
 - **Cons**: Higher write latency, leader blocked if follower is slow/unavailable
 
 **Asynchronous**: Leader doesn't wait for follower acknowledgment.
+
 - **Pros**: Better performance, resilient to follower failures
 - **Cons**: Potential data loss if leader fails before replication
 
-
 #### Problems with Replication Lag
 
-In asynchronous replication systems, replicas may lag behind the leader, causing several consistency problems for clients:
+In asynchronous replication systems, replicas may lag behind the leader, causing several consistency problems for
+clients:
 
 ##### **Reading Your Own Writes**
 
-If a user writes data to the leader and then tries to read it from a lagging follower, they might not see their own writes.
+If a user writes data to the leader and then tries to read it from a lagging follower, they might not see their own
+writes.
 
 <div className="text-center my-4">
   <img src="/article/database-architecture-storage-engines-distributed-systems/reading-your-own-writes.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Reading Your Own Writes Consistency Problem"/>
@@ -1160,6 +1217,7 @@ If a user writes data to the leader and then tries to read it from a lagging fol
 </div>
 
 **Solution: Read-After-Write Consistency**:
+
 - Read from the leader
 
 ##### **Monotonic Reads**
@@ -1173,6 +1231,7 @@ A user might see data appear and then disappear if they read from different repl
 </div>
 
 **Solution**:
+
 - Ensure each user always reads from the same replica
 - Session or user-based routing to a specific replica
 - Routing based on a consistent hash of the user ID
@@ -1188,6 +1247,7 @@ If replicas process writes in different orders, a reader might see events out of
 </div>
 
 **Solution**:
+
 - Causally related writes should be written to the same partition
 - Use sequence numbers or timestamps to order writes
 - Track and enforce causal dependencies between operations
@@ -1285,20 +1345,19 @@ Multiple nodes can accept writes, which are then propagated to other nodes.
 **Use Cases for Multi-Leader Replication**:
 
 1. **Multi-Datacenter Operation**:
-   - Each datacenter has its own leader
-   - Reduced latency for writes within each datacenter
-   - Better tolerance of datacenter outages
+    - Each datacenter has its own leader
+    - Reduced latency for writes within each datacenter
+    - Better tolerance of datacenter outages
 
 2. **Offline Operation**:
-   - Local "leader" on mobile device or laptop
-   - Allows operation while disconnected
-   - Syncs and resolves conflicts upon reconnection
+    - Local "leader" on mobile device or laptop
+    - Allows operation while disconnected
+    - Syncs and resolves conflicts upon reconnection
 
 3. **Collaborative Editing**:
-   - Each user has a local "leader"
-   - Changes are propagated asynchronously
-   - Conflict resolution preserves everyone's changes
-
+    - Each user has a local "leader"
+    - Changes are propagated asynchronously
+    - Conflict resolution preserves everyone's changes
 
 ##### **Handling Write Conflicts**
 
@@ -1313,27 +1372,28 @@ When multiple leaders accept writes to the same data simultaneously, conflicts c
 **Conflict Resolution Strategies**:
 
 1. **Last Write Wins (LWW)**:
-   - Each write is assigned a timestamp
-   - The write with the latest timestamp is chosen
-   - Simple but can lose data
+    - Each write is assigned a timestamp
+    - The write with the latest timestamp is chosen
+    - Simple but can lose data
 
 2. **Custom Conflict Resolution Logic**:
-   - Application-specific rules based on data semantics
-   - Example: For a shopping cart, merge the item sets
+    - Application-specific rules based on data semantics
+    - Example: For a shopping cart, merge the item sets
 
 3. **Conflict-Free Replicated Data Types (CRDTs)**:
-   - Special data structures designed to be merged automatically
-   - Example: Counter that can only increment, never decrement
-   - Ensures eventual consistency without application intervention
+    - Special data structures designed to be merged automatically
+    - Example: Counter that can only increment, never decrement
+    - Ensures eventual consistency without application intervention
 
 4. **Explicit User Resolution**:
-   - Present conflicts to users and let them decide
-   - Stores conflicting versions until resolution
-   - Used in version control systems like Git
+    - Present conflicts to users and let them decide
+    - Stores conflicting versions until resolution
+    - Used in version control systems like Git
 
 #### Leaderless Replication
 
-Any node can accept writes; clients coordinate with multiple nodes or any node in the cluster can act as a coordinator. This creates a highly available system without a single point of failure.
+Any node can accept writes; clients coordinate with multiple nodes or any node in the cluster can act as a coordinator.
+This creates a highly available system without a single point of failure.
 
 <div className="text-center my-4">
   <img src="/article/database-architecture-storage-engines-distributed-systems/leaderless.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Leaderless Replication"/>
@@ -1343,7 +1403,8 @@ Any node can accept writes; clients coordinate with multiple nodes or any node i
 
 ##### **Quorum Consensus**
 
-In leaderless replication systems, we need a way to ensure consistency despite node failures. Quorum consensus provides this guarantee through a simple mathematical rule.
+In leaderless replication systems, we need a way to ensure consistency despite node failures. Quorum consensus provides
+this guarantee through a simple mathematical rule.
 
 With N replicas, each write must be confirmed by W nodes, and each read must query at least R nodes:
 
@@ -1353,35 +1414,41 @@ With N replicas, each write must be confirmed by W nodes, and each read must que
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
 
-When **W + R > N**, we ensure that there's always at least one node that participates in both the write and read operations, guaranteeing that a read will see the most recent write:
+When **W + R > N**, we ensure that there's always at least one node that participates in both the write and read
+operations, guaranteeing that a read will see the most recent write:
 
 - **N** = Total number of replicas (typically 3 or 5)
 - **W** = Write quorum (number of nodes that must acknowledge a write)
 - **R** = Read quorum (number of nodes that must respond to a read)
 
 **Common configurations:**
+
 - **W = N, R = 1**: Fast reads, but vulnerable to unavailability for writes
 - **W = 1, R = N**: Fast writes, but vulnerable to unavailability for reads
 - **W = R = (N+1)/2**: Balanced approach (e.g., 2 of 3, or 3 of 5)
 
-The trade-off is between availability and consistency: higher values of W and R improve consistency but reduce availability during node failures.
+The trade-off is between availability and consistency: higher values of W and R improve consistency but reduce
+availability during node failures.
 
-
-The replication system should ensure that eventually all the data is copied to every replica. After an unavailable node comes back online, how does it catch up on the writes that it missed? Two mechanisms are often used in Dynamo-style datastores:
+The replication system should ensure that eventually all the data is copied to every replica. After an unavailable node
+comes back online, how does it catch up on the writes that it missed? Two mechanisms are often used in Dynamo-style
+datastores:
 
 **Read Repair**:
-- When a client reads from multiple nodes and detects inconsistencies, it writes the newest version back to the outdated replicas
+
+- When a client reads from multiple nodes and detects inconsistencies, it writes the newest version back to the outdated
+  replicas
 - Works well for frequently read data
 - Requires no additional infrastructure
 - Passive approach that only fixes data that's actually being read
 
 **Anti-Entropy Process**:
+
 - Background process that continuously looks for differences between replicas
 - Copies missing data from one replica to another
 - Doesn't operate in any particular order (unlike leader-based replication logs)
 - Ensures all data is eventually consistent, even if rarely accessed
 - May have significant delays before convergence
-
 
 ##### **Concurrent Writes and Version Tracking**
 
@@ -1391,7 +1458,8 @@ The replication system should ensure that eventually all the data is copied to e
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
 
-In leaderless systems, concurrent updates can occur without coordination, requiring careful conflict detection and resolution.
+In leaderless systems, concurrent updates can occur without coordination, requiring careful conflict detection and
+resolution.
 
 **Last Write Wins (using timestamps)**:
 
@@ -1421,6 +1489,7 @@ Vector clocks track causality between different versions of data:
 </div>
 
 Each node maintains a counter for every node in the system:
+
 - When a node updates data, it increments its own counter
 - When a node receives data from another node, it updates its vector clock
 - Two vector clocks can be compared to determine if one event happened before another
@@ -1428,33 +1497,44 @@ Each node maintains a counter for every node in the system:
 **Comparing Vector Clocks:**
 
 Looking at the image above, we can determine causality relationships:
-- **Causally Related**: When all values in one vector clock are equal to or greater than another, and at least one value is strictly greater, there is a causal relationship. For example, vector clock [3,0,0] happens after [2,0,0] because all elements are greater than or equal to the elements in [3,0,0]
-- **Concurrent Events**: When neither vector clock's values are all greater than or equal to the other, the events are concurrent. For example, [2,0,0] and [0,1,0] are concurrent because neither descends from the other.
+
+- **Causally Related**: When all values in one vector clock are equal to or greater than another, and at least one value
+  is strictly greater, there is a causal relationship. For example, vector clock [3,0,0] happens after [2,0,0] because
+  all elements are greater than or equal to the elements in [3,0,0]
+- **Concurrent Events**: When neither vector clock's values are all greater than or equal to the other, the events are
+  concurrent. For example, [2,0,0] and [0,1,0] are concurrent because neither descends from the other.
 
 **Examples:**
+
 1. [4,4,1] causally follows [3,0,0] because all elements in [4,4,1] are greater than or equal to the elements in [3,0,0]
 2. [2,3,1] and [2,0,0] are causally related because all elements in [2,3,1] are greater than or equal to [2,0,0]
 3. [2,2,0] and [2,4,1] are concurrent because [2,2,0] has elements not greater than [2,4,1] and vice versa
 
-This comparison allows distributed systems to determine whether events have a happened-before relationship or occurred concurrently, which is crucial for conflict resolution.
+This comparison allows distributed systems to determine whether events have a happened-before relationship or occurred
+concurrently, which is crucial for conflict resolution.
 
 **Resolving Concurrent Conflicts with Vector Clocks:**
 
-Vector clocks help detect concurrent updates, but application-specific logic is needed to resolve conflicts. Consider a shopping cart scenario:
+Vector clocks help detect concurrent updates, but application-specific logic is needed to resolve conflicts. Consider a
+shopping cart scenario:
 
 **Example: Shopping Cart Operations**
 
 *Starting state*: Empty cart with vector clock [0,0,0]
 
 *Concurrent operations*:
+
 - Device A: Add Book → Vector clock [1,0,0]
 - Device B: Add Headphones → Vector clock [0,1,0]
 
 *Conflict resolution*: Merge both additions
-- Result: 
+
+- Result:
+
 ```
 {Book: 1, Headphones: 1}
 ```
+
 with vector clock [1,1,0]
 
 When conflicting operations include removals, resolution becomes more complex:
@@ -1464,26 +1544,30 @@ When conflicting operations include removals, resolution becomes more complex:
 In distributed systems, items aren't immediately deleted but marked with a "tombstone" indicating they were deleted:
 
 *Example*:
+
 - Starting cart: `{Book: 1, Headphones: 1}` with vector clock [1,1,0]
 - Device B removes Book → Creates a tombstone, not just removing it
 - Resulting data: `{Headphones: 1, Book: TOMBSTONE}` with vector clock [1,2,0]
 
-Tombstones ensure that deletions propagate correctly through the system. If another replica later tries to re-add the deleted item due to asynchronous replication, the tombstone indicates that the item was intentionally deleted and should remain so. Tombstones are typically garbage-collected after all replicas have acknowledged the deletion.
+Tombstones ensure that deletions propagate correctly through the system. If another replica later tries to re-add the
+deleted item due to asynchronous replication, the tombstone indicates that the item was intentionally deleted and should
+remain so. Tombstones are typically garbage-collected after all replicas have acknowledged the deletion.
 
 ##### **Sloppy Quorums and Hinted Handoff**
 
 In a distributed system, strict quorum requirements may not be possible during network partitions or node failures.
 
 **Sloppy Quorums**:
+
 - Allow writes and reads to proceed even if the "proper" nodes are unavailable
 - Accept writes on behalf of unavailable nodes (temporary stewardship)
 - Increases availability at the cost of consistency guarantees
 
 **Hinted Handoff**:
+
 - Nodes that accept writes on behalf of unavailable nodes store "hints"
 - When the proper node becomes available again, the hints are delivered
 - Ensures eventual consistency even after prolonged outages
-
 
 #### **Leader-Based Replication vs Leaderless Replication**
 
@@ -1571,22 +1655,31 @@ In a distributed system, strict quorum requirements may not be possible during n
 This article has explored the core concepts that power modern database systems:
 
 **Storage and Data Structures**
-- B-Trees and B+ Trees form the backbone of traditional relational databases, optimizing for read performance and range queries
+
+- B-Trees and B+ Trees form the backbone of traditional relational databases, optimizing for read performance and range
+  queries
 - LSM Trees revolutionize write-heavy workloads by using in-memory buffers and sequential disk writes
 - Both approaches make fundamental trade-offs in terms of read vs. write performance
 
 **Memory and Reliability**
+
 - Buffer pools bridge the gap between slow disk storage and fast memory access
 - Write-ahead logging (WAL) ensures durability and atomicity even during system failures
 
 **Transaction Processing**
+
 - Isolation levels (Read Uncommitted to Serializable) balance performance against consistency guarantees
 - Concurrency control techniques prevent anomalies like dirty reads, lost updates, and write skew
 
 **Distributed Database Architectures**
-- Partitioning schemes like consistent hashing distribute data across multiple nodes for horizontal scaling
-- Replication approaches (leader-based, multi-leader, leaderless) provide fault tolerance with different consistency models
-- Vector clocks track causality in distributed systems, enabling conflict detection and resolution
-- Techniques like quorum consensus, read repair, and tombstones ensure eventual consistency in the face of network partitions
 
-These fundamental concepts continue to evolve as databases adapt to new requirements for scale, availability, and performance. The right database for your application will depend on your specific workload characteristics and consistency requirements. 
+- Partitioning schemes like consistent hashing distribute data across multiple nodes for horizontal scaling
+- Replication approaches (leader-based, multi-leader, leaderless) provide fault tolerance with different consistency
+  models
+- Vector clocks track causality in distributed systems, enabling conflict detection and resolution
+- Techniques like quorum consensus, read repair, and tombstones ensure eventual consistency in the face of network
+  partitions
+
+These fundamental concepts continue to evolve as databases adapt to new requirements for scale, availability, and
+performance. The right database for your application will depend on your specific workload characteristics and
+consistency requirements. 

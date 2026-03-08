@@ -1,17 +1,25 @@
+"use client"
+
 import React from 'react';
+import {motion} from 'framer-motion';
 
 interface PageContainerProps {
-  children: React.ReactNode;
-  title?: string;
+    children: React.ReactNode;
+    title?: string;
 }
 
-export function PageContainer({ children, title }: PageContainerProps) {
-  return (
-    <section className="w-full py-12 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-      <div className="max-w-[1400px] w-full mx-auto">
-        {title && <h1 className="text-3xl font-bold mb-8">{title}</h1>}
-        {children}
-      </div>
-    </section>
-  );
-} 
+export function PageContainer({children, title}: PageContainerProps) {
+    return (
+        <motion.section
+            initial={{opacity: 0, y: 12}}
+            animate={{opacity: 1, y: 0}}
+            transition={{duration: 0.3}}
+            className="w-full py-12 pb-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16"
+        >
+            <div className="max-w-[1400px] w-full mx-auto">
+                {title && <h1 className="text-4xl font-bold font-serif mb-8">{title}</h1>}
+                {children}
+            </div>
+        </motion.section>
+    );
+}

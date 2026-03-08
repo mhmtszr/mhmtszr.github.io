@@ -688,7 +688,7 @@ function PhotographyContent() {
                         <button
                             key={country}
                             onClick={() => setFilter(country)}
-                            className={`px-3 py-1.5 rounded-full text-sm whitespace-nowrap ${
+                            className={`px-3 py-1.5 rounded-full text-sm font-sans whitespace-nowrap transition-colors duration-200 ${
                                 filter === country
                                     ? "bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-800"
                                     : "bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
@@ -705,77 +705,83 @@ function PhotographyContent() {
                     <p className="text-gray-500 dark:text-gray-400">No photos found for {filter}</p>
                     <button
                         onClick={() => setFilter("All")}
-                        className="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md transition-colors"
+                        className="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-md transition-colors font-sans text-sm"
                     >
                         Show all photos
                     </button>
                 </div>
             ) : isChangingCountry ? (
-                <div className="min-h-[400px] flex items-center justify-center">
-                    <div className="flex flex-col items-center gap-4">
-                        <div
-                            className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800 dark:border-gray-200"/>
-                        <p className="text-gray-600 dark:text-gray-400">Loading photos from {filter}...</p>
-                    </div>
+                <div className="columns-1 sm:columns-2 lg:columns-3 [column-gap:1.5rem]">
+                    {[...Array(9)].map((_, i) => (
+                        <div key={i} className="mb-6 break-inside-avoid">
+                            <div className={`rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse ${
+                                i % 3 === 0 ? 'h-64' : i % 3 === 1 ? 'h-48' : 'h-56'
+                            }`}/>
+                        </div>
+                    ))}
                 </div>
             ) : (
                 <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="columns-1 sm:columns-2 lg:columns-3 [column-gap:1.5rem]">
                         {displayedPhotos.map((photo, index) => (
-                            <PhotoDetail
-                                key={photo.url}
-                                isOpen={selectedPhotoIndex === index}
-                                onOpenChange={(open) => {
-                                    setSelectedPhotoIndex(open ? index : null)
-                                }}
-                                type="image"
-                                url={photo.url}
-                                title={photo.title}
-                                onNext={handleNext}
-                                onPrevious={handlePrevious}
-                                preloadedImage={
-                                    <Image
-                                        src={photo.url}
-                                        alt={photo.title || ""}
-                                        width={800}
-                                        height={800}
-                                        className="h-full w-auto object-contain transform-gpu"
-                                        priority={index < 4}
-                                        sizes="100vw"
-                                    />
-                                }
-                                trigger={
-                                    <motion.div
-                                        initial={{opacity: 0, scale: 0.9}}
-                                        animate={{opacity: 1, scale: 1}}
-                                        transition={{duration: 0.3, delay: Math.min((index % BATCH_SIZE) * 0.1, 0.5)}}
-                                        className="relative group cursor-pointer overflow-hidden rounded-lg aspect-square"
-                                    >
+                            <div key={photo.url} className="mb-6 break-inside-avoid">
+                                <PhotoDetail
+                                    isOpen={selectedPhotoIndex === index}
+                                    onOpenChange={(open) => {
+                                        setSelectedPhotoIndex(open ? index : null)
+                                    }}
+                                    type="image"
+                                    url={photo.url}
+                                    title={photo.title}
+                                    onNext={handleNext}
+                                    onPrevious={handlePrevious}
+                                    preloadedImage={
                                         <Image
                                             src={photo.url}
                                             alt={photo.title || ""}
                                             width={800}
                                             height={800}
-                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                            priority={index < 8}
-                                            loading={index >= 8 ? "lazy" : "eager"}
-                                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                            className="h-full w-auto object-contain transform-gpu"
+                                            priority={index < 4}
+                                            sizes="100vw"
                                         />
-                                        <div
-                                            className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300"/>
-                                        <div
-                                            className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/60 to-transparent">
-                                            <p className="text-sm font-medium truncate">{photo.title}</p>
-                                            <p className="text-xs mt-1 truncate">{photo.city}, {photo.country}</p>
-                                        </div>
-                                    </motion.div>
-                                }
-                            >
-                                {photo.title}
-                                <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
+                                    }
+                                    trigger={
+                                        <motion.div
+                                            initial={{opacity: 0, scale: 0.9}}
+                                            animate={{opacity: 1, scale: 1}}
+                                            transition={{
+                                                duration: 0.3,
+                                                delay: Math.min((index % BATCH_SIZE) * 0.1, 0.5)
+                                            }}
+                                            className="relative group cursor-pointer overflow-hidden rounded-xl"
+                                        >
+                                            <Image
+                                                src={photo.url}
+                                                alt={photo.title || ""}
+                                                width={800}
+                                                height={600}
+                                                className="w-full h-auto transition-transform duration-500 group-hover:scale-110"
+                                                priority={index < 8}
+                                                loading={index >= 8 ? "lazy" : "eager"}
+                                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                            />
+                                            <div
+                                                className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-opacity duration-300"/>
+                                            <div
+                                                className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/60 to-transparent">
+                                                <p className="text-sm font-medium truncate font-sans">{photo.title}</p>
+                                                <p className="text-xs mt-1 truncate font-sans">{photo.city}, {photo.country}</p>
+                                            </div>
+                                        </motion.div>
+                                    }
+                                >
+                                    {photo.title}
+                                    <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
                   ({photo.city}, {photo.country})
                 </span>
-                            </PhotoDetail>
+                                </PhotoDetail>
+                            </div>
                         ))}
                     </div>
 
@@ -801,11 +807,18 @@ export default function PhotographyPage() {
     return (
         <Suspense
             fallback={
-                <div className="min-h-[400px] flex items-center justify-center">
-                    <div className="flex flex-col items-center gap-4">
-                        <div
-                            className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800 dark:border-gray-200"/>
-                        <p className="text-gray-600 dark:text-gray-400">Loading photos...</p>
+                <div className="w-full py-12 pb-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+                    <div className="max-w-[1400px] w-full mx-auto">
+                        <div className="h-10 w-48 bg-gray-200 dark:bg-gray-800 animate-pulse rounded mb-8"/>
+                        <div className="columns-1 sm:columns-2 lg:columns-3 [column-gap:1.5rem]">
+                            {[...Array(9)].map((_, i) => (
+                                <div key={i} className="mb-6 break-inside-avoid">
+                                    <div className={`rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse ${
+                                        i % 3 === 0 ? 'h-64' : i % 3 === 1 ? 'h-48' : 'h-56'
+                                    }`}/>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             }

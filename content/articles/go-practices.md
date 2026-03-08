@@ -4,12 +4,13 @@ description: "A comprehensive guide to Go best practices covering folder structu
 metaDescription: "Learn Go best practices, patterns, and solutions for writing clean, performant, and maintainable Go code. Covers folder structure, concurrency, error handling, testing, and performance tips."
 date: "2025-04-28"
 image: "/article/go-practices/preview.png"
-tags: ["Go", "Golang", "Best Practices", "Clean Code", "Concurrency", "Performance", "Testing", "Error Handling"]
-keywords: ["go best practices", "golang patterns", "go concurrency", "go performance optimization", "go error handling", "go testing", "golang clean code", "go folder structure", "go project layout"]
+tags: [ "Go", "Golang", "Best Practices", "Clean Code", "Concurrency", "Performance", "Testing", "Error Handling" ]
+keywords: [ "go best practices", "golang patterns", "go concurrency", "go performance optimization", "go error handling", "go testing", "golang clean code", "go folder structure", "go project layout" ]
 ---
 
 
-These practices are based on my personal experiences and opinions. I am always open to better suggestions and would love to hear your thoughts for improvement!
+These practices are based on my personal experiences and opinions. I am always open to better suggestions and would love
+to hear your thoughts for improvement!
 
 ## Folder Structure
 
@@ -42,19 +43,24 @@ More detailed: [https://github.com/golang-standards/project-layout](https://gith
 
 ### `/pkg`
 
-This folder should not contain any business logic and should not access the internal package. It is meant to include packages that handle integrations with third-party libraries that the internal package can use.
+This folder should not contain any business logic and should not access the internal package. It is meant to include
+packages that handle integrations with third-party libraries that the internal package can use.
 
 At any point, the packages within this folder should be transferable to another project without modification.
 
 ### `/internal`
 
-This is where all business logic resides. We should aim to follow Domain-Driven Design (DDD) principles as much as possible. We should avoid using generic utility or helper packages.
+This is where all business logic resides. We should aim to follow Domain-Driven Design (DDD) principles as much as
+possible. We should avoid using generic utility or helper packages.
 
-Each aggregate root should have its own package, containing only the code relevant to that aggregate. The `usecase.go` file within each package handles the application flow, acting as the entry point for domain logic execution.
+Each aggregate root should have its own package, containing only the code relevant to that aggregate. The `usecase.go`
+file within each package handles the application flow, acting as the entry point for domain logic execution.
 
 ### `/container`
 
-This folder is used to manage object lifecycles using [samber/do](https://github.com/samber/do). All required structs should be defined and registered here. No package should access the container package directly. Instead, the container should be accessed only once when the application starts, solely for the purpose of managing object lifecycles.
+This folder is used to manage object lifecycles using [samber/do](https://github.com/samber/do). All required structs
+should be defined and registered here. No package should access the container package directly. Instead, the container
+should be accessed only once when the application starts, solely for the purpose of managing object lifecycles.
 
 With `samber/do`, we can implement health checks and shutdown functions for our objects:
 
@@ -72,17 +78,26 @@ func (t *TestRepository) HealthCheck() error {
 }
 ```
 
-One of the key benefits of `do` is that it determines the order in which objects are instantiated and ensures that shutdown and health check functions run in the correct sequence. 
+One of the key benefits of `do` is that it determines the order in which objects are instantiated and ensures that
+shutdown and health check functions run in the correct sequence.
 
-For example, if we shut down an a repository before shutting the HTTP server, ongoing requests may fail. `do` ensures that shutdown operations happen in reverse order of instantiation, minimizing such issues and improving liveness, readiness, and graceful shutdown handling.
+For example, if we shut down an a repository before shutting the HTTP server, ongoing requests may fail. `do` ensures
+that shutdown operations happen in reverse order of instantiation, minimizing such issues and improving liveness,
+readiness, and graceful shutdown handling.
 
 ## Performance
 
 ### Use [Automaxprocs](https://github.com/uber-go/automaxprocs) for GOMAXPROCS
 
-[The Go scheduler](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part2.html) is designed to utilize as many threads as the number of CPU cores available on the host machine. In a Kubernetes environment, where multiple applications share the same node, the total number of cores can be significantly high. By default, a Go application may attempt to utilize all available cores, potentially leading to resource contention.
+[The Go scheduler](https://www.ardanlabs.com/blog/2018/08/scheduling-in-go-part2.html) is designed to utilize as many
+threads as the number of CPU cores available on the host machine. In a Kubernetes environment, where multiple
+applications share the same node, the total number of cores can be significantly high. By default, a Go application may
+attempt to utilize all available cores, potentially leading to resource contention.
 
-To optimize CPU utilization and ensure fair resource allocation, we can use [`automaxprocs`](https://github.com/uber-go/automaxprocs). This package automatically adjusts `GOMAXPROCS` to match the CPU limits specified in the application's Kubernetes deployment, ensuring that the Go runtime only schedules as many threads as permitted.
+To optimize CPU utilization and ensure fair resource allocation, we can use [
+`automaxprocs`](https://github.com/uber-go/automaxprocs). This package automatically adjusts `GOMAXPROCS` to match the
+CPU limits specified in the application's Kubernetes deployment, ensuring that the Go runtime only schedules as many
+threads as permitted.
 
 By integrating `automaxprocs`, we can achieve:
 
@@ -98,13 +113,15 @@ To enable `automaxprocs`, simply import the package in your application:
 import _ "go.uber.org/automaxprocs"
 ```
 
-This ensures that `GOMAXPROCS` is dynamically adjusted at startup, aligning with the CPU limits defined in the Kubernetes YAML configuration.
+This ensures that `GOMAXPROCS` is dynamically adjusted at startup, aligning with the CPU limits defined in the
+Kubernetes YAML configuration.
 
 ### Optimizing Struct Memory Layout
 
 The order of fields in a struct can significantly impact memory usage due to memory alignment.
 
 Consider the following example:
+
 ```go
 type testStruct struct {
     testBool1  bool    // 1 byte
@@ -123,7 +140,8 @@ func main() {
 }
 ```
 
-This discrepancy occurs due to how memory alignment works on a 64-bit architecture. For more details, refer to this [article](https://en.wikipedia.org/wiki/Data_structure_alignment).
+This discrepancy occurs due to how memory alignment works on a 64-bit architecture. For more details, refer to
+this [article](https://en.wikipedia.org/wiki/Data_structure_alignment).
 
 To minimize memory overhead, we can reorder the fields to align them more efficiently:
 
@@ -141,12 +159,16 @@ func main() {
 }
 ```
 
-You don't have to manually reorder fields every time. Tools like [`fieldalignment`](https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/fieldalignment) can automatically optimize the memory layout of your structs.
+You don't have to manually reorder fields every time. Tools like [
+`fieldalignment`](https://pkg.go.dev/golang.org/x/tools/go/analysis/passes/fieldalignment) can automatically optimize
+the memory layout of your structs.
 
 To apply the optimization, simply run:
+
 ```
 fieldalignment -fix ./... 
 ```
+
 This tool helps improve memory efficiency in your Go code by rearranging struct fields based on memory padding rules.
 
 ### Use `GOMEMLIMIT` Instead of `GOGC`
@@ -162,18 +184,23 @@ While there is a significant decrease in the amount of garbage collection runnin
 limits of your application are not well understood, do not set GOGC=off.
 
 #### Implementation
+
 To set GOMEMLIMIT, use the following environment variable configuration:
+
 ```
 export GOMEMLIMIT=512MiB
 ```
+
 This sets the memory limit to 512 MiB. Adjust the value based on your application's requirements.
 
 To disable GOGC and rely solely on GOMEMLIMIT, set GOGC to off:
+
 ```
 export GOGC=off
 ```
 
-However, be cautious when doing this, as it may lead to unexpected behavior if the memory limits are not well understood.
+However, be cautious when doing this, as it may lead to unexpected behavior if the memory limits are not well
+understood.
 
 ![img_1.png](/article/go-practices/img_1.png)
 
@@ -181,9 +208,13 @@ However, be cautious when doing this, as it may lead to unexpected behavior if t
 
 ### Use Goroutine Pool by Using ants
 
-Creating a new goroutine for each task can be expensive, especially in high-concurrency scenarios. Each goroutine consumes memory (typically around 2 KB), and spawning too many goroutines can lead to excessive context switching and memory usage.
+Creating a new goroutine for each task can be expensive, especially in high-concurrency scenarios. Each goroutine
+consumes memory (typically around 2 KB), and spawning too many goroutines can lead to excessive context switching and
+memory usage.
 
-[ants](https://github.com/panjf2000/ants) is a high-performance goroutine pool implementation that reuses goroutines to reduce the overhead of goroutine creation and destruction. It manages a pool of worker goroutines that can be reused across multiple tasks, significantly reducing memory usage and improving performance under high concurrency.
+[ants](https://github.com/panjf2000/ants) is a high-performance goroutine pool implementation that reuses goroutines to
+reduce the overhead of goroutine creation and destruction. It manages a pool of worker goroutines that can be reused
+across multiple tasks, significantly reducing memory usage and improving performance under high concurrency.
 
 **Example Usage**:
 
@@ -221,11 +252,14 @@ func main() {
 }
 ```
 
-As shown in the benchmark, using ants goroutine pool reduces memory usage by over 90% and improves execution time by more than 60% when handling a large number of short-lived tasks.
+As shown in the benchmark, using ants goroutine pool reduces memory usage by over 90% and improves execution time by
+more than 60% when handling a large number of short-lived tasks.
 
 ### Avoid Large Value Copies by Using Pointers
 
-When working with large structs or slices, passing them by value creates a complete copy of the data, which can significantly impact performance due to increased memory allocation and CPU usage. Using pointers for large data structures helps avoid unnecessary copying.
+When working with large structs or slices, passing them by value creates a complete copy of the data, which can
+significantly impact performance due to increased memory allocation and CPU usage. Using pointers for large data
+structures helps avoid unnecessary copying.
 
 <div className="overflow-x-auto my-6">
 <table>
@@ -321,11 +355,14 @@ As the benchmark shows, passing large structs by pointer can be faster.
 - For slices with large underlying arrays
 - For frequently called functions that handle substantial data
 
-**Note:** For small structs (under 64 bytes), passing by value can sometimes be more efficient due to cache locality and reduced indirection.
+**Note:** For small structs (under 64 bytes), passing by value can sometimes be more efficient due to cache locality and
+reduced indirection.
 
 ### Use Buffered Channels for Better Performance
 
-When working with channels in Go, using unbuffered channels can lead to unnecessary blocking and context switching. Buffered channels reduce synchronization overhead by allowing a specified number of elements to be sent without blocking.
+When working with channels in Go, using unbuffered channels can lead to unnecessary blocking and context switching.
+Buffered channels reduce synchronization overhead by allowing a specified number of elements to be sent without
+blocking.
 
 <div className="overflow-x-auto my-6">
 <table>
@@ -422,21 +459,25 @@ func BenchmarkBufferedChannel(b *testing.B) {
 </tbody></table>
 </div>
 
-As shown in the benchmark, buffered channels can be approximately 3 times faster than unbuffered channels for this specific workload. However, the optimal buffer size depends on your specific use case:
+As shown in the benchmark, buffered channels can be approximately 3 times faster than unbuffered channels for this
+specific workload. However, the optimal buffer size depends on your specific use case:
 
 - **Too small**: May not provide enough benefits over unbuffered channels
 - **Too large**: Can waste memory and mask potential deadlocks
 
 **Guidelines for buffer sizing**:
+
 - For predictable producer-consumer scenarios, set the buffer size to accommodate the expected burst of messages
 - For bursty workloads, buffer size should match the expected maximum burst size
 - For throttling, set the buffer size to the maximum concurrent operations you want to allow
 
-Remember that while buffered channels improve performance, they can also hide synchronization issues that would be immediately apparent with unbuffered channels.
+Remember that while buffered channels improve performance, they can also hide synchronization issues that would be
+immediately apparent with unbuffered channels.
 
 ### Use `fiber` for Web Framework
 
-[fiber](https://github.com/gofiber/fiber) is a lightweight and high-performance web framework built on fasthttp, the fastest HTTP engine in Go. It is
+[fiber](https://github.com/gofiber/fiber) is a lightweight and high-performance web framework built on fasthttp, the
+fastest HTTP engine in Go. It is
 optimized for speed and low memory consumption, making it ideal for building fast APIs and microservices. Compared to
 net/http, fiber significantly reduces request processing overhead and offers built-in support for middleware,
 WebSockets, and routing optimizations.
@@ -448,11 +489,14 @@ WebSockets, and routing optimizations.
 
 ### Use Concurrent Swiss Map for High-Performance Thread-Safe Maps
 
-When working with maps in concurrent environments, the standard approach is to use either a map with a mutex/RWMutex or `sync.Map`. However, both solutions have performance limitations in high-concurrency scenarios.
+When working with maps in concurrent environments, the standard approach is to use either a map with a mutex/RWMutex or
+`sync.Map`. However, both solutions have performance limitations in high-concurrency scenarios.
 
-[Concurrent Swiss Map](https://github.com/mhmtszr/concurrent-swiss-map) is a high-performance, thread-safe generic concurrent hash map implementation that delivers exceptional performance in concurrent access scenarios.
+[Concurrent Swiss Map](https://github.com/mhmtszr/concurrent-swiss-map) is a high-performance, thread-safe generic
+concurrent hash map implementation that delivers exceptional performance in concurrent access scenarios.
 
 **Key Features:**
+
 - Thread-safe with minimal lock contention through map sharding
 - High-performance for both read and write operations
 - Lower memory usage compared to other concurrent map implementations
@@ -465,7 +509,8 @@ When working with maps in concurrent environments, the standard approach is to u
   <img src="/article/go-practices/concurrent-swiss-map-arch.png" className="mx-auto max-w-full h-auto" alt="Concurrent Swiss Map Architecture"/>
 </div>
 
-The diagram illustrates how the Concurrent Swiss Map divides a single map into multiple shards, with each shard protected by its own mutex. This approach significantly reduces lock contention in multi-threaded applications.
+The diagram illustrates how the Concurrent Swiss Map divides a single map into multiple shards, with each shard
+protected by its own mutex. This approach significantly reduces lock contention in multi-threaded applications.
 
 **Example Usage:**
 
@@ -510,23 +555,26 @@ func main() {
 
 **Benchmark Results:**
 
-Benchmark tests show that Concurrent Swiss Map outperforms other map implementations in high-concurrency scenarios and uses less memory in all tested scenarios:
+Benchmark tests show that Concurrent Swiss Map outperforms other map implementations in high-concurrency scenarios and
+uses less memory in all tested scenarios:
 
 <div className="text-center my-6">
   <img src="/article/go-practices/concurrent-swiss-map-benchmark.png" className="mx-auto max-w-full h-auto" alt="Concurrent Swiss Map Benchmark Results"/>
 </div>
 
 Key findings:
+
 - Memory usage of the Concurrent Swiss Map is better than other map implementations in all test scenarios
 - In highly concurrent systems, Concurrent Swiss Map is significantly faster than alternatives
 - In systems with few concurrent operations, it offers performance similar to RWMutexMap
 
-The implementation uses a sharding technique that divides the map into multiple segments, each with its own lock, dramatically reducing contention when multiple goroutines access different parts of the map simultaneously.
-
+The implementation uses a sharding technique that divides the map into multiple segments, each with its own lock,
+dramatically reducing contention when multiple goroutines access different parts of the map simultaneously.
 
 ### Use unsafe Package to String Byte Conversion without Copying
 
-In Go, converting between `string` and `[]byte` typically involves a memory copy. However, since both types internally use
+In Go, converting between `string` and `[]byte` typically involves a memory copy. However, since both types internally
+use
 `StringHeader` and `SliceHeader`, we can use the `unsafe` package to avoid extra allocations:
 
 ```go
@@ -539,13 +587,15 @@ func BytesToString(b []byte) string {
 }
 ```
 
-Libraries like `fasthttp` and `fiber` leverage this approach for better performance. Note: Avoid this if the underlying data may change, as it could lead to unexpected behavior.
+Libraries like `fasthttp` and `fiber` leverage this approach for better performance. Note: Avoid this if the underlying
+data may change, as it could lead to unexpected behavior.
 Note. If your byte or string values are likely to change later, do not use this feature.
 
 ### Use `bytedance/sonic` instead of `encoding/json`
 
 Go's standard `encoding/json` is known for being slow due to excessive
-reflection. [bytedance/sonic](https://github.com/bytedance/sonic) is a drop-in replacement that offers significant performance
+reflection. [bytedance/sonic](https://github.com/bytedance/sonic) is a drop-in replacement that offers significant
+performance
 improvements.
 
 <div className="flex items-start justify-between gap-4">
@@ -611,7 +661,8 @@ func main() {
 ```
 
 Using sync.Pool, I helped resolve [a memory leak in New Relic Go Agent](https://github.com/newrelic/go-agent/pull/620).
-Instead of creating a new gzip writer for every request, I introduced a pool to reuse instances, reducing CPU usage by ~40% and memory usage by ~22%.
+Instead of creating a new gzip writer for every request, I introduced a pool to reuse instances, reducing CPU usage by ~
+40% and memory usage by ~22%.
 
 ### Prefer `strconv` over `fmt`
 
@@ -653,7 +704,6 @@ BenchmarkStrconv-4    64.2 ns/op    1 allocs/op
 </td></tr>
 </tbody></table>
 </div>
-
 
 ### Prefer specifying capacity for slices and maps
 
@@ -704,7 +754,8 @@ BenchmarkGood-4   100000000    0.21s
 
 ### Do not return a pointer from a function
 
-Returning a pointer from a function may cause the variable to escape to the heap(depending on the escape analysis result), increasing CPU usage and garbage
+Returning a pointer from a function may cause the variable to escape to the heap(depending on the escape analysis
+result), increasing CPU usage and garbage
 collection pressure. Instead, return the value directly to avoid unnecessary heap allocations.
 
 <div className="overflow-x-auto my-6">
@@ -726,6 +777,7 @@ func NewPerson(name string) Person {
     return Person{Name: name}
 }
 ```
+
 </td></tr>
 </tbody></table>
 </div>
@@ -940,14 +992,18 @@ See also,
 - [Self-referential functions and the design of options](https://commandcenter.blogspot.com/2014/01/self-referential-functions-and-design.html)
 - [Functional options for friendly APIs](https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis)
 
-
 ## Testing
 
 ### Unit Testing for Usecases
-It is essential to write unit tests for our `usecase` packages, as they contain the business logic that is accessed externally. Any interaction with third-party services, such as databases or external APIs, should be abstracted behind interfaces to facilitate mocking.
+
+It is essential to write unit tests for our `usecase` packages, as they contain the business logic that is accessed
+externally. Any interaction with third-party services, such as databases or external APIs, should be abstracted behind
+interfaces to facilitate mocking.
 
 ### Using Mockery for Mock Generation
-For generating mocks, we can use [Mockery](https://github.com/vektra/mockery). Below is a recommended `.mockery.yml` configuration:
+
+For generating mocks, we can use [Mockery](https://github.com/vektra/mockery). Below is a recommended `.mockery.yml`
+configuration:
 
 ```
 with-expecter: true
@@ -962,12 +1018,16 @@ packages:
 
 ```
 
-
-
-Mockery allows us to generate mock implementations from interfaces, making it easier to write isolated unit tests. However, we should not create interfaces solely for the purpose of mocking—interfaces should only be introduced when they provide clear benefits, such as enabling testability or supporting multiple implementations. Excessive use of interfaces can lead to unnecessary complexity and performance overhead, which we will discuss further in the [Performance](#performance) section.
+Mockery allows us to generate mock implementations from interfaces, making it easier to write isolated unit tests.
+However, we should not create interfaces solely for the purpose of mocking—interfaces should only be introduced when
+they provide clear benefits, such as enabling testability or supporting multiple implementations. Excessive use of
+interfaces can lead to unnecessary complexity and performance overhead, which we will discuss further in
+the [Performance](#performance) section.
 
 ### Using Table-Driven Tests
-When testing a function with different inputs and expected outputs, we should use **table-driven tests** to ensure better coverage and maintainability. This approach allows us to define multiple test cases in a structured manner.
+
+When testing a function with different inputs and expected outputs, we should use **table-driven tests** to ensure
+better coverage and maintainability. This approach allows us to define multiple test cases in a structured manner.
 
 Example:
 
@@ -995,6 +1055,7 @@ func TestSum(t *testing.T) {
 ```
 
 ### Running Tests with the Race Detector
+
 To catch race conditions early, all tests should be run with the --race flag enabled:
 
 ```go
@@ -1002,7 +1063,6 @@ go test ./... -race
 ```
 
 This helps detect potential data races, ensuring our code is safe for concurrent execution.
-
 
 ### Parallel Tests
 
@@ -1035,9 +1095,13 @@ If we do not do that, most or all tests will receive an unexpected value for
 
 ### Detecting Goroutine Leaks with goleak
 
-Goroutine leaks are a common source of memory leaks in Go applications. They occur when goroutines are created but never terminated, often due to blocked channels or improperly managed resources. These leaks can accumulate over time, eventually leading to memory exhaustion and application failure.
+Goroutine leaks are a common source of memory leaks in Go applications. They occur when goroutines are created but never
+terminated, often due to blocked channels or improperly managed resources. These leaks can accumulate over time,
+eventually leading to memory exhaustion and application failure.
 
-[goleak](https://github.com/uber-go/goleak) is a library by Uber that helps detect goroutine leaks in tests. By checking for any non-terminated goroutines at the end of a test, it ensures your code properly cleans up all concurrent operations.
+[goleak](https://github.com/uber-go/goleak) is a library by Uber that helps detect goroutine leaks in tests. By checking
+for any non-terminated goroutines at the end of a test, it ensures your code properly cleans up all concurrent
+operations.
 
 **Basic Usage**:
 
@@ -1080,7 +1144,8 @@ func TestWithOptions(t *testing.T) {
 
 **Handling Goroutine Leaks**:
 
-When a leak is detected, goleak provides information about the leaking goroutines, including their stack traces. This helps identify the source of the leak:
+When a leak is detected, goleak provides information about the leaking goroutines, including their stack traces. This
+helps identify the source of the leak:
 
 ```
 Found 1 unexpected goroutines:
@@ -1090,17 +1155,22 @@ Found 1 unexpected goroutines:
 ```
 
 To fix leaks, ensure all goroutines have proper termination conditions:
+
 1. Add context cancellation
 2. Implement shutdown mechanisms
 3. Ensure channels are properly closed
 
-By incorporating goleak into your test suite, you can catch and fix goroutine leaks early in the development process, preventing them from causing issues in production.
+By incorporating goleak into your test suite, you can catch and fix goroutine leaks early in the development process,
+preventing them from causing issues in production.
 
 ### Fuzz Testing
 
-Fuzz testing (or fuzzing) is a technique that provides random or semi-random inputs to your code to discover edge cases and bugs that might not be caught by regular testing. Go has native support for fuzz testing since Go 1.18, making it easy to implement robust fuzz tests.
+Fuzz testing (or fuzzing) is a technique that provides random or semi-random inputs to your code to discover edge cases
+and bugs that might not be caught by regular testing. Go has native support for fuzz testing since Go 1.18, making it
+easy to implement robust fuzz tests.
 
-Unlike traditional unit tests with predefined inputs and expected outputs, fuzz tests use the Go fuzzing engine to generate inputs automatically, helping uncover issues like panics, crashes, and unexpected behaviors.
+Unlike traditional unit tests with predefined inputs and expected outputs, fuzz tests use the Go fuzzing engine to
+generate inputs automatically, helping uncover issues like panics, crashes, and unexpected behaviors.
 
 **Basic Fuzz Test Example**:
 
@@ -1182,23 +1252,27 @@ go test -run=FuzzReverse/testdata/fuzz/FuzzReverse/123456
 
 **Best Practices for Fuzz Testing**:
 
-1. **Define Properties**: Instead of checking for specific outputs, verify properties that should always hold true (e.g., reversing a string twice should return the original string).
+1. **Define Properties**: Instead of checking for specific outputs, verify properties that should always hold true (
+   e.g., reversing a string twice should return the original string).
 
 2. **Provide Seed Corpus**: Include known test cases to help the fuzzer start with meaningful inputs.
 
-3. **Handle Invalid Inputs**: Add checks to skip or properly handle invalid inputs that might be generated by the fuzzer.
+3. **Handle Invalid Inputs**: Add checks to skip or properly handle invalid inputs that might be generated by the
+   fuzzer.
 
 4. **Use Constraints**: If needed, constrain input generation using custom functions or by handling specific edge cases.
 
 5. **Fix All Discovered Issues**: When a fuzz test finds a bug, add a regression test case to your regular tests.
 
 Fuzz testing is particularly valuable for:
+
 - Parsing and encoding/decoding functions
 - Data validation and sanitization
 - Complex algorithms with many edge cases
 - Security-critical code that processes untrusted inputs
 
-By adding fuzz testing to your Go projects, you can discover bugs that traditional testing methods might miss, leading to more robust and resilient code.
+By adding fuzz testing to your Go projects, you can discover bugs that traditional testing methods might miss, leading
+to more robust and resilient code.
 
 ## Error Handling
 
@@ -1211,7 +1285,8 @@ There are few options for declaring errors.
 Consider the following before picking the option best suited for your use case.
 
 - Does the caller need to match the error so that they can handle it?
-  If yes, we must support the [`errors.Is`](https://pkg.go.dev/errors#Is) or [`errors.As`](https://pkg.go.dev/errors#As) functions
+  If yes, we must support the [`errors.Is`](https://pkg.go.dev/errors#Is) or [`errors.As`](https://pkg.go.dev/errors#As)
+  functions
   by declaring a top-level error variable or a custom type.
 - Is the error message a static string,
   or is it a dynamic string that requires contextual information?
@@ -1219,7 +1294,6 @@ Consider the following before picking the option best suited for your use case.
   use [`fmt.Errorf`](https://pkg.go.dev/fmt#Errorf) or a custom error type.
 - Are we propagating a new error returned by a downstream function?
   If so, see the [section on error wrapping](#error-wrapping).
-
 
 <div className="overflow-x-auto my-6">
   <table>
@@ -1441,7 +1515,8 @@ x: y: new store: the error
 However once the error is sent to another system, it should be clear the
 message is an error (e.g. an `err` tag or "Failed" prefix in logs).
 
-See also [Don't just check errors, handle them gracefully](https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully).
+See
+also [Don't just check errors, handle them gracefully](https://dave.cheney.net/2016/04/27/dont-just-check-errors-handle-them-gracefully).
 
 ### Error Naming
 
@@ -1612,10 +1687,18 @@ if err != nil {
 
 ## Pre-Production Check
 
-- ✅ **Optimize CPU Utilization**: If running in a containerized environment, integrate [`automaxprocs`](https://github.com/uber-go/automaxprocs) to automatically adjust `GOMAXPROCS` based on available CPU resources.
-- ✅ **Health Checks**: Ensure proper configuration of **liveness** and **readiness** probes in Kubernetes to improve service reliability and automated recovery.
-- ✅ **Graceful Shutdown**: Implement a structured shutdown process to close resources in the correct order. See the [container section](#container) for best practices.
-- ✅ **Static Code Analysis**: Use `golangci-lint` to detect and resolve code smells, potential bugs, and performance issues.
-- ✅ **Logging, Monitoring & Alerts**: Define structured logs, alerts, and metrics to track application health and performance.
-- ✅ **Escape Analysis**: Review escape analysis reports to identify variables that unnecessarily escape to the heap, optimizing memory usage.
-- ✅ **Profiling & Leak Detection**: Use `pprof` for CPU and memory profiling to detect performance bottlenecks and memory leaks before deployment.
+- ✅ **Optimize CPU Utilization**: If running in a containerized environment, integrate [
+  `automaxprocs`](https://github.com/uber-go/automaxprocs) to automatically adjust `GOMAXPROCS` based on available CPU
+  resources.
+- ✅ **Health Checks**: Ensure proper configuration of **liveness** and **readiness** probes in Kubernetes to improve
+  service reliability and automated recovery.
+- ✅ **Graceful Shutdown**: Implement a structured shutdown process to close resources in the correct order. See
+  the [container section](#container) for best practices.
+- ✅ **Static Code Analysis**: Use `golangci-lint` to detect and resolve code smells, potential bugs, and performance
+  issues.
+- ✅ **Logging, Monitoring & Alerts**: Define structured logs, alerts, and metrics to track application health and
+  performance.
+- ✅ **Escape Analysis**: Review escape analysis reports to identify variables that unnecessarily escape to the heap,
+  optimizing memory usage.
+- ✅ **Profiling & Leak Detection**: Use `pprof` for CPU and memory profiling to detect performance bottlenecks and
+  memory leaks before deployment.

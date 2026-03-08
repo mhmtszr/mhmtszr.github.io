@@ -1,14 +1,14 @@
 'use client'
 
-import { useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import {useEffect} from 'react'
+import {usePathname} from 'next/navigation'
 
 export default function ScrollReset() {
-  const pathname = usePathname()
+    const pathname = usePathname()
 
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [pathname])
 
-  return null
+    return null
 } 
