@@ -101,8 +101,11 @@ export default async function ExperiencePage() {
                             <div className="space-y-4">
                                 <div>
                                     <h2 className="text-xl font-semibold">{exp.position}</h2>
-                                    <p className="text-gray-500 dark:text-gray-400 font-sans">
-                                        {exp.company} | {exp.period}
+                                    <p className="text-gray-600 dark:text-gray-300 font-sans mt-1">
+                                        {exp.company}
+                                    </p>
+                                    <p className="text-sm text-gray-400 dark:text-gray-500 font-sans mt-1 tracking-wide">
+                                        {exp.period}
                                     </p>
                                 </div>
 

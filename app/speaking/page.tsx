@@ -4,6 +4,7 @@ import {useState} from "react"
 import {PhotoDetail} from "@/components/ui/photo-detail"
 import {Calendar, FileText} from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import {DeferredImage} from "@/components/ui/deferred-image"
 import {Timeline, TimelineItem} from "../../components/ui/timeline"
 import {YouTubeFacade} from "@/components/ui/youtube-facade"
@@ -16,7 +17,7 @@ const talks = [
         date: 'March 2025',
         description: 'In this presentation, we talked about solving the challenges of managing states and orchestrating long-running processes. I shared practical insights on building systems that stay consistent and reliable, even during complex workflows.',
         type: 'image',
-        url: '/speaking/replay25.jpg',
+        url: '/speaking/replay25.webp',
         slides: 'https://speakerdeck.com/mehmetsezer/designing-resilient-platforms-with-workflow-orchestration'
     },
     {
@@ -25,7 +26,7 @@ const talks = [
         date: 'March 2025',
         description: 'In this presentation, we talked about solving the challenges of managing states and orchestrating long-running processes. I shared practical insights on building systems that stay consistent and reliable, even during complex workflows.',
         type: 'image',
-        url: '/speaking/cscon25.jpg',
+        url: '/speaking/cscon25.webp',
         slides: 'https://speakerdeck.com/mehmetsezer/designing-resilient-platforms-with-workflow-orchestration'
     },
     {
@@ -34,7 +35,7 @@ const talks = [
         date: 'Dec 2024',
         description: 'In this presentation, we talked about solving the challenges of managing states and orchestrating long-running processes. I shared practical insights on building systems that stay consistent and reliable, even during complex workflows.',
         type: 'image',
-        url: '/speaking/workflow.jpg',
+        url: '/speaking/workflow.webp',
         slides: 'https://speakerdeck.com/mehmetsezer/designing-resilient-platforms-with-workflow-orchestration'
     },
     {
@@ -51,7 +52,7 @@ const talks = [
         date: 'Nov 2023',
         description: 'I talked about the new features of Go.',
         type: 'image',
-        url: '/speaking/ankaragophers.jpg'
+        url: '/speaking/ankaragophers.webp'
     },
     {
         title: 'Trendyol Tech Ankara Go Q&A',
@@ -59,7 +60,7 @@ const talks = [
         date: 'May 2023',
         description: 'I was the moderator of our Go programming language Q&A event in the Trendyol Group Ankara Office.',
         type: 'image',
-        url: '/speaking/trendyol_go.jpg'
+        url: '/speaking/trendyol_go.webp'
     },
     {
         title: 'Microservice Architecture',
@@ -67,7 +68,7 @@ const talks = [
         date: 'March 2022',
         description: 'I talked about Microservice Architecture, which is one of the most important topics in the software industry today. I talked about the advantages and disadvantages of microservices, the problems that may arise in microservices, and the solutions to these problems.',
         type: 'image',
-        url: '/speaking/microservice.jpg'
+        url: '/speaking/microservice.webp'
     },
     {
         title: 'How to handle billion of user requests with scaling?',
@@ -75,7 +76,7 @@ const talks = [
         date: 'Dec 2022',
         description: 'I talked about how to design a system that can efficiently serve users worldwide and work stably under high load, step by step.',
         type: 'image',
-        url: '/speaking/devfest22ankara.jpg'
+        url: '/speaking/devfest22ankara.webp'
     },
     {
         title: 'Career in Software Engineering',
@@ -83,7 +84,7 @@ const talks = [
         date: 'Dec 2022',
         description: 'I made a presentation to the department, I shared my experiences as a student and as a software engineer.',
         type: 'image',
-        url: '/speaking/careerinsoftwareengineering.jpg'
+        url: '/speaking/careerinsoftwareengineering.webp'
     },
     {
         title: 'Golang Api Graceful Shutdown in Kubernetes',
@@ -99,7 +100,7 @@ const talks = [
         date: '2019',
         description: 'I taught "Python Programming Language" course which had about 15 participants for Koc University IEEE in 2019.',
         type: 'image',
-        url: '/speaking/koc.jpg'
+        url: '/speaking/koc.webp'
     },
     {
         title: 'Python Programming Language Course',
@@ -107,7 +108,7 @@ const talks = [
         date: '2019',
         description: 'I taught "Python Programming Language" course which had about 200 participants for Hacettepe University ACM in 2019.',
         type: 'image',
-        url: '/speaking/acmders.jpg'
+        url: '/speaking/acmders.webp'
     }
 ];
 
@@ -203,16 +204,26 @@ function SpeakingContent() {
                                             <div className="w-full">
                                                 <div
                                                     className="relative aspect-video rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700">
-                                                    <DeferredImage
-                                                        placeholderClassName="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-xl"
-                                                        src={talk.url || `/placeholder.svg?height=200&width=400&text=${encodeURIComponent(talk.title)}`}
-                                                        alt={talk.title}
-                                                        fill
-                                                        className="object-cover"
-                                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                                        loading="lazy"
-                                                        quality={90}
-                                                    />
+                                                    {index === 0 ? (
+                                                        <Image
+                                                            src={talk.url || `/placeholder.svg?height=200&width=400&text=${encodeURIComponent(talk.title)}`}
+                                                            alt={talk.title}
+                                                            fill
+                                                            className="object-cover"
+                                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                            priority
+                                                            fetchPriority="high"
+                                                        />
+                                                    ) : (
+                                                        <DeferredImage
+                                                            placeholderClassName="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-xl"
+                                                            src={talk.url || `/placeholder.svg?height=200&width=400&text=${encodeURIComponent(talk.title)}`}
+                                                            alt={talk.title}
+                                                            fill
+                                                            className="object-cover"
+                                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                        />
+                                                    )}
                                                 </div>
                                             </div>
                                             <div>

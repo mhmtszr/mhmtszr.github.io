@@ -2,10 +2,7 @@ import type React from "react"
 import type {Viewport} from "next"
 import './globals.css'
 import {Lora, Plus_Jakarta_Sans} from "next/font/google"
-import {ThemeProvider} from "@/components/theme-provider"
 import Sidebar from "@/components/sidebar"
-import Script from "next/script"
-import ScrollReset from "@/components/scroll-reset"
 
 const plusJakarta = Plus_Jakarta_Sans({
     subsets: ["latin"],
@@ -117,42 +114,22 @@ export default function RootLayout({
         <head>
             <link rel="preload" href="/photography/profile.jpg" as="image"/>
             <link rel="manifest" href="/site.webmanifest"/>
-            <meta name="google-site-verification" content="BJMSpiC_fy4HW6D8l2wxY75vzp2FTfAy4PC3vwb6NnU"/>
             <link rel="sitemap" type="application/xml" href="/sitemap.xml"/>
-            <Script id="theme-script" strategy="beforeInteractive">
-                {`
-            (function() {
-              try {
-                var d = document.documentElement;
-                var savedTheme = localStorage.getItem('theme');
-                if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  d.classList.add('dark');
-                } else {
-                  d.classList.remove('dark');
-                }
-              } catch (e) {}
-              requestAnimationFrame(function(){requestAnimationFrame(function(){document.documentElement.classList.add('transitions-ready')})});
-            })();
-          `}
-            </Script>
-            <link rel="icon" href="/favicon.png"/>
+            <script dangerouslySetInnerHTML={{__html: `(function(){try{var d=document.documentElement;var s=localStorage.getItem('theme');if(s==='dark'||(!s&&window.matchMedia('(prefers-color-scheme: dark)').matches)){d.classList.add('dark')}else{d.classList.remove('dark')}}catch(e){}requestAnimationFrame(function(){requestAnimationFrame(function(){document.documentElement.classList.add('transitions-ready')})})})();`}} />
             <link rel="alternate" type="application/rss+xml" title="Mehmet Sezer's Blog"
                   href="https://msezer.dev/rss.xml"/>
         </head>
-        <body className={`${plusJakarta.variable} ${lora.variable} ${plusJakarta.className}`} suppressHydrationWarning>
+        <body className={`${plusJakarta.variable} ${lora.variable} ${plusJakarta.className}`}>
         <a href="#main-content"
            className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-black dark:focus:bg-gray-900 dark:focus:text-white">
             Skip to content
         </a>
-        <ThemeProvider defaultTheme="light">
-            <ScrollReset/>
             <div className="flex min-h-screen flex-col">
                 <Sidebar/>
                 <div className="flex-1 md:ml-64 lg:ml-72">
                     <main id="main-content" className="min-h-screen w-full overflow-x-hidden">{children}</main>
                 </div>
             </div>
-        </ThemeProvider>
         </body>
         </html>
     )

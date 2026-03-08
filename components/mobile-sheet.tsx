@@ -1,28 +1,40 @@
 "use client"
 
-import type {ComponentType} from "react"
 import Link from "next/link"
 import {cn} from "@/lib/utils"
-import {FileText, Github, Linkedin, Menu, Twitter} from "lucide-react"
+import {
+    BookOpenText,
+    Briefcase,
+    Code,
+    FileText,
+    Github,
+    ImageIcon,
+    Linkedin,
+    Menu,
+    Presentation,
+    Twitter,
+    User,
+} from "lucide-react"
 import {MediumIcon} from "@/components/icons/medium"
 import {Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger} from "@/components/ui/sheet"
 
-type NavItem = {
-    name: string
-    href: string
-    icon: ComponentType<{ className?: string }>
-}
+const navItems = [
+    {name: "About", href: "/", icon: User},
+    {name: "Experience", href: "/experience", icon: Briefcase},
+    {name: "Projects", href: "/projects", icon: Code},
+    {name: "Speaking", href: "/speaking", icon: Presentation},
+    {name: "Articles", href: "/articles", icon: BookOpenText},
+    {name: "Photography", href: "/photography", icon: ImageIcon},
+]
 
 export default function MobileSheet({
     isOpen,
     onOpenChange,
     pathname,
-    navItems,
 }: {
     isOpen: boolean
     onOpenChange: (open: boolean) => void
     pathname: string | null
-    navItems: NavItem[]
 }) {
     return (
         <Sheet open={isOpen} onOpenChange={onOpenChange}>

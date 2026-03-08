@@ -713,9 +713,9 @@ function PhotographyContent() {
                     </button>
                 </div>
             ) : isChangingCountry ? (
-                <div role="status" aria-busy="true" aria-label="Loading photos" className="columns-1 sm:columns-2 lg:columns-3 [column-gap:1.5rem]">
+                <div role="status" aria-busy="true" aria-label="Loading photos" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {[...Array(9)].map((_, i) => (
-                        <div key={i} className="mb-6 break-inside-avoid">
+                        <div key={i}>
                             <div className={`rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse ${
                                 i % 3 === 0 ? 'h-64' : i % 3 === 1 ? 'h-48' : 'h-56'
                             }`}/>
@@ -725,9 +725,9 @@ function PhotographyContent() {
                 </div>
             ) : (
                 <>
-                    <div className="columns-1 sm:columns-2 lg:columns-3 [column-gap:1.5rem]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {displayedPhotos.map((photo, index) => (
-                            <div key={photo.url} className="mb-6 break-inside-avoid">
+                            <div key={photo.url}>
                                 <PhotoDetail
                                     isOpen={selectedPhotoIndex === index}
                                     onOpenChange={(open) => {
@@ -753,7 +753,7 @@ function PhotographyContent() {
                                         <button
                                             type="button"
                                             aria-label={`View photo: ${photo.title}`}
-                                            className="relative group cursor-pointer overflow-hidden rounded-xl animate-fade-in-up w-full text-left"
+                                            className="relative group cursor-pointer overflow-hidden rounded-xl animate-fade-in-up w-full text-left aspect-[3/4]"
                                             style={{animationDelay: `${Math.min((index % BATCH_SIZE) * 0.1, 0.5)}s`}}
                                         >
                                             {index < 2 ? (
@@ -763,7 +763,7 @@ function PhotographyContent() {
                                                     width={800}
                                                     height={600}
                                                     priority={index === 0}
-                                                    className="w-full h-auto transition-transform duration-500 group-hover:scale-110"
+                                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                                 />
                                             ) : (
@@ -772,10 +772,10 @@ function PhotographyContent() {
                                                     alt={photo.title || ""}
                                                     width={800}
                                                     height={600}
-                                                    className="w-full h-auto transition-transform duration-500 group-hover:scale-110"
+                                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                                     loading="lazy"
                                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                                    placeholderClassName="w-full aspect-[4/3] bg-gray-200 dark:bg-gray-800 animate-pulse rounded-xl"
+                                                    placeholderClassName="w-full h-full bg-gray-200 dark:bg-gray-800 animate-pulse rounded-xl"
                                                 />
                                             )}
                                             <div

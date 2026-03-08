@@ -3,33 +3,10 @@
 import {useState, lazy, Suspense} from "react"
 import Link from "next/link"
 import {usePathname} from "next/navigation"
-import {cn} from "@/lib/utils"
-import {
-    BookOpenText,
-    Briefcase,
-    Code,
-    FileText,
-    Github,
-    ImageIcon,
-    Linkedin,
-    Menu,
-    Presentation,
-    Twitter,
-    User,
-} from "lucide-react"
-import {MediumIcon} from "@/components/icons/medium"
+import {Menu} from "lucide-react"
 import {ThemeToggle} from "@/components/theme-toggle"
 
 const LazySheet = lazy(() => import("@/components/mobile-sheet"))
-
-const navItems = [
-    {name: "About", href: "/", icon: User},
-    {name: "Experience", href: "/experience", icon: Briefcase},
-    {name: "Projects", href: "/projects", icon: Code},
-    {name: "Speaking", href: "/speaking", icon: Presentation},
-    {name: "Articles", href: "/articles", icon: BookOpenText},
-    {name: "Photography", href: "/photography", icon: ImageIcon},
-]
 
 export default function MobileNav() {
     const pathname = usePathname()
@@ -52,7 +29,6 @@ export default function MobileNav() {
                             isOpen={isMobileNavOpen}
                             onOpenChange={setIsMobileNavOpen}
                             pathname={pathname}
-                            navItems={navItems}
                         />
                     </Suspense>
                 ) : (

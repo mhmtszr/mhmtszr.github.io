@@ -7,10 +7,6 @@ import rehypeSlug from 'rehype-slug'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import {estimateReadingTime} from './reading-time'
 
-// Configure for static generation
-export const dynamic = 'force-static'
-export const revalidate = false
-
 export interface ArticleMetadata {
     title: string
     description: string
@@ -158,19 +154,8 @@ export async function getAllArticles(): Promise<Article[]> {
 }
 
 export function getLatestArticles(allArticles: Article[], count: number): Article[] {
-    const articles = allArticles
-        .map((article) => article)
-        .sort((a, b) => {
-            if (a.meta.date < b.meta.date) {
-                return 1
-            }
-            if (a.meta.date > b.meta.date) {
-                return -1
-            }
-            return 0
-        })
+    return [...allArticles]
+        .sort((a, b) => new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime())
         .filter((article) => !article.meta.draft)
         .slice(0, count)
-
-    return articles
 } 
