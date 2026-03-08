@@ -9,8 +9,21 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Professional Experience | Mehmet Sezer',
-        description: 'Professional experience and career journey of Mehmet Sezer.',
+        description: 'Professional experience and career journey of Mehmet Sezer, including roles at Trendyol Group, Bayzat, and other companies.',
         url: 'https://msezer.dev/experience',
+        type: 'website',
+        images: [{
+            url: 'https://msezer.dev/opengraph-image.png',
+            width: 1200,
+            height: 630,
+            alt: 'Mehmet Sezer - Professional Experience',
+        }],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Professional Experience | Mehmet Sezer',
+        description: 'Professional experience and career journey of Mehmet Sezer, including roles at Trendyol Group, Bayzat, and other companies.',
+        images: ['https://msezer.dev/opengraph-image.png'],
     },
 }
 

@@ -1,4 +1,5 @@
 import type React from "react"
+import type {Viewport} from "next"
 import fs from 'fs'
 import path from 'path'
 import './globals.css'
@@ -18,7 +19,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 const lora = Lora({
     subsets: ["latin"],
     display: 'swap',
-    preload: false,
+    preload: true,
     variable: '--font-lora',
 })
 
@@ -33,6 +34,16 @@ const readCriticalCss = () => {
 };
 
 const criticalCssContent = readCriticalCss();
+
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    themeColor: [
+        {media: '(prefers-color-scheme: light)', color: '#faf9f6'},
+        {media: '(prefers-color-scheme: dark)', color: '#17191e'},
+    ],
+}
 
 export const metadata = {
     title: {
@@ -120,10 +131,7 @@ export default function RootLayout({
         <head>
             <link rel="manifest" href="/site.webmanifest"/>
             <style dangerouslySetInnerHTML={{__html: criticalCssContent}}/>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0"/>
             <meta name="google-site-verification" content="BJMSpiC_fy4HW6D8l2wxY75vzp2FTfAy4PC3vwb6NnU"/>
-            <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)"/>
-            <meta name="theme-color" content="#17191e" media="(prefers-color-scheme: dark)"/>
             <link rel="sitemap" type="application/xml" href="/sitemap.xml"/>
             <Script id="theme-script" strategy="beforeInteractive">
                 {`

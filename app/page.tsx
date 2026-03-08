@@ -240,19 +240,19 @@ export default async function HomePage() {
                                         className="group overflow-hidden rounded-xl border border-gray-100 shadow-sm transition-all hover:border-gray-300 hover:shadow-md dark:border-gray-800 dark:hover:border-gray-600"
                                     >
                                         {article.meta.image ? (
-                                            <div className="relative h-28 w-full overflow-hidden lg:h-32">
+                                            <div className="relative hidden sm:block h-28 w-full overflow-hidden lg:h-32">
                                                 <Image
                                                     src={article.meta.image}
                                                     alt={article.meta.title}
                                                     fill
                                                     loading="lazy"
                                                     className="object-cover transition-transform duration-500 group-hover:scale-110"
-                                                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
+                                                    sizes="(max-width: 1280px) 50vw, 25vw"
                                                 />
                                             </div>
                                         ) : (
                                             <div
-                                                className="h-28 w-full bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 lg:h-32"/>
+                                                className="hidden sm:block h-28 w-full bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 lg:h-32"/>
                                         )}
                                         <div className="space-y-1.5 p-3">
                                             <p className="text-xs text-gray-500 dark:text-gray-400 font-sans">{formattedDate}</p>

@@ -43,7 +43,7 @@ export default function Sidebar() {
                 className="sticky top-0 z-40 flex items-center justify-between px-4 h-16 border-b md:hidden! bg-white dark:bg-gray-950 font-sans">
                 <Link href="/" className="flex items-center gap-3">
                     <Avatar className="h-9 w-9 border border-gray-200 dark:border-gray-700">
-                        <AvatarImage src="/photography/profile.jpg" alt="Profile photo"/>
+                        <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer"/>
                         <AvatarFallback>MS</AvatarFallback>
                     </Avatar>
                     <span className="font-bold text-xl">Mehmet Sezer</span>
@@ -66,7 +66,7 @@ export default function Sidebar() {
                                 </SheetDescription>
                                 <div className="flex items-center gap-3 mt-4 mb-6 px-4">
                                     <Avatar className="h-10 w-10 border border-gray-200 dark:border-gray-700">
-                                        <AvatarImage src="/photography/profile.jpg" alt="Profile photo"/>
+                                        <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer"/>
                                         <AvatarFallback>MS</AvatarFallback>
                                     </Avatar>
                                     <span className="font-bold text-lg">Mehmet Sezer</span>
@@ -97,7 +97,7 @@ export default function Sidebar() {
                                     </ul>
                                 </nav>
                                 {/* Mobile Social Links */}
-                                <div
+                                <footer
                                     className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 py-8 shrink-0">
                                     <div className="grid grid-cols-5 gap-2 px-4 mb-6">
                                         <Link
@@ -150,7 +150,7 @@ export default function Sidebar() {
                                        suppressHydrationWarning>
                                         &copy; {new Date().getFullYear()} Mehmet Sezer
                                     </p>
-                                </div>
+                                </footer>
                             </div>
                         </SheetContent>
                     </Sheet>
@@ -165,7 +165,7 @@ export default function Sidebar() {
                         <div className="flex flex-col items-center px-6 mb-8">
                             <div className="mb-4">
                                 <Avatar className="h-24 w-24 border-2 border-gray-200 dark:border-gray-700">
-                                    <AvatarImage src="/photography/profile.jpg" alt="Profile photo"/>
+                                    <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer"/>
                                     <AvatarFallback>MS</AvatarFallback>
                                 </Avatar>
                             </div>
@@ -175,7 +175,7 @@ export default function Sidebar() {
                                 <ThemeToggle/>
                             </div>
                         </div>
-                        <nav className="flex-1 px-3 pb-4">
+                        <nav aria-label="Main navigation" className="flex-1 px-3 pb-4">
                             <ul className="grid gap-1">
                                 {navItems.map((item) => {
                                     const IconComponent = item.icon
@@ -201,7 +201,7 @@ export default function Sidebar() {
                         </nav>
                     </div>
                     {/* Desktop Social Links */}
-                    <div className="border-t border-gray-200 dark:border-gray-800 p-6">
+                    <footer className="border-t border-gray-200 dark:border-gray-800 p-6">
                         <div className="flex items-center justify-center gap-4">
                             <Link
                                 href="https://github.com/mhmtszr"
@@ -253,7 +253,7 @@ export default function Sidebar() {
                            suppressHydrationWarning>
                             &copy; {new Date().getFullYear()} Mehmet Sezer
                         </p>
-                    </div>
+                    </footer>
                 </div>
             </div>
         </>

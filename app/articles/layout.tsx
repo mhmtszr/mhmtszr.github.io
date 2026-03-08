@@ -11,12 +11,27 @@ export const metadata: Metadata = {
         template: "%s | Mehmet Sezer",
     },
     description: "Technical articles and insights about software engineering, microservices, distributed systems, and software architecture by Mehmet Sezer.",
+    alternates: {
+        canonical: 'https://msezer.dev/articles',
+    },
     openGraph: {
-        title: "Articles",
-        description: "Technical articles and insights about software engineering, microservices, distributed systems, and software architecture.",
-        type: 'article',
-        authors: ['Mehmet Sezer']
-    }
+        title: "Articles | Mehmet Sezer",
+        description: "Technical articles and insights about software engineering, microservices, distributed systems, and software architecture by Mehmet Sezer.",
+        type: 'website',
+        url: 'https://msezer.dev/articles',
+        images: [{
+            url: 'https://msezer.dev/opengraph-image.png',
+            width: 1200,
+            height: 630,
+            alt: 'Mehmet Sezer - Articles',
+        }],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Articles | Mehmet Sezer',
+        description: 'Technical articles and insights about software engineering, microservices, distributed systems, and software architecture by Mehmet Sezer.',
+        images: ['https://msezer.dev/opengraph-image.png'],
+    },
 }
 
 export default function ArticleLayout({

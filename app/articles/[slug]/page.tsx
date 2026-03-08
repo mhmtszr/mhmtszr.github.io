@@ -111,9 +111,9 @@ export default async function ArticlePage({
                         {label: article.meta.title, href: `/articles/${article.slug}`, isCurrent: true}
                     ]}
                 />
-                <div className="space-y-8">
+                <article className="space-y-8">
                     <ArticleContentClient article={article}/>
-                </div>
+                </article>
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{

@@ -9,8 +9,21 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Public Speaking | Mehmet Sezer',
-        description: 'Conference talks and public speaking engagements by Mehmet Sezer.',
+        description: 'Conference talks and public speaking engagements by Mehmet Sezer on distributed systems, microservices, Go, and workflow orchestration.',
         url: 'https://msezer.dev/speaking',
+        type: 'website',
+        images: [{
+            url: 'https://msezer.dev/opengraph-image.png',
+            width: 1200,
+            height: 630,
+            alt: 'Mehmet Sezer - Public Speaking',
+        }],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Public Speaking | Mehmet Sezer',
+        description: 'Conference talks and public speaking engagements by Mehmet Sezer on distributed systems, microservices, Go, and workflow orchestration.',
+        images: ['https://msezer.dev/opengraph-image.png'],
     },
 }
 

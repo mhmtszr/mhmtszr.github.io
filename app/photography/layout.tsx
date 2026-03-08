@@ -9,8 +9,21 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Photography | Mehmet Sezer',
-        description: 'Travel photography from around the world by Mehmet Sezer.',
+        description: 'Travel photography from around the world by Mehmet Sezer. Photos from Japan, England, Thailand, Cuba, and many more destinations.',
         url: 'https://msezer.dev/photography',
+        type: 'website',
+        images: [{
+            url: 'https://msezer.dev/opengraph-image.png',
+            width: 1200,
+            height: 630,
+            alt: 'Mehmet Sezer - Photography',
+        }],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Photography | Mehmet Sezer',
+        description: 'Travel photography from around the world by Mehmet Sezer. Photos from Japan, England, Thailand, Cuba, and many more destinations.',
+        images: ['https://msezer.dev/opengraph-image.png'],
     },
 }
 

@@ -9,8 +9,21 @@ export const metadata: Metadata = {
     },
     openGraph: {
         title: 'Projects | Mehmet Sezer',
-        description: 'Open-source projects and contributions by Mehmet Sezer.',
+        description: 'Open-source projects and contributions by Mehmet Sezer. Including concurrent data structures in Go, database change protocol connectors, and more.',
         url: 'https://msezer.dev/projects',
+        type: 'website',
+        images: [{
+            url: 'https://msezer.dev/opengraph-image.png',
+            width: 1200,
+            height: 630,
+            alt: 'Mehmet Sezer - Projects',
+        }],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Projects | Mehmet Sezer',
+        description: 'Open-source projects and contributions by Mehmet Sezer. Including concurrent data structures in Go, database change protocol connectors, and more.',
+        images: ['https://msezer.dev/opengraph-image.png'],
     },
 }
 
