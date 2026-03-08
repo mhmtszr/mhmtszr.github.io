@@ -100,7 +100,6 @@
 
     body {
         @apply bg-background text-foreground antialiased;
-        transition: background-color 0.3s ease, color 0.3s ease;
         overflow-x: hidden;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
@@ -120,24 +119,29 @@
     background-color: #17191e;
 }
 
-.transition-colors,
-.hover\:bg-gray-100,
-.hover\:bg-gray-200,
-.hover\:bg-gray-300,
-.hover\:text-gray-900,
-.bg-white,
-.bg-gray-50,
-.bg-gray-100,
-.bg-gray-200,
-.text-gray-500,
-.text-gray-600,
-.text-gray-700,
-.text-gray-800,
-.text-gray-900,
-.border-gray-100,
-.border-gray-200,
-.border-gray-300 {
+/* Only enable color transitions after page load to avoid non-composited animations during render */
+.transitions-ready .transition-colors,
+.transitions-ready .hover\:bg-gray-100,
+.transitions-ready .hover\:bg-gray-200,
+.transitions-ready .hover\:bg-gray-300,
+.transitions-ready .hover\:text-gray-900,
+.transitions-ready .bg-white,
+.transitions-ready .bg-gray-50,
+.transitions-ready .bg-gray-100,
+.transitions-ready .bg-gray-200,
+.transitions-ready .text-gray-500,
+.transitions-ready .text-gray-600,
+.transitions-ready .text-gray-700,
+.transitions-ready .text-gray-800,
+.transitions-ready .text-gray-900,
+.transitions-ready .border-gray-100,
+.transitions-ready .border-gray-200,
+.transitions-ready .border-gray-300 {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.transitions-ready body {
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .hero-gradient {
@@ -181,8 +185,55 @@
     }
 }
 
+@keyframes fade-in-up-sm {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 .animate-fade-in-up {
     animation: fade-in-up 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+.animate-fade-in-up-sm {
+    animation: fade-in-up-sm 0.3s ease-out forwards;
+}
+
+.animate-slide-in-left {
+    animation: slide-in-left 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+.animate-slide-in-right {
+    animation: slide-in-right 0.5s ease-out forwards;
     opacity: 0;
 }
 

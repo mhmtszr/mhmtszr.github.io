@@ -1,7 +1,5 @@
 import type React from "react"
 import type {Viewport} from "next"
-import fs from 'fs'
-import path from 'path'
 import './globals.css'
 import {Lora, Plus_Jakarta_Sans} from "next/font/google"
 import {ThemeProvider} from "@/components/theme-provider"
@@ -22,18 +20,6 @@ const lora = Lora({
     preload: true,
     variable: '--font-lora',
 })
-
-const readCriticalCss = () => {
-    try {
-        const cssPath = path.join(process.cwd(), 'app', 'critical.css');
-        return fs.readFileSync(cssPath, 'utf8');
-    } catch (error) {
-        console.error("Error reading critical CSS:", error);
-        return '';
-    }
-};
-
-const criticalCssContent = readCriticalCss();
 
 export const viewport: Viewport = {
     width: 'device-width',
@@ -130,20 +116,21 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
         <head>
             <link rel="manifest" href="/site.webmanifest"/>
-            <style dangerouslySetInnerHTML={{__html: criticalCssContent}}/>
             <meta name="google-site-verification" content="BJMSpiC_fy4HW6D8l2wxY75vzp2FTfAy4PC3vwb6NnU"/>
             <link rel="sitemap" type="application/xml" href="/sitemap.xml"/>
             <Script id="theme-script" strategy="beforeInteractive">
                 {`
             (function() {
               try {
-                const savedTheme = localStorage.getItem('theme');
+                var d = document.documentElement;
+                var savedTheme = localStorage.getItem('theme');
                 if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark');
+                  d.classList.add('dark');
                 } else {
-                  document.documentElement.classList.remove('dark');
+                  d.classList.remove('dark');
                 }
               } catch (e) {}
+              requestAnimationFrame(function(){requestAnimationFrame(function(){document.documentElement.classList.add('transitions-ready')})});
             })();
           `}
             </Script>

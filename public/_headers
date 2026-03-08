@@ -1,0 +1,18 @@
+# Cache static assets with content hashes indefinitely
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache images for 30 days
+/photography/*
+  Cache-Control: public, max-age=2592000
+
+# Cache favicon and manifest
+/favicon.png
+  Cache-Control: public, max-age=2592000
+
+/site.webmanifest
+  Cache-Control: public, max-age=2592000
+
+# Cache fonts
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable

@@ -1,7 +1,6 @@
 "use client"
 
-import {Suspense, useState} from "react"
-import {motion} from "framer-motion"
+import {useState} from "react"
 import {Badge} from "@/components/ui/badge"
 import {ExternalLink, Github} from "lucide-react"
 import Link from "next/link"
@@ -93,13 +92,11 @@ const projects = [
     },
 ]
 
-function ProjectsContent() {
+export default function ProjectsPage() {
     const [filter, setFilter] = useState("All")
 
-    // Get unique technologies for filter options
     const allTechnologies = ["All", ...new Set(projects.flatMap((p) => p.technologies))]
 
-    // Filter projects based on selected technology
     const filteredProjects = filter === "All" ? projects : projects.filter((p) => p.technologies.includes(filter))
 
     return (
@@ -125,15 +122,14 @@ function ProjectsContent() {
 
             <div className="grid gap-6 md:grid-cols-2">
                 {filteredProjects.map((project, index) => (
-                    <motion.div
+                    <div
                         key={index}
-                        initial={{opacity: 0, y: 20}}
-                        animate={{opacity: 1, y: 0}}
-                        transition={{duration: 0.3, delay: index * 0.05}}
+                        className="animate-fade-in-up"
+                        style={{animationDelay: `${index * 50}ms`}}
                     >
                         <Link href={project.github} target="_blank" rel="noopener noreferrer" className="block h-full">
                             <div
-                                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 h-full flex flex-col transition-all hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600">
+                                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 h-full flex flex-col transition-shadow hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600">
                                 <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
                                 <p className="text-gray-600 dark:text-gray-300 mb-4 grow leading-relaxed">{project.description}</p>
 
@@ -163,7 +159,7 @@ function ProjectsContent() {
                                 </div>
                             </div>
                         </Link>
-                    </motion.div>
+                    </div>
                 ))}
             </div>
 
@@ -179,38 +175,5 @@ function ProjectsContent() {
                 </div>
             )}
         </PageContainer>
-    )
-}
-
-export default function ProjectsPage() {
-    return (
-        <Suspense fallback={
-            <div className="w-full py-12 pb-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-                <div className="max-w-[1400px] w-full mx-auto">
-                    <div className="h-10 w-32 bg-gray-200 dark:bg-gray-800 animate-pulse rounded mb-8"/>
-                    <div className="flex gap-2 flex-wrap mb-8">
-                        {[...Array(4)].map((_, i) => (
-                            <div key={i} className="h-8 w-16 bg-gray-200 dark:bg-gray-800 animate-pulse rounded-full"/>
-                        ))}
-                    </div>
-                    <div className="grid gap-6 md:grid-cols-2">
-                        {[...Array(4)].map((_, i) => (
-                            <div key={i}
-                                 className="rounded-xl border border-gray-100 dark:border-gray-800 p-6 space-y-3">
-                                <div className="h-6 w-3/4 bg-gray-200 dark:bg-gray-800 animate-pulse rounded"/>
-                                <div className="h-4 w-full bg-gray-100 dark:bg-gray-800 animate-pulse rounded"/>
-                                <div className="h-4 w-2/3 bg-gray-100 dark:bg-gray-800 animate-pulse rounded"/>
-                                <div className="flex gap-2 pt-2">
-                                    <div className="h-6 w-14 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-full"/>
-                                    <div className="h-6 w-14 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-full"/>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        }>
-            <ProjectsContent/>
-        </Suspense>
     )
 }
