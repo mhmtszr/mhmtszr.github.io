@@ -1,9 +1,10 @@
-import { Github, Linkedin, FileText } from "lucide-react"
+import { Github, Linkedin } from "lucide-react"
+import { MediumIcon } from "@/components/icons/medium"
 import Link from "next/link"
 
 export default function Hero() {
   return (
-    <section className="relative bg-gradient-to-b from-gray-50 to-white py-20 md:py-32">
+    <section className="relative bg-linear-to-b from-gray-50 to-white py-20 md:py-32">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid gap-6 md:grid-cols-2 md:gap-12 lg:gap-16">
           <div className="flex flex-col justify-center space-y-4">
@@ -57,7 +58,7 @@ export default function Hero() {
                 rel="noopener noreferrer"
                 className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-900 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
               >
-                <FileText className="h-5 w-5" />
+                <MediumIcon className="h-5 w-5" />
                 <span className="sr-only">Medium</span>
               </Link>
             </div>

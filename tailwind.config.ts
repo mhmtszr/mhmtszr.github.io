@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss"
 
 const config = {
-  darkMode: ["class"],
+  darkMode: ["selector"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -9,7 +9,6 @@ const config = {
     "./src/**/*.{ts,tsx}",
     "./content/**/*.{ts,tsx,mdx}",
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
@@ -19,6 +18,10 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-lora)', 'Georgia', 'Cambria', 'serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -73,43 +76,57 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
-      transitionProperty: {
-        colors: "color, background-color, border-color, text-decoration-color, fill, stroke",
-      },
-      transitionDuration: {
-        "400": "400ms",
-      },
       typography: {
         DEFAULT: {
           css: {
             maxWidth: '100%',
+            fontFamily: 'var(--font-lora), Georgia, Cambria, serif',
+            lineHeight: '1.85',
             color: 'hsl(var(--foreground))',
+            p: {
+              color: 'hsl(var(--foreground))',
+              marginBottom: '1.75em',
+            },
             h1: {
               color: 'hsl(var(--foreground))',
+              fontFamily: 'var(--font-inter), ui-sans-serif, system-ui, sans-serif',
             },
             h2: {
               color: 'hsl(var(--foreground))',
+              fontFamily: 'var(--font-inter), ui-sans-serif, system-ui, sans-serif',
+              marginTop: '2.25em',
             },
             h3: {
               color: 'hsl(var(--foreground))',
+              fontFamily: 'var(--font-inter), ui-sans-serif, system-ui, sans-serif',
+              marginTop: '1.75em',
             },
             h4: {
               color: 'hsl(var(--foreground))',
-            },
-            p: {
-              color: 'hsl(var(--foreground))',
+              fontFamily: 'var(--font-inter), ui-sans-serif, system-ui, sans-serif',
+              marginTop: '1.5em',
             },
             li: {
               color: 'hsl(var(--foreground))',
             },
             strong: {
               color: 'hsl(var(--foreground))',
+              fontWeight: '700',
+            },
+            blockquote: {
+              fontStyle: 'italic',
+              borderLeftWidth: '3px',
+              borderLeftColor: 'hsl(var(--primary))',
+              backgroundColor: 'hsl(var(--muted))',
+              padding: '1em 1.25em',
+              borderRadius: '0 0.375rem 0.375rem 0',
             },
             code: {
               color: 'hsl(var(--foreground))',
               backgroundColor: 'hsl(var(--muted))',
               borderRadius: '0.25rem',
               padding: '0.25rem',
+              fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
               '&::before': { content: '"" !important' },
               '&::after': { content: '"" !important' },
             },
@@ -133,7 +150,7 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [require("@tailwindcss/typography")],
 } satisfies Config
 
 export default config

@@ -184,7 +184,7 @@ export default function Speaking() {
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="relative group cursor-pointer overflow-hidden rounded-lg aspect-[4/3]"
+                  className="relative group cursor-pointer overflow-hidden rounded-lg aspect-4/3"
                 >
                   {talk.type === "video" ? (
                     <div className="w-full h-full bg-black flex items-center justify-center">

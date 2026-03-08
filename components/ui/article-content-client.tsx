@@ -38,7 +38,7 @@ export function ArticleContentClient({ article }: ArticleContentProps) {
       <Toaster position="bottom-right" />
       
       {/* Container for TOC positioning - matches the header section width */}
-      <div className="container w-full max-w-4xl mx-auto px-6 py-8">
+      <div className="container w-full max-w-3xl mx-auto px-6 py-8">
         <div className="flex flex-col gap-4">
           {article.meta.image && (
             <div className="relative w-full flex items-center justify-center mb-6">
@@ -56,7 +56,7 @@ export function ArticleContentClient({ article }: ArticleContentProps) {
               </div>
             </div>
           )}
-          <h1 className="text-4xl font-bold dark:text-[#f0f0f5]">{article.meta.title}</h1>
+          <h1 className="text-4xl font-bold dark:text-gray-50">{article.meta.title}</h1>
           <div className="flex items-center gap-2 mt-2 text-sm text-gray-600 dark:text-gray-400">
             <Calendar className="h-4 w-4" />
             <time dateTime={article.meta.date}>{new Date(article.meta.date).toLocaleDateString('en-US', { 
@@ -75,7 +75,7 @@ export function ArticleContentClient({ article }: ArticleContentProps) {
           {article.meta.tags && article.meta.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
               {article.meta.tags.map((tag: string) => (
-                <Badge key={tag} variant="secondary">
+                <Badge key={tag} variant="outline" className="bg-gray-100 dark:bg-gray-700">
                   {tag}
                 </Badge>
               ))}
@@ -84,7 +84,7 @@ export function ArticleContentClient({ article }: ArticleContentProps) {
         </div>
 
         {/* Article Content - Same container for consistent alignment */}
-        <div className="prose prose-lg dark:prose-invert max-w-none mt-8 dark:text-[#d1d5db] [&_p]:dark:text-[#d1d5db] [&_h1]:dark:text-[#f0f0f5] [&_h2]:dark:text-[#f0f0f5] [&_h3]:dark:text-[#f0f0f5] [&_h4]:dark:text-[#f0f0f5] [&_h5]:dark:text-[#f0f0f5] [&_h6]:dark:text-[#f0f0f5] [&_li]:dark:text-[#d1d5db] [&_strong]:dark:text-[#f0f0f5] [&_b]:dark:text-[#f0f0f5] [&_em]:dark:text-[#d1d5db] [&_blockquote]:dark:text-[#d1d5db]">
+        <div className="prose prose-lg dark:prose-invert max-w-none mt-8 dark:text-zinc-300 [&_p]:dark:text-zinc-300 [&_h1]:dark:text-gray-50 [&_h2]:dark:text-gray-50 [&_h3]:dark:text-gray-50 [&_h4]:dark:text-gray-50 [&_h5]:dark:text-gray-50 [&_h6]:dark:text-gray-50 [&_li]:dark:text-zinc-300 [&_strong]:dark:text-gray-50 [&_b]:dark:text-gray-50 [&_em]:dark:text-zinc-300 [&_blockquote]:dark:text-zinc-300">
           <CodeCopyWrapper>{article.content}</CodeCopyWrapper>
         </div>
       </div>

@@ -15,6 +15,13 @@ const projects = [
     technologies: ["Go"],
   },
   {
+    title: "Go Guidelines",
+    description:
+      "A plugin for Cursor & Claude Code that teaches AI code agents to write production-grade Go with version-aware guidelines (Go 1.0–1.26) covering modern syntax, performance, concurrency, error handling, and testing.",
+    github: "https://github.com/mhmtszr/go-guidelines",
+    technologies: ["Go"],
+  },
+  {
     title: "Go DCP Elasticsearch",
     description:
       "Go implementation of the Couchbase Elasticsearch Connector that replicates documents from Couchbase via Database Change Protocol (DCP) and writes each document to an Elasticsearch index in near real-time.",
@@ -106,8 +113,8 @@ export default function Projects() {
               transition={{ duration: 0.5, delay: (index % 3) * 0.1 }}
               className="bg-white p-6 rounded-lg shadow-md border border-gray-100 h-full flex flex-col"
             >
-              <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-              <p className="text-gray-600 mb-4 flex-grow">{project.description}</p>
+              <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+              <p className="text-gray-600 mb-4 grow">{project.description}</p>
 
               <div className="mt-auto">
                 <div className="flex flex-wrap gap-2 mb-4">

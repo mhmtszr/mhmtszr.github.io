@@ -16,6 +16,13 @@ const projects = [
     technologies: ["Go"],
   },
   {
+    title: "Go Guidelines",
+    description:
+      "A plugin for Cursor & Claude Code that teaches AI code agents to write production-grade Go with version-aware guidelines (Go 1.0–1.26) covering modern syntax, performance, concurrency, error handling, and testing.",
+    github: "https://github.com/mhmtszr/go-guidelines",
+    technologies: ["Go"],
+  },
+  {
     title: "Go DCP Elasticsearch",
     description:
       "Go implementation of the Couchbase Elasticsearch Connector that replicates documents from Couchbase via Database Change Protocol (DCP) and writes each document to an Elasticsearch index in near real-time.",
@@ -126,8 +133,8 @@ function ProjectsContent() {
           >
             <Link href={project.github} target="_blank" rel="noopener noreferrer" className="block h-full">
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-100 dark:border-gray-700 h-full flex flex-col transition-all hover:shadow-lg hover:border-gray-300 dark:hover:border-gray-600">
-                <h3 className="text-xl font-bold mb-2">{project.title}</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-4 flex-grow">{project.description}</p>
+                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-4 grow">{project.description}</p>
 
                 <div className="mt-auto">
                   <div className="flex flex-wrap gap-2 mb-4">

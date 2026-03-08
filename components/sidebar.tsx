@@ -17,6 +17,7 @@ import {
   BookOpenText,
   Twitter,
 } from "lucide-react"
+import { MediumIcon } from "@/components/icons/medium"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -38,7 +39,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile Navigation */}
-      <div className="sticky top-0 z-40 flex items-center justify-between px-4 h-16 border-b md:!hidden bg-white dark:bg-gray-950">
+      <div className="sticky top-0 z-40 flex items-center justify-between px-4 h-16 border-b md:hidden! bg-white dark:bg-gray-950">
         <Link href="/" className="flex items-center gap-3">
           <Avatar className="h-9 w-9 border border-gray-200 dark:border-gray-700">
             <AvatarImage src="/photography/profile.jpg" alt="Profile photo" />
@@ -84,7 +85,7 @@ export default function Sidebar() {
                               isActive && "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-50",
                             )}
                           >
-                            <IconComponent className="h-5 w-5 flex-shrink-0" />
+                            <IconComponent className="h-5 w-5 shrink-0" />
                             <span className="truncate">{item.name}</span>
                           </Link>
                         </li>
@@ -93,7 +94,7 @@ export default function Sidebar() {
                   </ul>
                 </nav>
                 {/* Mobile Social Links */}
-                <div className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 py-8 flex-shrink-0">
+                <div className="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 py-8 shrink-0">
                   <div className="grid grid-cols-5 gap-2 px-4 mb-6">
                     <Link
                       href="https://github.com/mhmtszr"
@@ -128,7 +129,7 @@ export default function Sidebar() {
                       rel="noopener noreferrer"
                       className="flex justify-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     >
-                      <BookOpenText className="h-5 w-5" />
+                      <MediumIcon className="h-5 w-5" />
                       <span className="sr-only">Medium</span>
                     </Link>
                     <a
@@ -183,7 +184,7 @@ export default function Sidebar() {
                           isActive && "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-50",
                         )}
                       >
-                        <IconComponent className="h-5 w-5 flex-shrink-0" />
+                        <IconComponent className="h-5 w-5 shrink-0" />
                         <span className="truncate">{item.name}</span>
                       </Link>
                     </li>
@@ -228,7 +229,7 @@ export default function Sidebar() {
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
               >
-                <BookOpenText className="h-5 w-5" />
+                <MediumIcon className="h-5 w-5" />
                 <span className="sr-only">Medium</span>
               </Link>
               <a

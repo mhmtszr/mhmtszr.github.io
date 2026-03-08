@@ -1,6 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@config "../tailwind.config.ts";
+
+@custom-variant dark (&:is(.dark *));
 
 @layer base {
   :root {
@@ -32,14 +35,12 @@
 
     --radius: 0.5rem;
 
-    /* Code block styles */
     --code-bg: #fafafa;
     --code-fg: #383a42;
     --code-border: #e1e4e8;
     --code-line-highlight: rgba(201, 167, 255, 0.2);
     --code-word-highlight: rgba(201, 167, 255, 0.5);
 
-    /* Syntax highlighting for light theme */
     --syntax-keyword: #a626a4;
     --syntax-string: #50a14f;
     --syntax-number: #986801;
@@ -73,14 +74,12 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
 
-    /* Code block styles for dark mode */
     --code-bg: #282c34;
     --code-fg: #abb2bf;
     --code-border: #30363d;
     --code-line-highlight: rgba(201, 167, 255, 0.15);
     --code-word-highlight: rgba(201, 167, 255, 0.4);
 
-    /* Syntax highlighting for dark theme */
     --syntax-keyword: #c678dd;
     --syntax-string: #98c379;
     --syntax-number: #d19a66;
@@ -96,28 +95,72 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     transition: background-color 0.3s ease, color 0.3s ease;
     overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Markdown content styles */
   .prose {
     @apply max-w-none;
   }
 
   .prose h2 {
-    @apply border-b pb-2 mb-4;
+    @apply border-b pb-2 mb-4 text-2xl font-bold tracking-tight;
+  }
+
+  .prose h3 {
+    @apply text-xl font-semibold tracking-tight;
+  }
+
+  .prose h4 {
+    @apply text-lg font-semibold;
+  }
+
+  .prose table {
+    @apply w-full text-sm border-collapse overflow-hidden rounded-lg border border-border;
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  }
+
+  .prose thead {
+    background-color: hsl(var(--muted) / 0.6);
+  }
+
+  .prose thead th {
+    @apply px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground border-b border-border;
+  }
+
+  .prose tbody td {
+    @apply px-4 py-2.5 border-b;
+    border-color: hsl(var(--border) / 0.5);
+  }
+
+  .prose tbody tr:nth-child(even) {
+    background-color: hsl(var(--muted) / 0.3);
+  }
+
+  .prose tbody tr:last-child td {
+    @apply border-b-0;
+  }
+
+  .prose tbody tr {
+    @apply transition-colors duration-150;
+  }
+
+  .prose tbody tr:hover {
+    background-color: hsl(var(--muted) / 0.5);
   }
 
   .prose pre {
     @apply my-4 p-4 rounded-lg overflow-x-auto border relative;
-    background-color: hsl(var(--code-bg));
-    border-color: hsl(var(--code-border));
-    color: hsl(var(--code-fg));
+    background-color: var(--code-bg);
+    border-color: var(--code-border);
+    color: var(--code-fg);
   }
 
   .prose pre > code {
@@ -131,38 +174,39 @@
   }
 
   .prose pre > code > [data-line]::before {
-    @apply inline-block w-4 mr-4 text-right text-gray-500 dark:text-gray-400;
+    @apply inline-block w-4 mr-4 text-right text-gray-500;
     content: counter(line);
   }
 
+  .dark .prose pre > code > [data-line]::before {
+    @apply text-gray-400;
+  }
+
   .prose pre > code > [data-line].highlighted {
-    @apply border-l-blue-500 bg-blue-500/10;
+    @apply border-l-blue-500;
+    background-color: rgb(59 130 246 / 0.1);
   }
 
   .prose pre > code > [data-line] .word {
-    @apply rounded-md bg-blue-500/10 p-1;
-  }
-
-  .prose pre > code > [data-line]:hover {
-    /* Removed bg-gray-100 dark:bg-gray-800 to disable hover highlighting */
+    @apply rounded-md p-1;
+    background-color: rgb(59 130 246 / 0.1);
   }
 
   .prose code:not(pre code) {
     @apply px-1.5 py-0.5 rounded-md border text-sm;
-    background-color: hsl(var(--code-bg));
-    border-color: hsl(var(--code-border));
+    background-color: var(--code-bg);
+    border-color: var(--code-border);
   }
 
-  /* Syntax highlighting tokens */
   .token.comment,
   .token.prolog,
   .token.doctype,
   .token.cdata {
-    color: hsl(var(--syntax-comment));
+    color: var(--syntax-comment);
   }
 
   .token.punctuation {
-    color: hsl(var(--code-fg));
+    color: var(--code-fg);
   }
 
   .token.namespace {
@@ -179,7 +223,7 @@
 
   .token.boolean,
   .token.number {
-    color: hsl(var(--syntax-number));
+    color: var(--syntax-number);
   }
 
   .token.selector,
@@ -188,7 +232,7 @@
   .token.char,
   .token.builtin,
   .token.inserted {
-    color: hsl(var(--syntax-string));
+    color: var(--syntax-string);
   }
 
   .token.operator,
@@ -196,24 +240,24 @@
   .token.url,
   .language-css .token.string,
   .style .token.string {
-    color: hsl(var(--syntax-operator));
+    color: var(--syntax-operator);
   }
 
   .token.atrule,
   .token.attr-value,
   .token.keyword {
-    color: hsl(var(--syntax-keyword));
+    color: var(--syntax-keyword);
   }
 
   .token.function,
   .token.class-name {
-    color: hsl(var(--syntax-function));
+    color: var(--syntax-function);
   }
 
   .token.regex,
   .token.important,
   .token.variable {
-    color: hsl(var(--syntax-variable));
+    color: var(--syntax-variable);
   }
 
   .token.important,
@@ -229,7 +273,6 @@
     cursor: help;
   }
 
-  /* Line highlighting */
   .line {
     @apply block px-4;
   }
@@ -242,7 +285,6 @@
     @apply bg-muted rounded px-1;
   }
 
-  /* Language label */
   pre[data-language]::before {
     @apply absolute top-2 right-2 px-2 py-1 text-xs rounded bg-muted text-muted-foreground opacity-75;
     content: attr(data-language);
@@ -250,7 +292,6 @@
   }
 }
 
-/* Dark mode styles */
 .dark {
   background-color: #17191e;
 }
@@ -259,18 +300,19 @@
   background-color: #17191e;
 }
 
-/* Dark mode text color fix for articles */
 .dark .prose p,
 .dark .prose li,
 .dark .prose em,
 .dark .prose blockquote,
-.dark .prose a:not(:hover),
 .dark .prose td,
 .dark .prose th {
-  color: #d1d5db !important;
+  color: theme(colors.zinc.300) !important;
 }
 
-/* Make headings and bold text whiter */
+.dark .prose a:not(:hover) {
+  color: theme(colors.blue.300) !important;
+}
+
 .dark .prose h1,
 .dark .prose h2,
 .dark .prose h3,
@@ -279,10 +321,9 @@
 .dark .prose h6,
 .dark .prose strong,
 .dark .prose b {
-  color: #f0f0f5 !important;
+  color: theme(colors.gray.50) !important;
 }
 
-/* Smooth transitions */
 .transition-colors,
 .hover\:bg-gray-100,
 .hover\:bg-gray-200,
@@ -303,7 +344,6 @@
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Code block styling */
 pre {
   @apply overflow-x-auto rounded-lg border p-4 my-4;
   background-color: var(--code-bg);
@@ -321,31 +361,44 @@ pre code .line {
 }
 
 pre code .line.highlighted {
-  @apply bg-slate-500 bg-opacity-10;
+  background-color: rgb(100 116 139 / 0.1);
 }
 
-/* Disable line hover effect */
 pre code .line:hover {
   background-color: transparent !important;
 }
 
 pre code .line .word {
-  @apply rounded-md bg-slate-500 bg-opacity-10 p-1;
+  @apply rounded-md p-1;
+  background-color: rgb(100 116 139 / 0.1);
 }
 
-/* Inline code styling */
 :not(pre) > code {
-  @apply rounded-md bg-slate-100 px-1.5 py-0.5 text-slate-900 dark:bg-slate-800 dark:text-slate-100;
+  @apply rounded-md px-1.5 py-0.5;
   font-size: 0.875em;
 }
 
-/* Language label */
+:not(pre) > code {
+  @apply bg-slate-100 text-slate-900;
+}
+
+.dark :not(pre) > code {
+  @apply bg-slate-800 text-slate-100;
+}
+
 pre[data-language]::before {
-  @apply absolute right-4 top-0 rounded-b-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400;
+  @apply absolute right-4 top-0 rounded-b-md px-2 py-0.5 text-xs font-medium;
   content: attr(data-language);
 }
 
-/* Line numbers */
+pre[data-language]::before {
+  @apply bg-slate-100 text-slate-500;
+}
+
+.dark pre[data-language]::before {
+  @apply bg-slate-800 text-slate-400;
+}
+
 pre > code {
   counter-reset: line;
 }
@@ -356,20 +409,18 @@ pre > code > .line::before {
   content: counter(line);
 }
 
-/* Grid background */
 pre > code.has-grid {
-  @apply bg-slate-50 dark:bg-slate-900;
+  @apply bg-slate-50;
   background-image: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.02) 50%);
   background-size: 3em 3em;
   background-position: 0 0;
 }
 
-/* Dark mode adjustments */
 .dark pre > code.has-grid {
+  @apply bg-slate-900;
   background-image: linear-gradient(to bottom, transparent 50%, rgba(255, 255, 255, 0.02) 50%);
 }
 
-/* Hero gradient text */
 .hero-gradient {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #533483 75%, #1a1a2e 100%);
   background-size: 200% 200%;
@@ -417,7 +468,6 @@ pre > code.has-grid {
 .animation-delay-500 { animation-delay: 0.5s; }
 .animation-delay-600 { animation-delay: 0.6s; }
 
-/* Remove highlight from clickable images */
 .no-highlight {
   outline: none !important;
   box-shadow: none !important;
@@ -430,7 +480,6 @@ pre > code.has-grid {
   box-shadow: none !important;
 }
 
-/* Fix image container and caption styling */
 .prose .text-center {
   margin-top: 1.5rem !important;
   margin-bottom: 1.5rem !important;
@@ -445,35 +494,29 @@ pre > code.has-grid {
   margin-bottom: 0 !important;
 }
 
-/* Table of Contents styles */
 .toc ul {
   list-style-type: none;
   padding-left: 0;
 }
 
-.toc ul li {
-  margin-bottom: 0.25rem;
+.toc-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
 }
 
-.toc ul li a {
-  display: block;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  transition: all 0.2s ease;
+.toc-scrollbar::-webkit-scrollbar {
+  width: 3px;
 }
 
-.toc ul li a:hover {
-  background-color: rgba(var(--primary), 0.05);
+.toc-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.toc ul li a.active {
-  background-color: rgba(var(--primary), 0.1);
-  color: hsl(var(--primary));
-  font-weight: 500;
-  border-left: 2px solid hsl(var(--primary));
+.toc-scrollbar::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--border));
+  border-radius: 3px;
 }
 
-/* Header link styling */
 .prose h1,
 .prose h2,
 .prose h3,

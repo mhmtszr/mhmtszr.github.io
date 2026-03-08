@@ -38,7 +38,7 @@ export function ArticleCard({
     return (
       <Card className="overflow-hidden transition-all hover:shadow-lg h-full">
         <Link href={url} target={source === "medium" ? "_blank" : undefined} className="flex h-full">
-          <div className="relative w-60 flex-shrink-0">
+          <div className="relative w-60 shrink-0">
             <Image
               src={imageUrl}
               alt={title}
@@ -47,9 +47,9 @@ export function ArticleCard({
               sizes="(max-width: 768px) 100vw, 33vw"
             />
           </div>
-          <div className="flex flex-col flex-grow p-4">
+          <div className="flex flex-col grow p-4">
             <div className="flex flex-col h-full">
-              <div className="flex-grow">
+              <div className="grow">
                 <div className="flex items-center gap-2 mb-1">
                   <Calendar className="w-3 h-3 text-muted-foreground" />
                   <time className="text-xs text-muted-foreground">{formattedDate}</time>
@@ -83,7 +83,7 @@ export function ArticleCard({
   return (
     <Card className="overflow-hidden transition-all hover:shadow-lg h-full">
       <Link href={url} target={source === "medium" ? "_blank" : undefined} className="flex flex-col h-full">
-        <div className="relative h-52 flex-shrink-0">
+        <div className="relative h-52 shrink-0">
           <Image
             src={imageUrl}
             alt={title}
@@ -93,9 +93,9 @@ export function ArticleCard({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         </div>
-        <div className="flex flex-col flex-grow p-3">
+        <div className="flex flex-col grow p-3">
           <div className="flex flex-col h-full">
-            <div className="flex-grow">
+            <div className="grow">
               <div className="flex items-center gap-2 mb-1">
                 <Calendar className="w-3 h-3 text-muted-foreground" />
                 <time className="text-xs text-muted-foreground">{formattedDate}</time>

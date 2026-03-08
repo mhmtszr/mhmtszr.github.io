@@ -139,7 +139,7 @@ function ArticlesContent() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-[300px] rounded-lg bg-muted animate-pulse" />
+            <div key={i} className="h-[300px] rounded-lg bg-gray-100 dark:bg-gray-800 animate-pulse" />
           ))}
         </div>
       </PageContainer>
@@ -152,9 +152,9 @@ function ArticlesContent() {
         <div className="flex justify-end mb-8">
           <ViewToggle />
         </div>
-        <div className="rounded-lg border bg-card p-8 text-center">
+        <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 text-center">
           <h2 className="text-2xl font-semibold mb-4">{error}</h2>
-          <p className="text-muted-foreground">
+          <p className="text-gray-500 dark:text-gray-400">
             Please try again later or check the console for more details.
           </p>
         </div>

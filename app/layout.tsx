@@ -2,7 +2,7 @@ import type React from "react"
 import fs from 'fs'
 import path from 'path'
 import './globals.css'
-import { Inter } from "next/font/google"
+import { Inter, Lora } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import Sidebar from "@/components/sidebar"
 import Script from "next/script"
@@ -11,7 +11,15 @@ import ScrollReset from "@/components/scroll-reset"
 const inter = Inter({ 
   subsets: ["latin"],
   display: 'swap',
-  preload: true
+  preload: true,
+  variable: '--font-inter',
+})
+
+const lora = Lora({
+  subsets: ["latin"],
+  display: 'swap',
+  preload: true,
+  variable: '--font-lora',
 })
 
 const readCriticalCss = () => {
@@ -134,7 +142,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.png" />
         <link rel="alternate" type="application/rss+xml" title="Mehmet Sezer's Blog" href="https://msezer.dev/rss.xml" />
       </head>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className={`${inter.variable} ${lora.variable} ${inter.className}`} suppressHydrationWarning>
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-black dark:focus:bg-gray-900 dark:focus:text-white">
           Skip to content
         </a>

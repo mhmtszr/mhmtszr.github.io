@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from "react"
 import { motion } from "framer-motion"
-import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import { PhotoDetail } from "@/components/ui/photo-detail"
 import { FileText, Calendar } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
@@ -114,6 +114,7 @@ const talks = [
 
 function SpeakingContent() {
   const [filter, setFilter] = useState("All")
+  const [openDialog, setOpenDialog] = useState<number | null>(null)
 
   // Define filter options
   const filterOptions = ["All", "2025", "2024", "2023", "2022", "2019"]
@@ -132,7 +133,7 @@ function SpeakingContent() {
   return (
     <PageContainer title="Public Speaking">
       {/* Filter buttons */}
-      <div className="mb-12 overflow-x-auto pb-2">
+      <div className="mb-8 overflow-x-auto pb-2">
         <div className="flex gap-2 flex-wrap">
           {filterOptions.map((option) => (
             <button
@@ -189,12 +190,17 @@ function SpeakingContent() {
                   </div>
                 </div>
               ) : (
-                <Dialog>
-                  <DialogTrigger className="outline-none focus:outline-none ring-0 focus:ring-0 block w-full text-left">
+                <PhotoDetail
+                  isOpen={openDialog === index}
+                  onOpenChange={(open) => setOpenDialog(open ? index : null)}
+                  type="image"
+                  url={talk.url || ""}
+                  title={talk.title}
+                  description={talk.description}
+                  trigger={
                     <div className="space-y-4 cursor-pointer">
-                      {/* Media */}
                       <div className="w-full">
-                        <div className="relative aspect-[16/9] rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
+                        <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
                           <Image
                             src={talk.url || `/placeholder.svg?height=200&width=400&text=${encodeURIComponent(talk.title)}`}
                             alt={talk.title}
@@ -207,8 +213,6 @@ function SpeakingContent() {
                           />
                         </div>
                       </div>
-
-                      {/* Content */}
                       <div>
                         <h3 className="text-xl font-semibold">{talk.title}</h3>
                         <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-2">
@@ -223,6 +227,7 @@ function SpeakingContent() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline mt-2"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <FileText className="w-4 h-4" />
                             View Slides
@@ -230,28 +235,10 @@ function SpeakingContent() {
                         )}
                       </div>
                     </div>
-                  </DialogTrigger>
-                  {/* Apply different widths for mobile vs desktop */}
-                  <DialogContent 
-                    className="p-0 w-[95vw] max-w-[95vw] md:w-auto md:max-w-3xl border-none bg-transparent backdrop-blur-xl"
-                    onPointerDownOutside={(e) => {
-                      const element = e.target as HTMLElement;
-                      element.closest('button')?.click();
-                    }}
-                  >
-                    <DialogTitle className="sr-only">{talk.title}</DialogTitle>
-                    <DialogDescription className="sr-only">
-                      {talk.description || `Enlarged image for ${talk.title}`}
-                    </DialogDescription>
-                    <div className="h-full flex flex-col items-center justify-center">
-                      <img
-                        src={talk.url || `/placeholder.svg?height=600&width=800&text=${encodeURIComponent(talk.title)}`}
-                        alt={talk.title}
-                        className="w-full object-contain rounded-lg"
-                      />
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                  }
+                >
+                  <></>
+                </PhotoDetail>
               )}
             </TimelineItem>
           )

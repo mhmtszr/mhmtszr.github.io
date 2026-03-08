@@ -1,4 +1,5 @@
-import { Github, Linkedin, FileText, Twitter, BookOpenText } from "lucide-react"
+import { Github, Linkedin, FileText, Twitter } from "lucide-react"
+import { MediumIcon } from "@/components/icons/medium"
 import Link from "next/link"
 
 export default function Footer() {
@@ -90,7 +91,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors"
               >
-                <BookOpenText className="h-6 w-6" />
+                <MediumIcon className="h-6 w-6" />
                 <span className="sr-only">Medium</span>
               </Link>
               <Link
