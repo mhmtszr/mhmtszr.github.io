@@ -202,9 +202,9 @@ export GOGC=off
 However, be cautious when doing this, as it may lead to unexpected behavior if the memory limits are not well
 understood.
 
-![img_1.png](/article/go-practices/img_1.png)
+![img_1.png](/article/go-practices/img_1.webp)
 
-![img.png](/article/go-practices/img.png)
+![img.png](/article/go-practices/img.webp)
 
 ### Use Goroutine Pool by Using ants
 
@@ -483,8 +483,8 @@ net/http, fiber significantly reduces request processing overhead and offers bui
 WebSockets, and routing optimizations.
 
 <div className="flex items-center justify-between">
-  <img src="/article/go-practices/img_3.png" width="49%" alt="Go Practice Image 3"/>
-  <img src="/article/go-practices/img_4.png" width="49%" alt="Go Practice Image 4"/>
+  <img src="/article/go-practices/img_3.webp" width="49%" alt="Go Practice Image 3"/>
+  <img src="/article/go-practices/img_4.webp" width="49%" alt="Go Practice Image 4"/>
 </div>
 
 ### Use Concurrent Swiss Map for High-Performance Thread-Safe Maps
@@ -506,7 +506,7 @@ concurrent hash map implementation that delivers exceptional performance in conc
 **Architecture:**
 
 <div className="text-center my-6">
-  <img src="/article/go-practices/concurrent-swiss-map-arch.png" className="mx-auto max-w-full h-auto" alt="Concurrent Swiss Map Architecture"/>
+  <img src="/article/go-practices/concurrent-swiss-map-arch.webp" className="mx-auto max-w-full h-auto" alt="Concurrent Swiss Map Architecture"/>
 </div>
 
 The diagram illustrates how the Concurrent Swiss Map divides a single map into multiple shards, with each shard
@@ -559,7 +559,7 @@ Benchmark tests show that Concurrent Swiss Map outperforms other map implementat
 uses less memory in all tested scenarios:
 
 <div className="text-center my-6">
-  <img src="/article/go-practices/concurrent-swiss-map-benchmark.png" className="mx-auto max-w-full h-auto" alt="Concurrent Swiss Map Benchmark Results"/>
+  <img src="/article/go-practices/concurrent-swiss-map-benchmark.webp" className="mx-auto max-w-full h-auto" alt="Concurrent Swiss Map Benchmark Results"/>
 </div>
 
 Key findings:
@@ -602,12 +602,12 @@ improvements.
   {/* Image 1 with Text Above */}
   <div className="w-[49%] text-center">
     <p className="text-sm font-medium mb-1">Small (400B, 11 keys, 3 layers)</p>
-    <img src="/article/go-practices/bench-small.png" className="block w-full h-auto rounded border" alt="Sonic Benchmark Small"/>
+    <img src="/article/go-practices/bench-small.webp" className="block w-full h-auto rounded border" alt="Sonic Benchmark Small"/>
   </div>
   {/* Image 2 with Text Above */}
   <div className="w-[49%] text-center">
     <p className="text-sm font-medium mb-1">Large (635KB, 10000+ key, 6 layers)</p>
-    <img src="/article/go-practices/bench-large.png" className="block w-full h-auto rounded border" alt="Sonic Benchmark Large"/>
+    <img src="/article/go-practices/bench-large.webp" className="block w-full h-auto rounded border" alt="Sonic Benchmark Large"/>
   </div>
 </div>
 

@@ -105,7 +105,7 @@ encountered our first real-world search challenge.
 The diagram below summarizes how documents become tsvectors and how tsquery enables efficient, ranked search:
 
 <div className="text-center my-6">
-  <img src="/article/postgresql-full-text-search/postgresql-fts-core-concepts.png" className="mx-auto max-w-full" style={{maxWidth: "800px", height: "auto"}} alt="PostgreSQL Full-Text Search Core Concepts"/>
+  <img src="/article/postgresql-full-text-search/postgresql-fts-core-concepts.webp" className="mx-auto max-w-full" style={{maxWidth: "800px", height: "auto"}} alt="PostgreSQL Full-Text Search Core Concepts"/>
 </div>
 
 ## PostgreSQL Full Text Search: A Practical Guide
@@ -237,7 +237,7 @@ ORDER BY ts_rank(icerik, to_tsquery('elma & tatlı')) DESC;
 ```
 
 <div className="text-center my-6">
-  <img src="/article/postgresql-full-text-search/gin-index-internals.png" className="mx-auto max-w-full" style={{maxWidth: "800px", height: "auto"}} alt="GIN Index Internals: Entry Tree, Posting Tree, and Posting List"/>
+  <img src="/article/postgresql-full-text-search/gin-index-internals.webp" className="mx-auto max-w-full" style={{maxWidth: "800px", height: "auto"}} alt="GIN Index Internals: Entry Tree, Posting Tree, and Posting List"/>
 </div>
 
 Here is what happens step by step:

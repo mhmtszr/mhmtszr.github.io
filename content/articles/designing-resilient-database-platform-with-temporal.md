@@ -57,7 +57,7 @@ Now we know the requirements but how can we implement this platform?
 
 Let's start with a traditional programming approach. I'll use Go examples, but the concepts apply to any language.
 
-<img src="/article/designing-resilient-database-platform-with-temporal/traditional-approach.png" className="mx-auto
+<img src="/article/designing-resilient-database-platform-with-temporal/traditional-approach.webp" className="mx-auto
 max-w-xl h-auto" style={{maxWidth: "75%", maxHeight: "50%"}} alt="Traditional Approach"/>
 
 We have a `CreateMultiRegionDatabase` function that orchestrates the entire database creation process. It launches two
@@ -69,7 +69,7 @@ At first glance, this approach appears sound - but several issues arise.
 
 - **Blocking the Application Thread:**
 
-  <img src="/article/designing-resilient-database-platform-with-temporal/traditional-block-thread.png" className="
+  <img src="/article/designing-resilient-database-platform-with-temporal/traditional-block-thread.webp" className="
   mx-auto max-w-xl h-auto" style={{height: "auto"}} alt="Traditional Blocking Thread"/>
 
   Database creation can take hours, but we can't afford to block the application thread for that duration. How do we
@@ -77,7 +77,7 @@ At first glance, this approach appears sound - but several issues arise.
 
 - **Error Handling:**
 
-  <img src="/article/designing-resilient-database-platform-with-temporal/traditional-error-handling.png" className="
+  <img src="/article/designing-resilient-database-platform-with-temporal/traditional-error-handling.webp" className="
   mx-auto max-w-xl h-auto" style={{height: "auto"}} alt="Traditional Error Handling"/>
 
   We need to handle errors automatically without exposing them to customers. Traditional programming makes this
@@ -85,7 +85,7 @@ At first glance, this approach appears sound - but several issues arise.
 
 ### Apache Kafka Approach
 
-<img src="/article/designing-resilient-database-platform-with-temporal/kafka-approach.png" className="mx-auto max-w-xl
+<img src="/article/designing-resilient-database-platform-with-temporal/kafka-approach.webp" className="mx-auto max-w-xl
 h-auto" style={{maxWidth: "75%", height: "auto"}} alt="Kafka Approach"/>
 
 **Kafka** is a robust event-streaming platform well-suited for real-time message processing. It provides:
@@ -96,7 +96,7 @@ h-auto" style={{maxWidth: "75%", height: "auto"}} alt="Kafka Approach"/>
 
 Let's try Apache Kafka Approach for our platform
 
-<img src="/article/designing-resilient-database-platform-with-temporal/kafka-approach-code.png" className="mx-auto
+<img src="/article/designing-resilient-database-platform-with-temporal/kafka-approach-code.webp" className="mx-auto
 max-w-xl h-auto" style={{maxWidth: "75%", height: "auto"}} alt="Kafka Approach"/>
 
 To keep the example simple, I've simplified the Kafka consumer and producer structure instead of building a complete
@@ -113,20 +113,20 @@ Here's a simplified overview of the workflow:
 #### Problems
 
 - **State Management:**
-  <img src="/article/designing-resilient-database-platform-with-temporal/kafka-state-management.png" className="mx-auto
+  <img src="/article/designing-resilient-database-platform-with-temporal/kafka-state-management.webp" className="mx-auto
   max-w-xl h-auto" style={{height: "auto"}} alt="Kafka State Management"/>
 
   We need to store database created events to track when all regions of the cluster are ready. What happens if two
   events arrive at the same time? We need to handle concurrent processing carefully.
 
 - **Error Handling:**
-  <img src="/article/designing-resilient-database-platform-with-temporal/kafka-error-handling.png" className="mx-auto
+  <img src="/article/designing-resilient-database-platform-with-temporal/kafka-error-handling.webp" className="mx-auto
   max-w-xl h-auto" style={{maxWidth: "75%", height: "auto"}} alt="Kafka Error Handling"/>
 
   We still need custom error handling and retry logic. **Kafka does not have built-in error and retry mechanism.**
 
 - **Managing Kafka Components:**
-  <img src="/article/designing-resilient-database-platform-with-temporal/kafka-components.png" className="mx-auto
+  <img src="/article/designing-resilient-database-platform-with-temporal/kafka-components.webp" className="mx-auto
   max-w-xl h-auto" style={{maxWidth: "75%", height: "auto"}} alt="Kafka Components"/>
 
   We need to manage Kafka components, ensure consumers process messages correctly, and verify producers work properly.
@@ -147,7 +147,7 @@ Here's a simplified overview of the workflow:
 Let's step back from the code and look at our problem from a business perspective. BPMN is a standardized flow chart
 method that models business processes from end to end.
 
-<img src="/article/designing-resilient-database-platform-with-temporal/bpmn.png" className="mx-auto max-w-xl h-auto"
+<img src="/article/designing-resilient-database-platform-with-temporal/bpmn.webp" className="mx-auto max-w-xl h-auto"
 style={{height: "auto"}} alt="BPMN"/>
 
 In this diagram, you can see a use case that starts with a start event and ends with an end event. The use case contains
@@ -171,7 +171,7 @@ platforms like Temporal come into play.
 - **Built-in Reliability:** Support for retries, timeouts, scheduled and long-running tasks
 - **Multi-language Support:** Go, Java, PHP, Python, TypeScript, .NET, Clojure, Scala, Ruby
 
-<img src="/article/designing-resilient-database-platform-with-temporal/temporal.png" className="mx-auto max-w-xl h-auto"
+<img src="/article/designing-resilient-database-platform-with-temporal/temporal.webp" className="mx-auto max-w-xl h-auto"
 style={{height: "auto"}} alt="Temporal"/>
 
 You can deploy it self-hosted with just a database (like PostgreSQL) or use Temporal Cloud.
@@ -204,7 +204,7 @@ This can be cloud providers (AWS, Google Cloud, etc.) or our own infrastructure 
 We initiate the provisioning operation and then periodically check the progress (while there are various methods to
 monitor progress, periodic interval checking is one of the more straightforward approaches).
 
-<img src="/article/designing-resilient-database-platform-with-temporal/temporal-approach.png" className="mx-auto
+<img src="/article/designing-resilient-database-platform-with-temporal/temporal-approach.webp" className="mx-auto
 max-w-xl h-auto" style={{height: "auto"}} alt="Temporal"/>
 
 Defining workflows and activities is straightforward - they are simply functions that accept input parameters.
@@ -225,7 +225,7 @@ that it doesn't block any thread -**it simply delays the execution of the workfl
 Temporal also provides a web-based UI that allows us to monitor workflow execution, trigger new workflows, and manage
 the overall system.
 
-<img src="/article/designing-resilient-database-platform-with-temporal/temporal-ui.png" className="mx-auto max-w-xl
+<img src="/article/designing-resilient-database-platform-with-temporal/temporal-ui.webp" className="mx-auto max-w-xl
 h-auto" style={{height: "auto"}} alt="Temporal"/>
 
 Here is an example workflow that I initiated for Istanbul database creation.
@@ -236,7 +236,7 @@ straightforward.**
 We've discussed single-region database creation. Now, let's explore how we can design multi-region database
 provisioning.
 
-<img src="/article/designing-resilient-database-platform-with-temporal/temporal-multi-region.png" className="mx-auto
+<img src="/article/designing-resilient-database-platform-with-temporal/temporal-multi-region.webp" className="mx-auto
 max-w-xl h-auto" style={{height: "auto"}} alt="Temporal"/>
 
 We can invoke a workflow within another workflow as a **child workflow**.
@@ -247,7 +247,7 @@ These will execute in parallel because we're waiting for the workflow
 
 Once both database creations are complete, we will call another activity: `CreateDatabaseReplication`.
 
-<img src="/article/designing-resilient-database-platform-with-temporal/temporal-ui-2.png" className="mx-auto max-w-xl
+<img src="/article/designing-resilient-database-platform-with-temporal/temporal-ui-2.webp" className="mx-auto max-w-xl
 h-auto" style={{height: "auto"}} alt="Temporal"/>
 
 As you can see, with the Temporal approach, **the cognitive load is significantly reduced.** We can focus on core

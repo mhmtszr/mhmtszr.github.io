@@ -111,7 +111,7 @@ Reading from disk is slow, so databases maintain an in-memory cache of frequentl
 buffer pool.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/buffer-pool.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "40%", height: "auto"}} alt="Database Buffer Pool"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/buffer-pool.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "40%", height: "auto"}} alt="Database Buffer Pool"/>
   <p className="text-sm text-gray-600 mt-0">Buffer pool architecture showing page table mapping disk pages to memory frames<br/>
   <span className="text-xs italic">Source: Intel, "Optimizing Write Ahead Logging with Intel Optane Persistent Memory"</span></p>
 </div>
@@ -171,7 +171,7 @@ A B-Tree is a self-balancing tree data structure that:
 - Is optimized for systems that read and write large blocks of data
 
 <div className="text-center my-6">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/btree.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="B-Tree Structure"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/btree.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="B-Tree Structure"/>
 </div>
 
 #### B-Tree Nodes and Disk Blocks Relationship
@@ -249,7 +249,7 @@ B+ Trees are preferred in most database systems because:
 3. They offer more consistent performance (all data is at the same level)
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/btrees-and-database-indexes.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="B-Trees and Database Indexes showing inner and leaf nodes"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/btrees-and-database-indexes.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="B-Trees and Database Indexes showing inner and leaf nodes"/>
   <p className="text-sm text-gray-600 mt-2">B+ Tree structure showing inner nodes with keys/pointers and leaf nodes with actual data<br/>
   <span className="text-xs italic">Source: PlanetScale Blog, "B-trees and database indexes" (https://planetscale.com/blog/btrees-and-database-indexes)</span></p>
 </div>
@@ -283,7 +283,7 @@ reads.
 #### LSM Tree Architecture
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/lsm-tree.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="LSM Tree Architecture"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/lsm-tree.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="LSM Tree Architecture"/>
   <p className="text-sm text-gray-600 mt-0">LSM Tree architecture showing MemTable, WAL, and SSTables<br/>
   <span className="text-xs italic">Source: Medium, "LSM Trees: The Go-To Data Structure for Databases, Search Engines, and More" (https://medium.com/@dwivedi.ankit21/lsm-trees-the-go-to-data-structure-for-databases-search-engines-and-more-c3a48fa469d2)</span></p>
 </div>
@@ -432,7 +432,7 @@ A Bloom filter is a space-efficient probabilistic data structure that tells you 
 or might be in a set.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/bloom-filter.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Bloom Filter"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/bloom-filter.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Bloom Filter"/>
   <p className="text-sm text-gray-600 mt-0">Bloom filter data structure showing set membership testing with hash functions<br/>
   <span className="text-xs italic">Source: Wikipedia, "Bloom filter" (https://en.wikipedia.org/wiki/Bloom_filter)</span></p>
 </div>
@@ -727,7 +727,7 @@ When multiple transactions run concurrently, several anomalies can occur:
 A dirty read occurs when one transaction reads data that has been modified but not yet committed by another transaction.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/dirty-read.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Dirty Read Scenario"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/dirty-read.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Dirty Read Scenario"/>
   <p className="text-sm text-gray-600 mt-0">Illustration of a dirty read concurrency anomaly where a transaction reads uncommitted data<br/>
   <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
@@ -737,7 +737,7 @@ A dirty read occurs when one transaction reads data that has been modified but n
 One transaction overwrites an uncommitted value written by another transaction
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/dirty-write.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Dirty Write Scenario"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/dirty-write.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Dirty Write Scenario"/>
   <p className="text-sm text-gray-600 mt-0">Illustration of a dirty write anomaly where a transaction overwrites uncommitted data from another transaction<br/>
   <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
@@ -748,7 +748,7 @@ A lost update occurs when two transactions read and then update the same data, w
 update of the first one.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/lost-update.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Lost Update Scenario"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/lost-update.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Lost Update Scenario"/>
   <p className="text-sm text-gray-600 mt-0">Illustration of a lost update anomaly where two transactions read and update the same data, with one change being lost<br/>
   <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
@@ -759,7 +759,7 @@ A non-repeatable read occurs when a transaction reads the same row twice and get
 transaction modified and committed the data between reads.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/nonrepeatable-read.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Non-Repeatable Read Scenario"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/nonrepeatable-read.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Non-Repeatable Read Scenario"/>
   <p className="text-sm text-gray-600 mt-0">Illustration of a non-repeatable read anomaly where a transaction reads the same row twice but gets different values<br/>
   <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
@@ -770,7 +770,7 @@ Read skew occurs when a transaction reads related data that is updated by anothe
 that violates data constraints.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/read-skew.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Read Skew Scenario"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/read-skew.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Read Skew Scenario"/>
   <p className="text-sm text-gray-600 mt-0">Illustration of a read skew anomaly where a transaction reads related data that is updated by another transaction<br/>
   <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
@@ -781,7 +781,7 @@ Write skew occurs when two transactions read an overlapping data set, make disjo
 jointly create an inconsistent result.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/write-skew.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Write Skew Scenario"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/write-skew.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Write Skew Scenario"/>
   <p className="text-sm text-gray-600 mt-0">Illustration of a write skew anomaly where two transactions read an overlapping data set and make disjoint updates<br/>
   <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
@@ -792,7 +792,7 @@ A phantom read occurs when a transaction executes a query twice, and the second 
 visible in the first result (or vice versa) because another transaction added or removed qualifying rows.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/phantom-read.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Phantom Read Scenario"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/phantom-read.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Phantom Read Scenario"/>
   <p className="text-sm text-gray-600 mt-0">Illustration of a phantom read anomaly where a transaction sees rows that weren't visible in a previous read<br/>
   <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
@@ -873,7 +873,7 @@ Prevents dirty reads by only showing committed data, but allows non-repeatable r
 Prevents both dirty reads and non-repeatable reads by using snapshot isolation.
 
 <div className="text-center my-6">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/snapshot-isolation.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Snapshot Isolation and MVCC"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/snapshot-isolation.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Snapshot Isolation and MVCC"/>
   <p className="text-sm text-gray-600 mt-2">Snapshot isolation implemented with multi-version concurrency control (MVCC)<br/>
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
@@ -903,7 +903,7 @@ The strongest isolation level, preventing all concurrency anomalies.
     - Predicate locks or index-range locks prevent phantom reads
 
    <div className="text-center my-4">
-     <img src="/article/database-architecture-storage-engines-distributed-systems/two-phase-locking.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Two-Phase Locking Process"/>
+     <img src="/article/database-architecture-storage-engines-distributed-systems/two-phase-locking.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Two-Phase Locking Process"/>
      <p className="text-sm text-gray-600 mt-0">Two-phase locking example<br/>
      <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
    </div>
@@ -915,7 +915,7 @@ The strongest isolation level, preventing all concurrency anomalies.
    waits for resource Y, while Transaction B holds a lock on Y and waits for X, neither can proceed.
 
    <div className="text-center my-4">
-     <img src="/article/database-architecture-storage-engines-distributed-systems/deadlock.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Deadlock in Database Transactions"/>
+     <img src="/article/database-architecture-storage-engines-distributed-systems/deadlock.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Deadlock in Database Transactions"/>
      <p className="text-sm text-gray-600 mt-0">Deadlock scenario where transactions are waiting for locks held by each other<br/>
      <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
    </div>
@@ -1018,7 +1018,7 @@ func updateWithPessimisticLock(txn *Transaction, accountID int, amount int) erro
 #### Optimistic Concurrency Control Example
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/optimistic-locking.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Optimistic Concurrency Control"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/optimistic-locking.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Optimistic Concurrency Control"/>
   <p className="text-sm text-gray-600 mt-0">Optimistic locking workflow showing version checking during concurrent updates<br/>
   <span className="text-xs italic">Source: "High-Performance Java Persistence" by Vlad Mihalcea</span></p>
 </div>
@@ -1052,7 +1052,7 @@ Inverted indexes are the core data structure behind search engines like Elastics
 that contain them, enabling efficient full-text search.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/inverted-index.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Inverted Index"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/inverted-index.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Inverted Index"/>
   <p className="text-sm text-gray-600 mt-0">Inverted index structure showing how words map to document references<br/>
   <span className="text-xs italic">Source: GitHub repository "Inverted-index-python" by Noureldin2303 (https://github.com/Noureldin2303/Inverted-index-python)</span></p>
 </div>
@@ -1105,7 +1105,7 @@ Unlike row-oriented databases where all columns of a row are stored together, co
 column together on disk.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/column-storage.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Column vs Row Storage"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/column-storage.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Column vs Row Storage"/>
   <p className="text-sm text-gray-600 mt-0">Comparison between row-oriented and column-oriented database storage models<br/>
   <span className="text-xs italic">Source: QuestDB, "What Is a Columnar Database?" (https://questdb.com/glossary/columnar-database/)</span></p>
 </div>
@@ -1155,7 +1155,7 @@ Problem: When you add or remove nodes, almost all keys need to be redistributed.
 Consistent hashing minimizes the number of keys that need to be moved when nodes are added or removed.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/consistent-hashing.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Consistent Hashing"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/consistent-hashing.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Consistent Hashing"/>
   <p className="text-sm text-gray-600 mt-0">Consistent hashing ring showing key and server distribution<br/>
   <span className="text-xs italic">Source: Pratima Upadhyay, "Consistent Hashing" (https://www.linkedin.com/pulse/consistent-hashing-pratima-upadhyay/)</span></p>
 </div>
@@ -1169,7 +1169,7 @@ Consistent hashing minimizes the number of keys that need to be moved when nodes
 To distribute load more evenly, each physical node can be represented by multiple virtual nodes on the ring:
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/virtual-nodes.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Virtual Nodes in Consistent Hashing"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/virtual-nodes.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Virtual Nodes in Consistent Hashing"/>
   <p className="text-sm text-gray-600 mt-0">Virtual nodes in consistent hashing for better load distribution<br/>
   <span className="text-xs italic">Source: Medium, "System Design: Consistent Hashing" (https://medium.com/data-science/system-design-consistent-hashing-43ddf48d2d32)</span></p>
 </div>
@@ -1183,7 +1183,7 @@ Replication stores copies of the same data on multiple nodes for fault tolerance
 One node is designated as the leader, handling all writes. Writes are propagated to follower nodes.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/single-leader.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Single-Leader Replication"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/single-leader.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Single-Leader Replication"/>
   <p className="text-sm text-gray-600 mt-0">Single-leader replication model showing write path through leader to followers<br/>
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
@@ -1211,7 +1211,7 @@ If a user writes data to the leader and then tries to read it from a lagging fol
 writes.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/reading-your-own-writes.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Reading Your Own Writes Consistency Problem"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/reading-your-own-writes.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Reading Your Own Writes Consistency Problem"/>
   <p className="text-sm text-gray-600 mt-0">Illustration of the reading-your-own-writes consistency issue in asynchronous replication<br/>
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
@@ -1225,7 +1225,7 @@ writes.
 A user might see data appear and then disappear if they read from different replicas that have different lag.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/monotonic-reads.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Monotonic Reads Consistency Problem"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/monotonic-reads.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Monotonic Reads Consistency Problem"/>
   <p className="text-sm text-gray-600 mt-0">Illustration of the monotonic reads consistency issue with different replicas<br/>
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
@@ -1241,7 +1241,7 @@ A user might see data appear and then disappear if they read from different repl
 If replicas process writes in different orders, a reader might see events out of order.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/consistent-prefix-reads.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Consistent Prefix Reads Consistency Problem"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/consistent-prefix-reads.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Consistent Prefix Reads Consistency Problem"/>
   <p className="text-sm text-gray-600 mt-0">Illustration of the consistent prefix reads problem with out-of-order processing<br/>
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
@@ -1337,7 +1337,7 @@ EXECUTE FUNCTION replicate_to_replica();`</span></td>
 Multiple nodes can accept writes, which are then propagated to other nodes.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/multi-leader.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Multi-Leader Replication"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/multi-leader.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Multi-Leader Replication"/>
   <p className="text-sm text-gray-600 mt-0">Multi-leader replication model with writes coordinated between multiple leader nodes<br/>
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
@@ -1364,7 +1364,7 @@ Multiple nodes can accept writes, which are then propagated to other nodes.
 When multiple leaders accept writes to the same data simultaneously, conflicts can occur:
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/multi-leader-conflicts.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Multi-Leader Write Conflicts"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/multi-leader-conflicts.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Multi-Leader Write Conflicts"/>
   <p className="text-sm text-gray-600 mt-0">Write conflicts in multi-leader replication when concurrent updates occur on different leaders<br/>
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
@@ -1396,7 +1396,7 @@ Any node can accept writes; clients coordinate with multiple nodes or any node i
 This creates a highly available system without a single point of failure.
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/leaderless.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Leaderless Replication"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/leaderless.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Leaderless Replication"/>
   <p className="text-sm text-gray-600 mt-0">Leaderless replication model where clients can write to any node in the cluster<br/>
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
@@ -1409,7 +1409,7 @@ this guarantee through a simple mathematical rule.
 With N replicas, each write must be confirmed by W nodes, and each read must query at least R nodes:
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/quorum-consensus.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Quorum Consensus in Leaderless Replication"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/quorum-consensus.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Quorum Consensus in Leaderless Replication"/>
   <p className="text-sm text-gray-600 mt-0">Quorum consensus in leaderless replication to maintain consistency<br/>
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
@@ -1453,7 +1453,7 @@ datastores:
 ##### **Concurrent Writes and Version Tracking**
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/concurrent-writes.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Concurrent Writes in Distributed Systems"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/concurrent-writes.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "70%", height: "auto"}} alt="Concurrent Writes in Distributed Systems"/>
   <p className="text-sm text-gray-600 mt-0">Concurrent writes in distributed systems and version tracking<br/>
   <span className="text-xs italic">Source: "Designing Data-Intensive Applications" by Martin Kleppmann (O'Reilly Media, 2017)</span></p>
 </div>
@@ -1483,7 +1483,7 @@ Time synchronization between distributed nodes is notoriously difficult:
 Vector clocks track causality between different versions of data:
 
 <div className="text-center my-4">
-  <img src="/article/database-architecture-storage-engines-distributed-systems/vector-clocks.png" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Vector Clocks"/>
+  <img src="/article/database-architecture-storage-engines-distributed-systems/vector-clocks.webp" className="mx-auto max-w-xl h-auto" style={{maxWidth: "60%", height: "auto"}} alt="Vector Clocks"/>
   <p className="text-sm text-gray-600 mt-0">Vector clocks tracking causality between events in a distributed system<br/>
   <span className="text-xs italic">Source: Wikipedia, "Vector clock" (https://en.wikipedia.org/wiki/Vector_clock)</span></p>
 </div>

@@ -1,4 +1,6 @@
 import {ImageResponse} from 'next/og'
+import {readFileSync} from 'fs'
+import {join} from 'path'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-static'
@@ -13,6 +15,10 @@ export const size = {
 export const contentType = 'image/png'
 
 export default async function Image() {
+    const bgPath = join(process.cwd(), 'public/og-background.png')
+    const bgBase64 = readFileSync(bgPath).toString('base64')
+    const bgDataUrl = `data:image/png;base64,${bgBase64}`
+
     return new ImageResponse(
         (
             <div
@@ -24,7 +30,7 @@ export default async function Image() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     position: 'relative',
-                    backgroundImage: 'url(https://msezer.dev/opengraph-image.png)',
+                    backgroundImage: `url(${bgDataUrl})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                 }}

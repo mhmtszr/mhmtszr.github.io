@@ -9,523 +9,523 @@ import {PageContainer} from "../components/page-container"
 // Photography data with actual photos
 const photos = [
     {
-        url: '/photography/tokyo.jpg',
+        url: '/photography/tokyo.webp',
         title: 'Shibuya Crossing',
         city: 'Tokyo',
         country: 'Japan'
     },
     {
-        url: '/photography/kyoto.jpg',
+        url: '/photography/kyoto.webp',
         title: 'Hokan-ji',
         city: 'Kyoto',
         country: 'Japan'
     },
     {
-        url: '/photography/kyoto2.jpg',
+        url: '/photography/kyoto2.webp',
         title: 'Fushimi Inari Taisha',
         city: 'Kyoto',
         country: 'Japan'
     },
     {
-        url: '/photography/nara.jpg',
+        url: '/photography/nara.webp',
         title: 'Nara',
         city: 'Nara',
         country: 'Japan'
     },
     {
-        url: '/photography/universalstudios.jpg',
+        url: '/photography/universalstudios.webp',
         title: 'Universal Studios Japan',
         city: 'Osaka',
         country: 'Japan'
     },
     {
-        url: '/photography/london.jpg',
+        url: '/photography/london.webp',
         title: 'London',
         city: 'London',
         country: 'England'
     },
     {
-        url: '/photography/bigben.jpg',
+        url: '/photography/bigben.webp',
         title: 'Big Ben',
         city: 'London',
         country: 'England'
     },
     {
-        url: '/photography/bigben2.jpg',
+        url: '/photography/bigben2.webp',
         title: 'Big Ben',
         city: 'London',
         country: 'England'
     },
     {
-        url: '/photography/bigben3.jpg',
+        url: '/photography/bigben3.webp',
         title: 'Big Ben',
         city: 'London',
         country: 'England'
     },
     {
-        url: '/photography/bankstation.jpg',
+        url: '/photography/bankstation.webp',
         title: 'Bank Station',
         city: 'London',
         country: 'England'
     },
     {
-        url: '/photography/bloomberg.jpg',
+        url: '/photography/bloomberg.webp',
         title: 'Bloomberg Office',
         city: 'London',
         country: 'England'
     },
     {
-        url: '/photography/towerbridge.jpg',
+        url: '/photography/towerbridge.webp',
         title: 'Tower Bridge',
         city: 'London',
         country: 'England'
     },
     {
-        url: '/photography/londoneye.jpg',
+        url: '/photography/londoneye.webp',
         title: 'London Eye',
         city: 'London',
         country: 'England'
     },
     {
-        url: '/photography/edinburgh.jpg',
+        url: '/photography/edinburgh.webp',
         title: 'Edinburgh',
         city: 'Edinburgh',
         country: 'Scotland'
     },
     {
-        url: '/photography/victoria_street.jpg',
+        url: '/photography/victoria_street.webp',
         title: 'Victoria Street',
         city: 'Edinburgh',
         country: 'Scotland'
     },
     {
-        url: '/photography/dean_village.jpg',
+        url: '/photography/dean_village.webp',
         title: 'Dean Village',
         city: 'Edinburgh',
         country: 'Scotland'
     },
     {
-        url: '/photography/waverley_bridge.jpg',
+        url: '/photography/waverley_bridge.webp',
         title: 'Waverley Bridge',
         city: 'Edinburgh',
         country: 'Scotland'
     },
     {
-        url: '/photography/newtontree.jpg',
+        url: '/photography/newtontree.webp',
         title: 'Newton Tree',
         city: 'Cambridge',
         country: 'England'
     },
     {
-        url: '/photography/cambridgecollege.jpg',
+        url: '/photography/cambridgecollege.webp',
         title: 'Cambridge College',
         city: 'Cambridge',
         country: 'England'
     },
     {
-        url: '/photography/phuket.jpg',
+        url: '/photography/phuket.webp',
         title: 'Phuket',
         city: 'Phuket',
         country: 'Thailand'
     },
     {
-        url: '/photography/james_bond_island.jpg',
+        url: '/photography/james_bond_island.webp',
         title: 'James Bond Island',
         city: 'Phuket',
         country: 'Thailand'
     },
     {
-        url: '/photography/panyee.jpg',
+        url: '/photography/panyee.webp',
         title: 'Panye Island',
         city: 'Phuket',
         country: 'Thailand'
     },
     {
-        url: '/photography/maya_bay.jpg',
+        url: '/photography/maya_bay.webp',
         title: 'Maya Bay',
         city: 'Phuket',
         country: 'Thailand'
     },
     {
-        url: '/photography/bangkok.jpg',
+        url: '/photography/bangkok.webp',
         title: 'Chao Phraya River',
         city: 'Bangkok',
         country: 'Thailand'
     },
     {
-        url: '/photography/bangkok_2.jpg',
+        url: '/photography/bangkok_2.webp',
         title: 'Lumphini Park',
         city: 'Bangkok',
         country: 'Thailand'
     },
     {
-        url: '/photography/bangkok_3.jpg',
+        url: '/photography/bangkok_3.webp',
         title: 'Temple of the Golden Buddha',
         city: 'Bangkok',
         country: 'Thailand'
     },
     {
-        url: '/photography/havana.jpg',
+        url: '/photography/havana.webp',
         title: 'National Capitol of Cuba',
         city: 'Havana',
         country: 'Cuba'
     },
     {
-        url: '/photography/kübaatatürk.jpg',
+        url: '/photography/kübaatatürk.webp',
         title: 'Atatürk Statue',
         city: 'Havana',
         country: 'Cuba'
     },
     {
-        url: '/photography/varadero.jpg',
+        url: '/photography/varadero.webp',
         title: 'North Atlantic Ocean',
         city: 'Varadero',
         country: 'Cuba'
     },
     {
-        url: '/photography/trinidad.jpg',
+        url: '/photography/trinidad.webp',
         title: 'Romance Museum',
         city: 'Trinidad',
         country: 'Cuba'
     },
     {
-        url: '/photography/vinales.jpg',
+        url: '/photography/vinales.webp',
         title: 'Vinales',
         city: 'Vinales',
         country: 'Cuba'
     },
     {
-        url: '/photography/budva.jpg',
+        url: '/photography/budva.webp',
         title: 'Dancing Girl',
         city: 'Budva',
         country: 'Montenegro'
     },
     {
-        url: '/photography/sveti_stefan.jpg',
+        url: '/photography/sveti_stefan.webp',
         title: 'Sveti Stefan',
         city: 'Budva',
         country: 'Montenegro'
     },
     {
-        url: '/photography/kotor.jpg',
+        url: '/photography/kotor.webp',
         title: 'Kotor Castle',
         city: 'Kotor',
         country: 'Montenegro'
     },
     {
-        url: '/photography/perast.jpg',
+        url: '/photography/perast.webp',
         title: 'Perast',
         city: 'Perast',
         country: 'Montenegro'
     },
     {
-        url: '/photography/perast_2.jpg',
+        url: '/photography/perast_2.webp',
         title: 'Perast',
         city: 'Perast',
         country: 'Montenegro'
     },
     {
-        url: '/photography/novi_sad.jpg',
+        url: '/photography/novi_sad.webp',
         title: 'The Name of Mary Church',
         city: 'Novi Sad',
         country: 'Serbia'
     },
     {
-        url: '/photography/belgrade_2.jpg',
+        url: '/photography/belgrade_2.webp',
         title: "St. Mark's Church",
         city: 'Belgrade',
         country: 'Serbia'
     },
     {
-        url: '/photography/belgrade.jpg',
+        url: '/photography/belgrade.webp',
         title: 'The Belgrade Fortress',
         city: 'Belgrade',
         country: 'Serbia'
     },
     {
-        url: '/photography/barcelona2.jpg',
+        url: '/photography/barcelona2.webp',
         title: 'Tibidabo Amusement Park',
         city: 'Barcelona',
         country: 'Spain'
     },
     {
-        url: '/photography/roma.jpg',
+        url: '/photography/roma.webp',
         title: 'Altare della Patria',
         city: 'Rome',
         country: 'Italy'
     },
     {
-        url: '/photography/paris.jpg',
+        url: '/photography/paris.webp',
         title: 'Eiffel Tower',
         city: 'Paris',
         country: 'France'
     },
     {
-        url: '/photography/madrid.jpg',
+        url: '/photography/madrid.webp',
         title: 'Santiago Bernabéu Stadium',
         city: 'Madrid',
         country: 'Spain'
     },
     {
-        url: '/photography/barcelona.jpg',
+        url: '/photography/barcelona.webp',
         title: 'La Font Magica',
         city: 'Barcelona',
         country: 'Spain'
     },
     {
-        url: '/photography/prag.jpg',
+        url: '/photography/prag.webp',
         title: 'Dancing House',
         city: 'Prague',
         country: 'Czech Republic'
     },
     {
-        url: '/photography/venice.jpg',
+        url: '/photography/venice.webp',
         title: 'Venice',
         city: 'Venice',
         country: 'Italy'
     },
     {
-        url: '/photography/paris2.jpg',
+        url: '/photography/paris2.webp',
         title: 'Louvre Museum',
         city: 'Paris',
         country: 'France'
     },
     {
-        url: '/photography/florence.jpg',
+        url: '/photography/florence.webp',
         title: 'Ponte Vecchio',
         city: 'Florence',
         country: 'Italy'
     },
     {
-        url: '/photography/munich.jpg',
+        url: '/photography/munich.webp',
         title: 'Marienplatz',
         city: 'Munich',
         country: 'Germany'
     },
     {
-        url: '/photography/brussels.jpg',
+        url: '/photography/brussels.webp',
         title: '2018 FIFA World Cup Belgium - Brazil',
         city: 'Brussels',
         country: 'Belgium'
     },
     {
-        url: '/photography/amsterdam.jpg',
+        url: '/photography/amsterdam.webp',
         title: 'One of many channels',
         city: 'Amsterdam',
         country: 'Netherlands'
     },
     {
-        url: '/photography/berlin.jpg',
+        url: '/photography/berlin.webp',
         title: 'Reichstag Building',
         city: 'Berlin',
         country: 'Germany'
     },
     {
-        url: '/photography/hardrockprag.jpg',
+        url: '/photography/hardrockprag.webp',
         title: 'Hard Rock Cafe',
         city: 'Prague',
         country: 'Czech Republic'
     },
     {
-        url: '/photography/pisa.jpg',
+        url: '/photography/pisa.webp',
         title: 'Leaning Tower of Pisa',
         city: 'Pisa',
         country: 'Italy'
     },
     {
-        url: '/photography/barcelonaview.jpg',
+        url: '/photography/barcelonaview.webp',
         title: 'Park Guell',
         city: 'Barcelona',
         country: 'Spain'
     },
     {
-        url: '/photography/el_retiro.jpg',
+        url: '/photography/el_retiro.webp',
         title: 'El Retiro Park',
         city: 'Madrid',
         country: 'Spain'
     },
     {
-        url: '/photography/familia.jpg',
+        url: '/photography/familia.webp',
         title: 'La Sagrada Familia',
         city: 'Barcelona',
         country: 'Spain'
     },
     {
-        url: '/photography/romatrevi.jpg',
+        url: '/photography/romatrevi.webp',
         title: 'Fontana di Trevi',
         city: 'Rome',
         country: 'Italy'
     },
     {
-        url: '/photography/mostar.jpg',
+        url: '/photography/mostar.webp',
         title: 'Old Bridge',
         city: 'Mostar',
         country: 'Bosnia and Herzegovina'
     },
     {
-        url: '/photography/alperenler_tekkesi.jpg',
+        url: '/photography/alperenler_tekkesi.webp',
         title: 'Blagaj tekija',
         city: 'Mostar',
         country: 'Bosnia and Herzegovina'
     },
     {
-        url: '/photography/saraybosna.jpg',
+        url: '/photography/saraybosna.webp',
         title: 'Sarajevo',
         city: 'Sarajevo',
         country: 'Bosnia and Herzegovina'
     },
     {
-        url: '/photography/igneada.jpg',
+        url: '/photography/igneada.webp',
         title: 'İğneada Longoz Ormanları',
         city: 'Kırklareli',
         country: 'Turkey'
     },
     {
-        url: '/photography/kekova.jpg',
+        url: '/photography/kekova.webp',
         title: 'Kekova, Batık Şehir',
         city: 'Antalya',
         country: 'Turkey'
     },
     {
-        url: '/photography/erfelek_1.jpg',
+        url: '/photography/erfelek_1.webp',
         title: 'Erfelek Tatlica Falls',
         city: 'Sinop',
         country: 'Turkey'
     },
     {
-        url: '/photography/cengelköy.jpg',
+        url: '/photography/cengelköy.webp',
         title: 'Cengelköy',
         city: 'Istanbul',
         country: 'Turkey'
     },
     {
-        url: '/photography/adrasan2.jpg',
+        url: '/photography/adrasan2.webp',
         title: 'Adrasan Beach',
         city: 'Antalya',
         country: 'Turkey'
     },
     {
-        url: '/photography/izmir.jpg',
+        url: '/photography/izmir.webp',
         title: 'Bostanlı',
         city: 'Izmir',
         country: 'Turkey'
     },
     {
-        url: '/photography/alanya.jpg',
+        url: '/photography/alanya.webp',
         title: 'Alanya',
         city: 'Alanya',
         country: 'Turkey'
     },
     {
-        url: '/photography/hacettepe.jpg',
+        url: '/photography/hacettepe.webp',
         title: 'Hacettepe University Green Valley',
         city: 'Ankara',
         country: 'Turkey'
     },
     {
-        url: '/photography/büyükada.jpg',
+        url: '/photography/büyükada.webp',
         title: 'Büyükada',
         city: 'Istanbul',
         country: 'Turkey'
     },
     {
-        url: '/photography/karabük.jpg',
+        url: '/photography/karabük.webp',
         title: 'A beautiful frame that I caught on a long journey with our bikes',
         city: 'Karabük',
         country: 'Turkey'
     },
     {
-        url: '/photography/izmirbisiklet.jpg',
+        url: '/photography/izmirbisiklet.webp',
         title: 'A moment from our bike tour',
         city: 'Izmir',
         country: 'Turkey'
     },
     {
-        url: '/photography/kapadokya.jpg',
+        url: '/photography/kapadokya.webp',
         title: 'Kapadokya',
         city: 'Nevşehir',
         country: 'Turkey'
     },
     {
-        url: '/photography/adrasan.jpg',
+        url: '/photography/adrasan.webp',
         title: 'Adrasan Beach',
         city: 'Antalya',
         country: 'Turkey'
     },
     {
-        url: '/photography/antalya.jpg',
+        url: '/photography/antalya.webp',
         title: 'Boğazkent',
         city: 'Antalya',
         country: 'Turkey'
     },
     {
-        url: '/photography/asansör.jpg',
+        url: '/photography/asansör.webp',
         title: 'Tarihi Asansör',
         city: 'Izmir',
         country: 'Turkey'
     },
     {
-        url: '/photography/bolu.jpg',
+        url: '/photography/bolu.webp',
         title: 'Yedigöller National Park',
         city: 'Bolu',
         country: 'Turkey'
     },
     {
-        url: '/photography/expo2016.jpg',
+        url: '/photography/expo2016.webp',
         title: 'Expo 2016',
         city: 'Antalya',
         country: 'Turkey'
     },
     {
-        url: '/photography/ilgaz.jpg',
+        url: '/photography/ilgaz.webp',
         title: 'Ilgaz Mountain National Park',
         city: 'Kastamonu',
         country: 'Turkey'
     },
     {
-        url: '/photography/istanbulboat.jpg',
+        url: '/photography/istanbulboat.webp',
         title: 'Boat Tour',
         city: 'Istanbul',
         country: 'Turkey'
     },
     {
-        url: '/photography/safari.jpg',
+        url: '/photography/safari.webp',
         title: 'Safari Tour',
         city: 'Serik',
         country: 'Turkey'
     },
     {
-        url: '/photography/eskisehir2.jpg',
+        url: '/photography/eskisehir2.webp',
         title: 'Sehr-i Ask Adasi',
         city: 'Eskisehir',
         country: 'Turkey'
     },
     {
-        url: '/photography/kapulukaya.jpg',
+        url: '/photography/kapulukaya.webp',
         title: 'Kapulukaya Baraji',
         city: 'Kirikkale',
         country: 'Turkey'
     },
     {
-        url: '/photography/heybeliada.jpg',
+        url: '/photography/heybeliada.webp',
         title: 'Heybeliada',
         city: 'Istanbul',
         country: 'Turkey'
     },
     {
-        url: '/photography/kas.jpg',
+        url: '/photography/kas.webp',
         title: 'Kaş',
         city: 'Antalya',
         country: 'Turkey'
     },
     {
-        url: '/photography/erfelek_2.jpg',
+        url: '/photography/erfelek_2.webp',
         title: 'Erfelek Tatlica Falls',
         city: 'Sinop',
         country: 'Turkey'
     },
     {
-        url: '/photography/eskişehir.jpg',
+        url: '/photography/eskişehir.webp',
         title: 'Odunpazarı houses',
         city: 'Eskisehir',
         country: 'Turkey'
@@ -537,7 +537,7 @@ const uniqueCountries = ["All", ...Array.from(
     new Set(photos.map(photo => photo.country))
 )]
 
-const BATCH_SIZE = 4;
+const BATCH_SIZE = 9;
 
 function PhotographyContent() {
     const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null)
@@ -758,18 +758,18 @@ function PhotographyContent() {
                                         >
                                             {index < 2 ? (
                                                 <Image
-                                                    src={photo.url}
+                                                    src={photo.url.replace('.webp', '-thumb.webp')}
                                                     alt={photo.title || ""}
                                                     width={800}
                                                     height={600}
                                                     priority
-                                                    fetchPriority={index === 0 ? "high" : undefined}
+                                                    fetchPriority="high"
                                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                                 />
                                             ) : (
                                                 <DeferredImage
-                                                    src={photo.url}
+                                                    src={photo.url.replace('.webp', '-thumb.webp')}
                                                     alt={photo.title || ""}
                                                     width={800}
                                                     height={600}
