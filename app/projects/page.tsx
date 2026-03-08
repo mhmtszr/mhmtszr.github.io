@@ -103,11 +103,12 @@ export default function ProjectsPage() {
         <PageContainer title="Projects">
             {/* Filter buttons */}
             <div className="mb-8 overflow-x-auto pb-2">
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 flex-wrap" role="group" aria-label="Filter by technology">
                     {allTechnologies.map((tech) => (
                         <button
                             key={tech}
                             onClick={() => setFilter(tech)}
+                            aria-pressed={filter === tech}
                             className={`px-3 py-1.5 rounded-full text-sm font-sans whitespace-nowrap transition-colors duration-200 ${
                                 filter === tech
                                     ? "bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-800"
@@ -130,7 +131,7 @@ export default function ProjectsPage() {
                         <Link href={project.github} target="_blank" rel="noopener noreferrer" className="block h-full">
                             <div
                                 className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 h-full flex flex-col transition-shadow hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600">
-                                <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                                <h2 className="text-xl font-semibold mb-2">{project.title}</h2>
                                 <p className="text-gray-600 dark:text-gray-300 mb-4 grow leading-relaxed">{project.description}</p>
 
                                 <div className="mt-auto">

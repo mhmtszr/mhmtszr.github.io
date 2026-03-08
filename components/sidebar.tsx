@@ -43,7 +43,7 @@ export default function Sidebar() {
                 className="sticky top-0 z-40 flex items-center justify-between px-4 h-16 border-b md:hidden! bg-white dark:bg-gray-950 font-sans">
                 <Link href="/" className="flex items-center gap-3">
                     <Avatar className="h-9 w-9 border border-gray-200 dark:border-gray-700">
-                        <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer"/>
+                        <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer" fetchPriority="high"/>
                         <AvatarFallback>MS</AvatarFallback>
                     </Avatar>
                     <span className="font-bold text-xl">Mehmet Sezer</span>
@@ -165,7 +165,7 @@ export default function Sidebar() {
                         <div className="flex flex-col items-center px-6 mb-8">
                             <div className="mb-4">
                                 <Avatar className="h-24 w-24 border-2 border-gray-200 dark:border-gray-700">
-                                    <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer"/>
+                                    <AvatarImage src="/photography/profile.jpg" alt="Mehmet Sezer" fetchPriority="high"/>
                                     <AvatarFallback>MS</AvatarFallback>
                                 </Avatar>
                             </div>

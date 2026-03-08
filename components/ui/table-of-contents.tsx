@@ -1,7 +1,6 @@
 "use client"
 
 import {useCallback, useEffect, useRef, useState} from "react"
-import {AnimatePresence, motion} from "framer-motion"
 import {List, PanelRightClose, PanelRightOpen, X} from "lucide-react"
 
 interface TOCItem {
@@ -204,52 +203,37 @@ export function TableOfContents() {
                     className="fixed z-30 top-[4.5rem] hidden xl:block"
                     style={{left: sidebarLeft, width: TOC_WIDTH}}
                 >
-                    <AnimatePresence mode="wait">
-                        {desktopOpen ? (
-                            <motion.div
-                                key="toc-panel"
-                                initial={{opacity: 0, x: 20}}
-                                animate={{opacity: 1, x: 0}}
-                                exit={{opacity: 0, x: 20}}
-                                transition={{duration: 0.2}}
-                                className="flex flex-col max-h-[calc(100vh-8rem)]"
-                            >
-                                <div className="mb-3 shrink-0">
-                                    <div className="flex items-center justify-between mb-2">
+                    <div
+                        className={`flex flex-col max-h-[calc(100vh-8rem)] transition-opacity duration-200 ${desktopOpen ? 'opacity-100' : 'opacity-0 pointer-events-none absolute'}`}
+                    >
+                        <div className="mb-3 shrink-0">
+                            <div className="flex items-center justify-between mb-2">
                     <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       On this page
                     </span>
-                                        <button
-                                            onClick={() => setDesktopOpen(false)}
-                                            className="p-0.5 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-                                            aria-label="Hide table of contents"
-                                        >
-                                            <PanelRightClose size={14}/>
-                                        </button>
-                                    </div>
-                                    {progressBar}
-                                </div>
-                                <div ref={tocScrollRef}
-                                     className="overflow-y-auto overflow-x-hidden pr-2 toc-scrollbar">
-                                    {tocList}
-                                </div>
-                            </motion.div>
-                        ) : (
-                            <motion.button
-                                key="toc-toggle"
-                                initial={{opacity: 0, scale: 0.9}}
-                                animate={{opacity: 1, scale: 1}}
-                                exit={{opacity: 0, scale: 0.9}}
-                                transition={{duration: 0.2}}
-                                onClick={() => setDesktopOpen(true)}
-                                className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-background/95 backdrop-blur-sm shadow-sm border border-border hover:bg-accent text-muted-foreground hover:text-foreground transition-all"
-                                aria-label="Show table of contents"
-                            >
-                                <PanelRightOpen size={14}/>
-                                <span className="text-xs font-medium">TOC</span>
-                            </motion.button>
-                        )}
-                    </AnimatePresence>
+                                <button
+                                    onClick={() => setDesktopOpen(false)}
+                                    className="p-0.5 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+                                    aria-label="Hide table of contents"
+                                >
+                                    <PanelRightClose size={14}/>
+                                </button>
+                            </div>
+                            {progressBar}
+                        </div>
+                        <div ref={tocScrollRef}
+                             className="overflow-y-auto overflow-x-hidden pr-2 toc-scrollbar">
+                            {tocList}
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => setDesktopOpen(true)}
+                        className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-background/95 backdrop-blur-sm shadow-sm border border-border hover:bg-accent text-muted-foreground hover:text-foreground transition-opacity duration-200 ${!desktopOpen ? 'opacity-100' : 'opacity-0 pointer-events-none absolute'}`}
+                        aria-label="Show table of contents"
+                    >
+                        <PanelRightOpen size={14}/>
+                        <span className="text-xs font-medium">TOC</span>
+                    </button>
                 </div>
             )}
 
@@ -259,7 +243,7 @@ export function TableOfContents() {
                     <button
                         onClick={() => setIsOpen(!isOpen)}
                         className="fixed z-40 top-16 left-4 md:left-[272px] flex items-center gap-1.5 px-3 py-2 rounded-lg bg-background/95 backdrop-blur-sm shadow-md border border-border hover:bg-accent text-foreground/80 transition-all duration-200"
-                        aria-label="Table of Contents"
+                        aria-label={`Contents, ${activeIndex + 1} of ${tocItems.length} sections`}
                     >
                         <List size={16}/>
                         <span className="text-sm font-medium">Contents</span>
@@ -268,57 +252,46 @@ export function TableOfContents() {
             </span>
                     </button>
 
-                    <AnimatePresence>
-                        {isOpen && (
-                            <>
-                                <motion.div
-                                    initial={{opacity: 0}}
-                                    animate={{opacity: 1}}
-                                    exit={{opacity: 0}}
-                                    className="fixed inset-0 bg-black/40 z-30"
-                                    onClick={() => setIsOpen(false)}
-                                />
+                    {/* Backdrop */}
+                    <div
+                        className={`fixed inset-0 bg-black/40 z-30 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                        onClick={() => setIsOpen(false)}
+                    />
 
-                                <motion.div
-                                    initial={{opacity: 0, x: 260}}
-                                    animate={{opacity: 1, x: 0}}
-                                    exit={{opacity: 0, x: 260}}
-                                    transition={{type: "spring", damping: 28, stiffness: 320}}
-                                    className="fixed top-0 right-0 z-40 h-full w-72 bg-background border-l border-border shadow-2xl overflow-y-auto"
+                    {/* Slide panel */}
+                    <div
+                        className={`fixed top-0 right-0 z-40 h-full w-72 bg-background border-l border-border shadow-2xl overflow-y-auto transition-transform duration-300 ease-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                    >
+                        <div
+                            className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-border px-4 pt-4 pb-3 z-10">
+                            <div className="flex items-center justify-between mb-2">
+                                <h3 className="text-sm font-semibold">Table of Contents</h3>
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        setIsOpen(false)
+                                    }}
+                                    className="p-1 rounded-md hover:bg-accent transition-colors"
+                                    aria-label="Close"
                                 >
+                                    <X size={16}/>
+                                </button>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="flex-1 h-1 bg-muted rounded-full overflow-hidden">
                                     <div
-                                        className="sticky top-0 bg-background/95 backdrop-blur-sm border-b border-border px-4 pt-4 pb-3 z-10">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <h3 className="text-sm font-semibold">Table of Contents</h3>
-                                            <button
-                                                onClick={(e) => {
-                                                    e.preventDefault()
-                                                    e.stopPropagation()
-                                                    setIsOpen(false)
-                                                }}
-                                                className="p-1 rounded-md hover:bg-accent transition-colors"
-                                                aria-label="Close"
-                                            >
-                                                <X size={16}/>
-                                            </button>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="flex-1 h-1 bg-muted rounded-full overflow-hidden">
-                                                <div
-                                                    className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
-                                                    style={{width: `${readingProgress}%`}}
-                                                />
-                                            </div>
-                                            <span className="text-xs text-muted-foreground tabular-nums shrink-0">
+                                        className="h-full bg-primary rounded-full transition-all duration-500 ease-out"
+                                        style={{width: `${readingProgress}%`}}
+                                    />
+                                </div>
+                                <span className="text-xs text-muted-foreground tabular-nums shrink-0">
                         {Math.round(readingProgress)}%
                       </span>
-                                        </div>
-                                    </div>
-                                    <div className="px-4 py-3">{tocList}</div>
-                                </motion.div>
-                            </>
-                        )}
-                    </AnimatePresence>
+                            </div>
+                        </div>
+                        <div className="px-4 py-3">{tocList}</div>
+                    </div>
                 </>
             )}
         </>

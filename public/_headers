@@ -6,6 +6,9 @@
 /photography/*
   Cache-Control: public, max-age=2592000
 
+/article/*
+  Cache-Control: public, max-age=2592000
+
 # Cache favicon and manifest
 /favicon.png
   Cache-Control: public, max-age=2592000

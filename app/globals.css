@@ -162,6 +162,13 @@
     animation: gradient-shift 8s ease infinite;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .hero-gradient, .dark .hero-gradient {
+        animation: none;
+        background-position: 0% 50%;
+    }
+}
+
 @keyframes gradient-shift {
     0% {
         background-position: 0% 50%;
@@ -176,8 +183,8 @@
 
 @keyframes fade-in-up {
     from {
-        opacity: 0;
-        transform: translateY(20px);
+        opacity: 0.01;
+        transform: translateY(10px);
     }
     to {
         opacity: 1;
@@ -187,19 +194,17 @@
 
 @keyframes fade-in-up-sm {
     from {
-        opacity: 0;
-        transform: translateY(12px);
+        opacity: 0.01;
     }
     to {
         opacity: 1;
-        transform: translateY(0);
     }
 }
 
 @keyframes slide-in-left {
     from {
-        opacity: 0;
-        transform: translateX(-50px);
+        opacity: 0.01;
+        transform: translateX(-30px);
     }
     to {
         opacity: 1;
@@ -209,8 +214,8 @@
 
 @keyframes slide-in-right {
     from {
-        opacity: 0;
-        transform: translateX(50px);
+        opacity: 0.01;
+        transform: translateX(30px);
     }
     to {
         opacity: 1;
@@ -219,8 +224,7 @@
 }
 
 .animate-fade-in-up {
-    animation: fade-in-up 0.6s ease-out forwards;
-    opacity: 0;
+    animation: fade-in-up 0.4s ease-out forwards;
 }
 
 .animate-fade-in-up-sm {
@@ -228,47 +232,47 @@
 }
 
 .animate-slide-in-left {
-    animation: slide-in-left 0.5s ease-out forwards;
-    opacity: 0;
+    animation: slide-in-left 0.4s ease-out forwards;
 }
 
 .animate-slide-in-right {
-    animation: slide-in-right 0.5s ease-out forwards;
-    opacity: 0;
+    animation: slide-in-right 0.4s ease-out forwards;
 }
 
 .animation-delay-100 {
-    animation-delay: 0.1s;
+    animation-delay: 0.05s;
 }
 
 .animation-delay-200 {
-    animation-delay: 0.2s;
+    animation-delay: 0.1s;
 }
 
 .animation-delay-300 {
-    animation-delay: 0.3s;
+    animation-delay: 0.15s;
 }
 
 .animation-delay-400 {
-    animation-delay: 0.4s;
+    animation-delay: 0.2s;
 }
 
 .animation-delay-500 {
-    animation-delay: 0.5s;
+    animation-delay: 0.25s;
 }
 
 .animation-delay-600 {
-    animation-delay: 0.6s;
+    animation-delay: 0.3s;
 }
 
 .no-highlight {
-    outline: none !important;
-    box-shadow: none !important;
     -webkit-tap-highlight-color: transparent !important;
 }
 
-.no-highlight:focus,
-.no-highlight:focus-visible {
+.no-highlight:focus:not(:focus-visible) {
     outline: none !important;
     box-shadow: none !important;
+}
+
+/* Fix shiki material-theme comment color for WCAG AA contrast (4.5:1 on #263238) */
+pre code span[style*="color:#546E7A"] {
+    color: #90A4AE !important;
 }

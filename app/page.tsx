@@ -227,7 +227,7 @@ export default async function HomePage() {
                             </Link>
                         </div>
                         <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
-                            {latestArticles.map((article) => {
+                            {latestArticles.map((article, idx) => {
                                 const formattedDate = new Date(article.meta.date).toLocaleDateString("en-US", {
                                     year: "numeric",
                                     month: "short",
@@ -245,7 +245,8 @@ export default async function HomePage() {
                                                     src={article.meta.image}
                                                     alt={article.meta.title}
                                                     fill
-                                                    loading="lazy"
+                                                    priority={idx === 0}
+                                                    loading={idx === 0 ? "eager" : "lazy"}
                                                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                                                     sizes="(max-width: 1280px) 50vw, 25vw"
                                                 />

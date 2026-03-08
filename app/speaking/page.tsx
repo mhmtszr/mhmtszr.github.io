@@ -1,10 +1,10 @@
 "use client"
 
-import {Suspense, useState} from "react"
+import {useState} from "react"
 import {PhotoDetail} from "@/components/ui/photo-detail"
 import {Calendar, FileText} from "lucide-react"
 import Link from "next/link"
-import Image from "next/image"
+import {DeferredImage} from "@/components/ui/deferred-image"
 import {Timeline, TimelineItem} from "../../components/ui/timeline"
 import {YouTubeFacade} from "@/components/ui/youtube-facade"
 import {PageContainer} from "../components/page-container"
@@ -125,7 +125,7 @@ function SpeakingContent() {
     const getYear = (date: string) => date.split(" ").pop() || ""
 
     // Function to check if we should show the year marker
-    const shouldShowYear = (index: number, currentYear: string, prevYear?: string) => {
+    const shouldShowYear = (currentYear: string, prevYear?: string) => {
         return currentYear !== prevYear
     }
 
@@ -133,11 +133,12 @@ function SpeakingContent() {
         <PageContainer title="Public Speaking">
             {/* Filter buttons */}
             <div className="mb-8 overflow-x-auto pb-2">
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 flex-wrap" role="group" aria-label="Filter by year">
                     {filterOptions.map((option) => (
                         <button
                             key={option}
                             onClick={() => setFilter(option)}
+                            aria-pressed={filter === option}
                             className={`px-3 py-1.5 rounded-full text-sm font-sans whitespace-nowrap transition-colors duration-200 ${
                                 filter === option
                                     ? "bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-800"
@@ -154,7 +155,7 @@ function SpeakingContent() {
                 {filteredTalks.map((talk, index) => {
                     const currentYear = getYear(talk.date)
                     const prevYear = index < filteredTalks.length - 1 ? getYear(filteredTalks[index + 1].date) : undefined
-                    const showYear = shouldShowYear(index, currentYear, prevYear)
+                    const showYear = shouldShowYear(currentYear, prevYear)
 
                     return (
                         <TimelineItem
@@ -168,7 +169,7 @@ function SpeakingContent() {
                                         <YouTubeFacade url={talk.url} title={talk.title}/>
                                     </div>
                                     <div>
-                                        <h3 className="text-xl font-semibold">{talk.event}</h3>
+                                        <h2 className="text-xl font-semibold">{talk.event}</h2>
                                         <p className="text-gray-600 dark:text-gray-300 mt-1">{talk.title}</p>
                                         <div
                                             className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-2 font-sans text-sm">
@@ -198,11 +199,12 @@ function SpeakingContent() {
                                     title={talk.title}
                                     description={talk.description}
                                     trigger={
-                                        <div className="space-y-4 cursor-pointer">
+                                        <button type="button" className="space-y-4 cursor-pointer text-left w-full">
                                             <div className="w-full">
                                                 <div
                                                     className="relative aspect-video rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700">
-                                                    <Image
+                                                    <DeferredImage
+                                                        placeholderClassName="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded-xl"
                                                         src={talk.url || `/placeholder.svg?height=200&width=400&text=${encodeURIComponent(talk.title)}`}
                                                         alt={talk.title}
                                                         fill
@@ -214,7 +216,7 @@ function SpeakingContent() {
                                                 </div>
                                             </div>
                                             <div>
-                                                <h3 className="text-xl font-semibold">{talk.event}</h3>
+                                                <h2 className="text-xl font-semibold">{talk.event}</h2>
                                                 <p className="text-gray-600 dark:text-gray-300 mt-1">{talk.title}</p>
                                                 <div
                                                     className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mt-2">
@@ -235,7 +237,7 @@ function SpeakingContent() {
                                                     </Link>
                                                 )}
                                             </div>
-                                        </div>
+                                        </button>
                                     }
                                 >
                                     <></>
@@ -250,32 +252,5 @@ function SpeakingContent() {
 }
 
 export default function SpeakingPage() {
-    return (
-        <Suspense
-            fallback={
-                <div className="w-full py-12 pb-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-                    <div className="max-w-[1400px] w-full mx-auto">
-                        <div className="h-10 w-48 bg-gray-200 dark:bg-gray-800 animate-pulse rounded mb-8"/>
-                        <div className="space-y-8">
-                            {[...Array(3)].map((_, i) => (
-                                <div key={i}
-                                     className={`w-full md:w-[calc(50%-24px)] ${i % 2 === 0 ? 'md:mr-auto' : 'md:ml-auto'}`}>
-                                    <div
-                                        className="rounded-2xl border border-gray-100 dark:border-gray-800 p-6 space-y-4">
-                                        <div
-                                            className="aspect-video rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse"/>
-                                        <div className="h-5 w-3/4 bg-gray-200 dark:bg-gray-800 animate-pulse rounded"/>
-                                        <div className="h-4 w-1/2 bg-gray-100 dark:bg-gray-800 animate-pulse rounded"/>
-                                        <div className="h-3 w-full bg-gray-100 dark:bg-gray-800 animate-pulse rounded"/>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            }
-        >
-            <SpeakingContent/>
-        </Suspense>
-    )
+    return <SpeakingContent/>
 }

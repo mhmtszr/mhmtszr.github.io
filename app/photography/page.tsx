@@ -1,9 +1,9 @@
 "use client"
 
-import {Suspense, useCallback, useEffect, useMemo, useRef, useState} from "react"
-import {motion} from "framer-motion"
+import {useCallback, useEffect, useMemo, useRef, useState} from "react"
 import {PhotoDetail} from "@/components/ui/photo-detail"
 import Image from "next/image"
+import {DeferredImage} from "@/components/ui/deferred-image"
 import {PageContainer} from "../components/page-container"
 
 // Photography data with actual photos
@@ -537,7 +537,7 @@ const uniqueCountries = ["All", ...Array.from(
     new Set(photos.map(photo => photo.country))
 )]
 
-const BATCH_SIZE = 12;
+const BATCH_SIZE = 4;
 
 function PhotographyContent() {
     const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null)
@@ -546,6 +546,7 @@ function PhotographyContent() {
     const [isLoading, setIsLoading] = useState(false)
     const [isChangingCountry, setIsChangingCountry] = useState(false)
     const observerTarget = useRef<HTMLDivElement>(null)
+    const isInitialMount = useRef(true)
 
     // Filter photos based on selected country
     const filteredPhotos = useMemo(() =>
@@ -581,15 +582,15 @@ function PhotographyContent() {
         });
     }, [hasMorePhotos, isLoading, filteredPhotos.length]);
 
-    // Reset when filter changes
+    // Reset when filter changes (skip skeleton on initial mount for faster LCP)
     useEffect(() => {
         setDisplayCount(BATCH_SIZE);
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            return;
+        }
         setIsChangingCountry(true);
-
-        const timer = setTimeout(() => {
-            setIsChangingCountry(false);
-        }, 300);
-
+        const timer = setTimeout(() => setIsChangingCountry(false), 300);
         return () => clearTimeout(timer);
     }, [filter]);
 
@@ -683,11 +684,12 @@ function PhotographyContent() {
         <PageContainer title="Photography">
             {/* Filter buttons */}
             <div className="mb-8 overflow-x-auto pb-2">
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 flex-wrap" role="group" aria-label="Filter by country">
                     {uniqueCountries.map((country) => (
                         <button
                             key={country}
                             onClick={() => setFilter(country)}
+                            aria-pressed={filter === country}
                             className={`px-3 py-1.5 rounded-full text-sm font-sans whitespace-nowrap transition-colors duration-200 ${
                                 filter === country
                                     ? "bg-gray-800 text-white dark:bg-gray-200 dark:text-gray-800"
@@ -711,7 +713,7 @@ function PhotographyContent() {
                     </button>
                 </div>
             ) : isChangingCountry ? (
-                <div className="columns-1 sm:columns-2 lg:columns-3 [column-gap:1.5rem]">
+                <div role="status" aria-busy="true" aria-label="Loading photos" className="columns-1 sm:columns-2 lg:columns-3 [column-gap:1.5rem]">
                     {[...Array(9)].map((_, i) => (
                         <div key={i} className="mb-6 break-inside-avoid">
                             <div className={`rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse ${
@@ -719,6 +721,7 @@ function PhotographyContent() {
                             }`}/>
                         </div>
                     ))}
+                    <span className="sr-only">Loading photos...</span>
                 </div>
             ) : (
                 <>
@@ -747,24 +750,34 @@ function PhotographyContent() {
                                         />
                                     }
                                     trigger={
-                                        <motion.div
-                                            initial={{opacity: 0, scale: 0.9}}
-                                            animate={{opacity: 1, scale: 1}}
-                                            transition={{
-                                                duration: 0.3,
-                                                delay: Math.min((index % BATCH_SIZE) * 0.1, 0.5)
-                                            }}
-                                            className="relative group cursor-pointer overflow-hidden rounded-xl"
+                                        <button
+                                            type="button"
+                                            aria-label={`View photo: ${photo.title}`}
+                                            className="relative group cursor-pointer overflow-hidden rounded-xl animate-fade-in-up w-full text-left"
+                                            style={{animationDelay: `${Math.min((index % BATCH_SIZE) * 0.1, 0.5)}s`}}
                                         >
-                                            <Image
-                                                src={photo.url}
-                                                alt={photo.title || ""}
-                                                width={800}
-                                                height={600}
-                                                className="w-full h-auto transition-transform duration-500 group-hover:scale-110"
-                                                loading="lazy"
-                                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                            />
+                                            {index < 2 ? (
+                                                <Image
+                                                    src={photo.url}
+                                                    alt={photo.title || ""}
+                                                    width={800}
+                                                    height={600}
+                                                    priority={index === 0}
+                                                    className="w-full h-auto transition-transform duration-500 group-hover:scale-110"
+                                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                                />
+                                            ) : (
+                                                <DeferredImage
+                                                    src={photo.url}
+                                                    alt={photo.title || ""}
+                                                    width={800}
+                                                    height={600}
+                                                    className="w-full h-auto transition-transform duration-500 group-hover:scale-110"
+                                                    loading="lazy"
+                                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                                    placeholderClassName="w-full aspect-[4/3] bg-gray-200 dark:bg-gray-800 animate-pulse rounded-xl"
+                                                />
+                                            )}
                                             <div
                                                 className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-opacity duration-300"/>
                                             <div
@@ -772,7 +785,7 @@ function PhotographyContent() {
                                                 <p className="text-sm font-medium truncate font-sans">{photo.title}</p>
                                                 <p className="text-xs mt-1 truncate font-sans">{photo.city}, {photo.country}</p>
                                             </div>
-                                        </motion.div>
+                                        </button>
                                     }
                                 >
                                     {photo.title}
@@ -803,26 +816,5 @@ function PhotographyContent() {
 }
 
 export default function PhotographyPage() {
-    return (
-        <Suspense
-            fallback={
-                <div className="w-full py-12 pb-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
-                    <div className="max-w-[1400px] w-full mx-auto">
-                        <div className="h-10 w-48 bg-gray-200 dark:bg-gray-800 animate-pulse rounded mb-8"/>
-                        <div className="columns-1 sm:columns-2 lg:columns-3 [column-gap:1.5rem]">
-                            {[...Array(9)].map((_, i) => (
-                                <div key={i} className="mb-6 break-inside-avoid">
-                                    <div className={`rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse ${
-                                        i % 3 === 0 ? 'h-64' : i % 3 === 1 ? 'h-48' : 'h-56'
-                                    }`}/>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            }
-        >
-            <PhotographyContent/>
-        </Suspense>
-    )
+    return <PhotographyContent/>
 }

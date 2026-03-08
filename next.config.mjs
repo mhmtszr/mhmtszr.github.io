@@ -12,7 +12,7 @@ const nextConfig = {
     serverExternalPackages: ['shiki'],
     turbopack: {},
     experimental: {
-        optimizePackageImports: ['framer-motion', 'lucide-react'],
+        optimizePackageImports: ['lucide-react'],
     },
 }
 

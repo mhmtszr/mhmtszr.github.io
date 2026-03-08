@@ -8,7 +8,7 @@ interface PageContainerProps {
 export function PageContainer({children, title}: PageContainerProps) {
     return (
         <section
-            className="w-full py-12 pb-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 animate-fade-in-up-sm"
+            className="w-full py-12 pb-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16"
         >
             <div className="max-w-[1400px] w-full mx-auto">
                 {title && <h1 className="text-4xl font-bold font-serif mb-8">{title}</h1>}

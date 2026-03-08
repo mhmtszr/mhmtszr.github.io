@@ -1,5 +1,4 @@
 import {Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger} from "@/components/ui/dialog"
-import {AnimatePresence, motion} from "framer-motion"
 import React, {ReactNode, useCallback, useEffect, useRef, useState} from "react"
 import Image from "next/image"
 
@@ -43,24 +42,32 @@ export function PhotoDetail({
     const [currentImageUrl, setCurrentImageUrl] = useState(url)
     const [isTransitioning, setIsTransitioning] = useState(false)
     const imageRef = useRef<HTMLImageElement>(null)
+    const touchStartRef = useRef<{x: number, y: number} | null>(null)
 
-    const handleDragEnd = useCallback((e: any, info: any) => {
+    const handleTouchStart = useCallback((e: React.TouchEvent) => {
         if (!isMobile) return
+        const touch = e.touches[0]
+        touchStartRef.current = {x: touch.clientX, y: touch.clientY}
+    }, [isMobile])
+
+    const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+        if (!isMobile || !touchStartRef.current) return
+        const touch = e.changedTouches[0]
+        const dx = touch.clientX - touchStartRef.current.x
+        const dy = touch.clientY - touchStartRef.current.y
+        touchStartRef.current = null
 
         const SWIPE_THRESHOLD = 50
-        const offset = info.offset.x
-        const offsetY = info.offset.y
 
-        // Handle vertical pull to close
-        if (offsetY > SWIPE_THRESHOLD) {
+        if (dy > SWIPE_THRESHOLD && Math.abs(dy) > Math.abs(dx)) {
             onOpenChange(false)
             return
         }
 
-        if (offset > SWIPE_THRESHOLD && onPrevious) {
-            onPrevious(e)
-        } else if (offset < -SWIPE_THRESHOLD && onNext) {
-            onNext(e)
+        if (dx > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) && onPrevious) {
+            onPrevious(e as unknown as React.MouseEvent)
+        } else if (dx < -SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) && onNext) {
+            onNext(e as unknown as React.MouseEvent)
         }
     }, [isMobile, onNext, onPrevious, onOpenChange])
 
@@ -156,47 +163,35 @@ export function PhotoDetail({
                 )}
 
                 {type === "image" ? (
-                    <motion.div
+                    <div
                         onClick={(e) => e.stopPropagation()}
-                        drag={isMobile ? true : false}
-                        dragConstraints={{left: 0, right: 0, top: 0, bottom: 0}}
-                        dragElastic={0.2}
-                        onDragEnd={handleDragEnd}
-                        dragMomentum={false}
+                        onTouchStart={handleTouchStart}
+                        onTouchEnd={handleTouchEnd}
                         className="relative w-full h-full flex items-center justify-center"
                     >
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={currentImageUrl}
-                                initial={{opacity: 0}}
-                                animate={{opacity: 1}}
-                                exit={{opacity: 0}}
-                                transition={{duration: 0.2}}
-                                className="relative flex items-center justify-center"
-                            >
-                                <div className="relative w-auto h-auto">
-                                    {(isImageLoading || isTransitioning) && (
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <div
-                                                className="animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-gray-800 dark:border-gray-800 dark:border-t-gray-200"/>
-                                        </div>
-                                    )}
-                                    <Image
-                                        ref={imageRef}
-                                        key={currentImageUrl}
-                                        src={currentImageUrl}
-                                        alt={title}
-                                        width={1920}
-                                        height={1080}
-                                        className={`w-auto h-auto max-w-[95vw] max-h-[95vh] object-contain transition-opacity duration-300 ${(isImageLoading || isTransitioning) ? 'opacity-0' : 'opacity-100'}`}
-                                        priority
-                                        onLoad={handleImageLoad}
-                                        loading="eager"
-                                    />
-                                </div>
-                            </motion.div>
-                        </AnimatePresence>
-                    </motion.div>
+                        <div className="relative flex items-center justify-center">
+                            <div className="relative w-auto h-auto">
+                                {(isImageLoading || isTransitioning) && (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div
+                                            className="animate-spin rounded-full h-8 w-8 border-2 border-gray-200 border-t-gray-800 dark:border-gray-800 dark:border-t-gray-200"/>
+                                    </div>
+                                )}
+                                <Image
+                                    ref={imageRef}
+                                    key={currentImageUrl}
+                                    src={currentImageUrl}
+                                    alt={title}
+                                    width={1920}
+                                    height={1080}
+                                    className={`w-auto h-auto max-w-[95vw] max-h-[95vh] object-contain transition-opacity duration-300 ${(isImageLoading || isTransitioning) ? 'opacity-0' : 'opacity-100'}`}
+                                    priority
+                                    onLoad={handleImageLoad}
+                                    loading="eager"
+                                />
+                            </div>
+                        </div>
+                    </div>
                 ) : (
                     <div className="w-full aspect-video rounded-lg overflow-hidden">
                         <iframe
@@ -211,4 +206,4 @@ export function PhotoDetail({
             </DialogContent>
         </Dialog>
     )
-} 
+}

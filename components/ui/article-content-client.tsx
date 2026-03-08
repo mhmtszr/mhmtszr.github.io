@@ -1,14 +1,16 @@
 "use client"
 
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import {Badge} from '@/components/ui/badge'
 import {Calendar} from 'lucide-react'
-import Image from 'next/image'
 import {CodeCopyWrapper} from './code-copy-wrapper'
 import {ScrollToHash} from '@/components/ui/ScrollToHash'
-import {ArticleImageEnhancer} from './article-image-enhancer'
-import {TableOfContents} from '@/components/ui/table-of-contents'
 import {HeaderLinks} from '@/components/ui/header-link'
 import {generateArticleSchema} from '@/lib/schema'
+
+const TableOfContents = dynamic(() => import('@/components/ui/table-of-contents').then(m => ({default: m.TableOfContents})), {ssr: false})
+const ArticleImageEnhancer = dynamic(() => import('./article-image-enhancer').then(m => ({default: m.ArticleImageEnhancer})), {ssr: false})
 
 interface ArticleContentProps {
     article: {
@@ -39,7 +41,7 @@ export function ArticleContentClient({article}: ArticleContentProps) {
                 <header className="mb-10">
                     {article.meta.image && (
                         <div className="relative w-full flex items-center justify-center mb-8">
-                            <div className="cursor-pointer" data-image-key="hero-image">
+                            <div className="cursor-pointer w-full" data-image-key="hero-image">
                                 <Image
                                     src={article.meta.image}
                                     alt={article.meta.title || "Article featured image"}
@@ -47,7 +49,6 @@ export function ArticleContentClient({article}: ArticleContentProps) {
                                     height={630}
                                     className="w-full max-h-[400px] md:max-h-[500px] object-contain rounded-lg"
                                     priority
-                                    loading="eager"
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                                 />
                             </div>
@@ -66,7 +67,7 @@ export function ArticleContentClient({article}: ArticleContentProps) {
                             day: 'numeric'
                         })}</time>
                         {article.meta.readingTime && (
-                            <span className="inline-flex items-center gap-1.5 ml-2 text-gray-400 dark:text-gray-500">
+                            <span className="inline-flex items-center gap-1.5 ml-2 text-gray-500 dark:text-gray-400">
                 <span aria-hidden="true">·</span>
                 <span>{article.meta.readingTime}</span>
               </span>

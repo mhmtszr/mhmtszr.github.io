@@ -29,7 +29,7 @@ export function YouTubeFacade({url, title}: YouTubeFacadeProps) {
 
     if (!videoId) return null
 
-    const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`
+    const thumbnailUrl = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
     const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0${startTime ? `&start=${startTime}` : ''}`
     const mobileUrl = `vnd.youtube://${videoId}${startTime ? `?t=${startTime}` : ''}`
     const webUrl = `https://www.youtube.com/watch?v=${videoId}${startTime ? `&t=${startTime}` : ''}`

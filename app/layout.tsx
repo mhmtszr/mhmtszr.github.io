@@ -115,6 +115,7 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
         <head>
+            <link rel="preload" href="/photography/profile.jpg" as="image"/>
             <link rel="manifest" href="/site.webmanifest"/>
             <meta name="google-site-verification" content="BJMSpiC_fy4HW6D8l2wxY75vzp2FTfAy4PC3vwb6NnU"/>
             <link rel="sitemap" type="application/xml" href="/sitemap.xml"/>

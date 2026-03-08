@@ -1,6 +1,7 @@
 import {Badge} from "@/components/ui/badge"
 import {Calendar, ExternalLink} from "lucide-react"
 import Image from "next/image"
+import {DeferredImage} from "@/components/ui/deferred-image"
 import Link from "next/link"
 
 interface ArticleCardProps {
@@ -13,6 +14,32 @@ interface ArticleCardProps {
     source: "medium" | "website"
     isListView?: boolean
     index?: number
+}
+
+function ArticleImage({src, alt, index}: {src: string; alt: string; index: number}) {
+    if (index < 3) {
+        return (
+            <Image
+                src={src}
+                alt={alt}
+                fill
+                priority={index === 0}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+        )
+    }
+    return (
+        <DeferredImage
+            src={src}
+            alt={alt}
+            fill
+            loading="lazy"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            placeholderClassName="absolute inset-0 bg-gray-200 dark:bg-gray-800 animate-pulse"
+        />
+    )
 }
 
 export function ArticleCard({
@@ -41,14 +68,7 @@ export function ArticleCard({
                 className="overflow-hidden rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm transition-all hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 h-full">
                 <Link href={url} target={source === "medium" ? "_blank" : undefined} className="group flex h-full">
                     <div className="relative w-60 shrink-0 bg-gray-100 dark:bg-gray-800">
-                        <Image
-                            src={imageUrl}
-                            alt={title}
-                            fill
-                            loading="lazy"
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            sizes="(max-width: 768px) 100vw, 33vw"
-                        />
+                        <ArticleImage src={imageUrl} alt={title} index={index} />
                     </div>
                     <div className="flex flex-col grow p-4">
                         <div className="flex flex-col h-full">
@@ -90,14 +110,7 @@ export function ArticleCard({
             className="overflow-hidden rounded-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shadow-sm transition-all hover:shadow-md hover:border-gray-300 dark:hover:border-gray-600 h-full">
             <Link href={url} target={source === "medium" ? "_blank" : undefined} className="group flex flex-col h-full">
                 <div className="relative h-52 shrink-0 bg-gray-100 dark:bg-gray-800">
-                    <Image
-                        src={imageUrl}
-                        alt={title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        loading="lazy"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                    />
+                    <ArticleImage src={imageUrl} alt={title} index={index} />
                 </div>
                 <div className="flex flex-col grow p-3">
                     <div className="flex flex-col h-full">

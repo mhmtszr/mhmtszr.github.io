@@ -1,7 +1,7 @@
 "use client"
 
-import {useEffect, useState} from "react"
-import {Dialog, DialogContent, DialogTitle} from "@/components/ui/dialog"
+import {useEffect, useRef, useState} from "react"
+import {Dialog, DialogContent, DialogDescription, DialogTitle} from "@/components/ui/dialog"
 import Image from "next/image"
 
 export function ArticleImageEnhancer() {
@@ -10,6 +10,7 @@ export function ArticleImageEnhancer() {
     }>({})
     const [selectedKey, setSelectedKey] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(true)
+    const listenersRef = useRef<{ element: HTMLElement, handler: (e: Event) => void }[]>([])
 
     // Function to enhance images with alt text
     const enhanceImagesWithAltText = () => {
@@ -79,6 +80,8 @@ export function ArticleImageEnhancer() {
         // Process each image and store its details
         const mappings: { [key: string]: { src: string, alt: string, element: HTMLElement } } = {}
 
+        const listeners: { element: HTMLElement, handler: (e: Event) => void }[] = []
+
         // Process hero image if it exists
         if (heroImage) {
             const src = heroImage.getAttribute("src") || ""
@@ -97,12 +100,14 @@ export function ArticleImageEnhancer() {
                     // Remove outline and highlight
                     heroWrapper.classList.add('no-highlight')
 
-                    heroWrapper.addEventListener("click", (e) => {
+                    const handler = (e: Event) => {
                         e.preventDefault()
                         e.stopPropagation()
                         setSelectedKey("hero-image")
                         setIsLoading(true)
-                    })
+                    }
+                    heroWrapper.addEventListener("click", handler)
+                    listeners.push({ element: heroWrapper, handler })
                 }
             }
         }
@@ -125,32 +130,29 @@ export function ArticleImageEnhancer() {
                 img.setAttribute("data-image-key", key)
 
                 // Add click event listener
-                img.addEventListener("click", (e) => {
+                const handler = (e: Event) => {
                     e.preventDefault()
                     e.stopPropagation()
                     setSelectedKey(key)
                     setIsLoading(true)
-                })
+                }
+                img.addEventListener("click", handler)
+                listeners.push({ element: img as HTMLElement, handler })
             })
         }
 
         // Run the alt text enhancer
         enhanceImagesWithAltText();
 
+        listenersRef.current = listeners
         setImageMappings(mappings)
 
         // Clean up event listeners on unmount
         return () => {
-            const heroWrapper = document.querySelector('[data-image-key="hero-image"]') as HTMLElement
-            if (heroWrapper) {
-                heroWrapper.removeEventListener("click", () => {
-                })
-            }
-
-            Object.values(mappings).forEach(({element}) => {
-                element.removeEventListener("click", () => {
-                })
+            listenersRef.current.forEach(({ element, handler }) => {
+                element.removeEventListener("click", handler)
             })
+            listenersRef.current = []
 
             // Remove the style element when component is unmounted
             document.head.removeChild(style)
@@ -169,6 +171,9 @@ export function ArticleImageEnhancer() {
                     <DialogTitle className="sr-only">
                         {imageMappings[selectedKey].alt}
                     </DialogTitle>
+                    <DialogDescription className="sr-only">
+                        Full size view of {imageMappings[selectedKey].alt}
+                    </DialogDescription>
 
                     <div className="relative w-full h-full flex items-center justify-center">
                         <div className="relative w-auto h-auto">

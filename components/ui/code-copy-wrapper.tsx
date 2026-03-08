@@ -13,7 +13,6 @@ export function CodeCopyWrapper({children}: CodeCopyWrapperProps) {
         if (!contentRef.current) return
 
         const preElements = contentRef.current.querySelectorAll('pre')
-
         preElements.forEach((pre) => {
             const codeElement = pre.querySelector('code')
             const codeText = codeElement?.innerText ?? pre.innerText
@@ -26,6 +25,7 @@ export function CodeCopyWrapper({children}: CodeCopyWrapperProps) {
 
             // Create the button
             const button = document.createElement('button')
+            button.setAttribute('aria-label', 'Copy code')
             button.className =
                 'absolute top-2 right-2 z-10 p-1.5 rounded-md bg-background/80 text-muted-foreground backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 md:opacity-0 md:group-hover:opacity-100' // Initial state for desktop: hidden until hover
 
