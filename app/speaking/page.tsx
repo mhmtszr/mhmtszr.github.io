@@ -208,8 +208,7 @@ function SpeakingContent() {
                                                         fill
                                                         className="object-cover"
                                                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                                        priority={index === 0}
-                                                        loading={index === 0 ? undefined : "lazy"}
+                                                        loading="lazy"
                                                         quality={90}
                                                     />
                                                 </div>

@@ -3,7 +3,7 @@ title: "Designing Resilient Database Platform with Temporal"
 description: "How we designed a resilient database platform at Trendyol using Temporal for workflow orchestration, handling long-running operations and multi-region deployments."
 metaDescription: "Learn how Trendyol designed a resilient database platform using Temporal workflow orchestration. Covers long-running operations, multi-region deployments, and platform engineering best practices."
 date: "2025-07-29"
-image: "/article/designing-resilient-database-platform-with-temporal/preview.png"
+image: "/article/designing-resilient-database-platform-with-temporal/preview.webp"
 tags: ["Temporal", "Database", "Workflow Orchestration", "Apache Kafka", "Platform Engineering", "Distributed Systems"]
 keywords: ["temporal workflow", "database platform design", "workflow orchestration", "platform engineering", "resilient systems", "trendyol database platform", "long-running operations", "multi-region deployment"]
 ---

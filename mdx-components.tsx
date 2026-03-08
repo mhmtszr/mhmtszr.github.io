@@ -31,14 +31,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         ),
         img: ({src, alt}) => (
             <div className="my-6">
-                <Image src={src || ""} alt={alt || ""} width={800} height={500} className="rounded-lg mx-auto"/>
+                <Image src={src || ""} alt={alt || ""} width={800} height={500} loading="lazy" className="rounded-lg mx-auto"/>
             </div>
         ),
         code: ({children}) => (
             <code className="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono">{children}</code>
         ),
         pre: ({children}) => (
-            <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg overflow-x-auto my-6 text-sm">{children}</pre>
+            <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg my-6 text-sm whitespace-pre-wrap break-words">{children}</pre>
         ),
         table: ({children}) => (
             <div className="overflow-x-auto my-6">
@@ -70,7 +70,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
                 <div className="flex items-center justify-between bg-gray-200 dark:bg-gray-800 px-4 py-2 rounded-t-lg">
                     <span className="text-sm font-mono text-gray-600 dark:text-gray-400">{language}</span>
                 </div>
-                <pre className="bg-gray-100 dark:bg-gray-900 p-4 rounded-b-lg overflow-x-auto text-sm">
+                <pre className="bg-gray-100 dark:bg-gray-900 p-4 rounded-b-lg text-sm whitespace-pre-wrap break-words">
           <code>{children}</code>
         </pre>
             </div>

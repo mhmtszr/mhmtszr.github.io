@@ -116,7 +116,7 @@ export default async function HomePage() {
                                         <Briefcase className="h-5 w-5 text-blue-600 dark:text-blue-400"/>
                                     </div>
                                     <div className="relative min-w-0 flex-1 font-sans">
-                                        <h3 className="font-medium">Experience</h3>
+                                        <p className="font-medium">Experience</p>
                                         <p className="text-xs text-gray-500 dark:text-gray-400">Career path & impact</p>
                                     </div>
                                     <ArrowRight
@@ -131,7 +131,7 @@ export default async function HomePage() {
                                         <Code className="h-5 w-5 text-emerald-600 dark:text-emerald-400"/>
                                     </div>
                                     <div className="relative min-w-0 flex-1 font-sans">
-                                        <h3 className="font-medium">Projects</h3>
+                                        <p className="font-medium">Projects</p>
                                         <p className="text-xs text-gray-500 dark:text-gray-400">Open source work</p>
                                     </div>
                                     <ArrowRight
@@ -146,7 +146,7 @@ export default async function HomePage() {
                                         <Presentation className="h-5 w-5 text-amber-600 dark:text-amber-400"/>
                                     </div>
                                     <div className="relative min-w-0 flex-1 font-sans">
-                                        <h3 className="font-medium">Speaking</h3>
+                                        <p className="font-medium">Speaking</p>
                                         <p className="text-xs text-gray-500 dark:text-gray-400">Talks & sessions</p>
                                     </div>
                                     <ArrowRight
@@ -161,7 +161,7 @@ export default async function HomePage() {
                                         <Camera className="h-5 w-5 text-rose-600 dark:text-rose-400"/>
                                     </div>
                                     <div className="relative min-w-0 flex-1 font-sans">
-                                        <h3 className="font-medium">Photography</h3>
+                                        <p className="font-medium">Photography</p>
                                         <p className="text-xs text-gray-500 dark:text-gray-400">Travel & street</p>
                                     </div>
                                     <ArrowRight
@@ -177,7 +177,7 @@ export default async function HomePage() {
                                     <span className="h-3 w-3 rounded-full bg-red-500/80"/>
                                     <span className="h-3 w-3 rounded-full bg-yellow-500/80"/>
                                     <span className="h-3 w-3 rounded-full bg-green-500/80"/>
-                                    <span className="ml-2 text-xs text-gray-500">~/about.json</span>
+                                    <span className="ml-2 text-xs text-gray-400">~/about.json</span>
                                 </div>
                                 <div className="px-4 py-4 font-mono text-[13px] leading-[21px] text-gray-300">
                                     <p><span className="text-green-400">$</span> whoami</p>
@@ -245,6 +245,7 @@ export default async function HomePage() {
                                                     src={article.meta.image}
                                                     alt={article.meta.title}
                                                     fill
+                                                    loading="lazy"
                                                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                                                     sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 25vw"
                                                 />
@@ -254,7 +255,7 @@ export default async function HomePage() {
                                                 className="h-28 w-full bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 lg:h-32"/>
                                         )}
                                         <div className="space-y-1.5 p-3">
-                                            <p className="text-xs text-gray-400 dark:text-gray-500 font-sans">{formattedDate}</p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 font-sans">{formattedDate}</p>
                                             <h3 className="line-clamp-2 text-sm font-medium leading-snug transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">
                                                 {article.meta.title}
                                             </h3>

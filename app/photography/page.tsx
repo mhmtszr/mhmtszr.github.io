@@ -742,7 +742,7 @@ function PhotographyContent() {
                                             width={800}
                                             height={800}
                                             className="h-full w-auto object-contain transform-gpu"
-                                            priority={index < 4}
+                                            loading="lazy"
                                             sizes="100vw"
                                         />
                                     }
@@ -762,8 +762,7 @@ function PhotographyContent() {
                                                 width={800}
                                                 height={600}
                                                 className="w-full h-auto transition-transform duration-500 group-hover:scale-110"
-                                                priority={index < 8}
-                                                loading={index >= 8 ? "lazy" : "eager"}
+                                                loading="lazy"
                                                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                             />
                                             <div

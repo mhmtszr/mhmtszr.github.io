@@ -3,7 +3,7 @@ title: "Database Architecture Explained: From Storage Engines to Distributed Sys
 description: "A deep dive into modern database systems: architecture, storage engines, indexing, transaction processing, and distributed design. Learn B-Trees, LSM Trees, replication, and more."
 metaDescription: "Comprehensive guide to database architecture: storage engines (B-Tree, LSM Tree), indexing, ACID transactions, MVCC, replication, partitioning, sharding, and distributed system design patterns."
 date: "2025-05-15"
-image: "/article/database-architecture-storage-engines-distributed-systems/preview.png"
+image: "/article/database-architecture-storage-engines-distributed-systems/preview.webp"
 tags: ["Database Architecture", "Database Design", "Storage Engines", "B-Tree", "LSM Tree", "Transaction Processing", "Distributed Databases", "Replication", "Partitioning", "Sharding", "Consistency Models", "Database Indexing", "Full-Text Search", "Column Store", "NoSQL", "SQL", "ACID", "MVCC", "WAL", "Isolation Levels", "Consistent Hashing"]
 keywords: ["database architecture", "storage engines explained", "b-tree vs lsm tree", "database indexing", "distributed databases", "database replication", "database sharding", "ACID transactions", "MVCC concurrency control", "database partitioning", "consistent hashing", "database design patterns"]
 ---

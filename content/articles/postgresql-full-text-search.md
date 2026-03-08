@@ -3,7 +3,7 @@ title: "PostgreSQL Full Text Search: Why We Replaced Elasticsearch"
 description: "How we moved from Couchbase N1QL through CDC-to-Elasticsearch to native PostgreSQL Full Text Search. A journey of simplification, consistency, and the right tool for the job."
 metaDescription: "We replaced Elasticsearch with PostgreSQL Full Text Search. Learn why we chose native FTS over CDC pipelines and a practical PostgreSQL FTS tutorial."
 date: "2026-02-22"
-image: "/article/postgresql-full-text-search/preview.png"
+image: "/article/postgresql-full-text-search/preview.webp"
 tags: [ "PostgreSQL", "Full Text Search", "Elasticsearch", "Couchbase", "CDC", "GIN Index", "tsvector" ]
 keywords: [ "PostgreSQL full text search", "PostgreSQL vs Elasticsearch", "tsvector tsquery", "GIN index", "Couchbase to PostgreSQL migration", "CDC elasticsearch", "search without elasticsearch" ]
 ---
@@ -72,7 +72,7 @@ not a bit naive:
 
 ```sql
 SELECT * FROM products
-WHERE description LIKE '%keyboard%';
+WHERE overview LIKE '%keyboard%';
 ```
 
 We would sprinkle in some wildcards, maybe throw in a case-insensitive `ILIKE` operator, and call it a day. When
@@ -80,7 +80,7 @@ requirements got more specific, we'd reach for regular expressions, feeling quit
 
 ```sql
 SELECT * FROM products
-WHERE description ~* '\\ykeyboard\\y';
+WHERE overview ~* '\\ykeyboard\\y';
 ```
 
 This approach worked fine for small projects and simple search requirements. However, reality hit hard when we
@@ -172,7 +172,7 @@ ORDER BY rank DESC;
 Use `setweight` to give different columns different importance (A highest, D lowest):
 
 ```sql
-SELECT setweight(to_tsvector(title), 'A') || setweight(to_tsvector(description), 'B')
+SELECT setweight(to_tsvector(title), 'A') || setweight(to_tsvector(overview), 'B')
 FROM searchable_docs;
 ```
 
@@ -187,7 +187,7 @@ ALTER TABLE searchable_docs
 ADD COLUMN title_search tsvector
 GENERATED ALWAYS AS (
     setweight(to_tsvector('simple', coalesce(title, '')), 'A') ||
-    setweight(to_tsvector('simple', coalesce(description, '')), 'B') ||
+    setweight(to_tsvector('simple', coalesce(overview, '')), 'B') ||
     setweight(to_tsvector('simple', coalesce(tags, '')), 'C')
 ) STORED;
 ```
@@ -308,7 +308,7 @@ Use `ts_headline` to return a snippet of matching content with search terms wrap
 
 ```sql
 SELECT title,
-  ts_headline('english', description, websearch_to_tsquery('postgresql'),
+  ts_headline('english', overview, websearch_to_tsquery('postgresql'),
     'StartSel=<mark>, StopSel=</mark>, MaxFragments=1, MaxWords=50, MinWords=20') AS snippet
 FROM searchable_docs
 WHERE title_search @@ websearch_to_tsquery('postgresql')
@@ -334,11 +334,11 @@ CREATE EXTENSION IF NOT EXISTS unaccent;  -- Removes diacritics: 'café' matches
 CREATE TABLE products (
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL,
-    description TEXT,
+    overview TEXT,
     tags TEXT,
     search_vector tsvector GENERATED ALWAYS AS (
         setweight(to_tsvector('simple', coalesce(title, '')), 'A') ||
-        setweight(to_tsvector('simple', coalesce(description, '')), 'B') ||
+        setweight(to_tsvector('simple', coalesce(overview, '')), 'B') ||
         setweight(to_tsvector('simple', coalesce(tags, '')), 'C')
     ) STORED
 );

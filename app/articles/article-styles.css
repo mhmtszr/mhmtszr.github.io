@@ -1,3 +1,6 @@
+@reference "tailwindcss";
+@config "../../tailwind.config.ts";
+
 /* ── Prose base heading styles ── */
 .prose h2 {
     @apply border-b pb-2 mb-4 text-2xl font-bold tracking-tight;
