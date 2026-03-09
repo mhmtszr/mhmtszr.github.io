@@ -32,9 +32,9 @@ export function TimelineItem({isLeft, children, className, year}: TimelineItemPr
                     "before:block before:absolute before:top-1/2 before:-translate-y-1/2 before:w-6 before:h-[2px] before:bg-gray-200 dark:before:bg-gray-700",
                     "before:left-[-24px]",
                     isLeft ? "md:before:right-[-24px] md:before:left-auto" : "md:before:left-[-24px]",
-                    "after:absolute after:top-1/2 after:-translate-y-1/2 after:w-3 after:h-3 after:rounded-full after:bg-gray-300 dark:after:bg-gray-600",
-                    "after:left-[-32px] md:after:left-auto",
-                    isLeft ? "md:after:right-[-28px]" : "md:after:left-[-28px]",
+                    "after:absolute after:top-1/2 after:-translate-y-1/2 after:w-3 after:h-3 after:rounded-full after:bg-gray-300 dark:after:bg-gray-600 after:z-[1]",
+                    "after:left-[-26px] md:after:left-auto",
+                    isLeft ? "md:after:right-[-30px]" : "md:after:left-[-30px]",
                     isLeft ? "animate-slide-in-left md:animate-slide-in-left" : "animate-slide-in-left md:animate-slide-in-right",
                 )}
             >
