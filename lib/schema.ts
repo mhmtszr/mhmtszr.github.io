@@ -26,6 +26,7 @@ export function generatePersonSchema() {
         name: 'Mehmet Sezer',
         jobTitle: 'Senior Software Engineer',
         url: 'https://msezer.dev',
+        image: 'https://msezer.dev/photography/profile.jpg',
         alumniOf: {
             '@type': 'CollegeOrUniversity',
             name: 'Hacettepe University',
@@ -89,6 +90,51 @@ export function generateArticleSchema(article: ArticleWithSlug) {
         inLanguage: 'en-US',
         isAccessibleForFree: true,
         wordCount: article.meta.readingTime ? parseInt(article.meta.readingTime) * 200 : 800
+    };
+}
+
+// ItemList schema for article listings
+export function generateItemListSchema(articles: Array<{ title: string; url: string; image?: string }>) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        itemListElement: articles.map((article, index) => ({
+            '@type': 'ListItem',
+            position: index + 1,
+            name: article.title,
+            url: article.url.startsWith('http') ? article.url : `https://msezer.dev${article.url}`,
+        }))
+    };
+}
+
+// ProfilePage schema for the experience page
+export function generateProfilePageSchema() {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'ProfilePage',
+        mainEntity: {
+            '@type': 'Person',
+            name: 'Mehmet Sezer',
+            jobTitle: 'Senior Software Engineer',
+            url: 'https://msezer.dev',
+            image: 'https://msezer.dev/photography/profile.jpg',
+            worksFor: {
+                '@type': 'Organization',
+                name: 'Trendyol',
+                url: 'https://trendyol.com'
+            },
+            alumniOf: {
+                '@type': 'CollegeOrUniversity',
+                name: 'Hacettepe University',
+                department: 'Computer Science'
+            },
+            sameAs: [
+                'https://github.com/mhmtszr',
+                'https://linkedin.com/in/mehmetsezerr',
+                'https://x.com/_mehmetsezer',
+                'https://medium.com/@mehmet.sezer'
+            ]
+        }
     };
 }
 

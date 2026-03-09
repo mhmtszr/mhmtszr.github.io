@@ -1,5 +1,5 @@
 import type React from "react"
-import type {Viewport} from "next"
+import type {Metadata, Viewport} from "next"
 import './globals.css'
 import {Lora, Plus_Jakarta_Sans} from "next/font/google"
 import Sidebar from "@/components/sidebar"
@@ -28,7 +28,7 @@ export const viewport: Viewport = {
     ],
 }
 
-export const metadata = {
+export const metadata: Metadata = {
     title: {
         default: "Mehmet Sezer - Senior Software Engineer",
         template: "%s | Mehmet Sezer"
@@ -62,7 +62,8 @@ export const metadata = {
         canonical: '/',
     },
     icons: {
-        icon: 'https://msezer.dev/favicon.png'
+        icon: 'https://msezer.dev/favicon.png',
+        apple: 'https://msezer.dev/favicon.png',
     },
     openGraph: {
         title: 'Mehmet Sezer - Senior Software Engineer',
@@ -119,7 +120,7 @@ export default function RootLayout({
             <link rel="alternate" type="application/rss+xml" title="Mehmet Sezer's Blog"
                   href="https://msezer.dev/rss.xml"/>
         </head>
-        <body className={`${plusJakarta.variable} ${lora.variable} ${plusJakarta.className}`}>
+        <body className={`${plusJakarta.variable} ${lora.variable} ${plusJakarta.className}`} suppressHydrationWarning>
         <a href="#main-content"
            className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-white focus:text-black dark:focus:bg-gray-900 dark:focus:text-white">
             Skip to content

@@ -1,5 +1,5 @@
 import {Metadata} from 'next'
-import {generateBreadcrumbSchema} from '@/lib/schema'
+import {generateBreadcrumbSchema, generateProfilePageSchema} from '@/lib/schema'
 
 export const metadata: Metadata = {
     title: 'Professional Experience',
@@ -32,6 +32,7 @@ export default function ExperienceLayout({children}: { children: React.ReactNode
         {label: 'Home', href: 'https://msezer.dev'},
         {label: 'Experience', href: 'https://msezer.dev/experience'},
     ])
+    const profileSchema = generateProfilePageSchema()
 
     return (
         <>
@@ -39,6 +40,10 @@ export default function ExperienceLayout({children}: { children: React.ReactNode
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{__html: JSON.stringify(breadcrumbSchema)}}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{__html: JSON.stringify(profileSchema)}}
             />
         </>
     )

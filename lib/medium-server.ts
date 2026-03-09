@@ -2,36 +2,41 @@ import type {MediumArticle} from './medium'
 
 const MEDIUM_RSS_URL = 'https://medium.com/@mehmet.sezer/feed'
 
+function getTextContent(parent: string, tag: string): string {
+    const match = parent.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`))
+    return match ? match[1].replace(/<!\[CDATA\[([\s\S]*?)]]>/g, '$1').trim() : ''
+}
+
 export async function getMediumArticlesServer(): Promise<MediumArticle[]> {
     try {
-        const Parser = (await import('rss-parser')).default
-        const parser = new Parser({
-            customFields: {
-                item: [
-                    ['content:encoded', 'content'],
-                    ['dc:creator', 'creator'],
-                    ['category', 'categories']
-                ],
-            },
-        })
+        const res = await fetch(MEDIUM_RSS_URL)
+        if (!res.ok) return []
 
-        const feed = await parser.parseURL(MEDIUM_RSS_URL)
+        const xml = await res.text()
+        const items = xml.match(/<item>([\s\S]*?)<\/item>/g)
 
-        if (!feed.items?.length) {
-            return []
-        }
+        if (!items?.length) return []
 
-        return feed.items.map((item: any) => {
-            const imageMatch = item.content?.match(/<img[^>]+src="([^">]+)"/)
+        return items.map((item) => {
+            const contentEncoded = getTextContent(item, 'content:encoded')
+            const imageMatch = contentEncoded.match(/<img[^>]+src="([^">]+)"/)
             const imageUrl = imageMatch ? imageMatch[1] : '/images/placeholder-article.jpg'
 
+            const description = getTextContent(item, 'description')
+                .replace(/<[^>]+>/g, '')
+                .slice(0, 200)
+
+            const categories = [...item.matchAll(/<category><!\[CDATA\[(.*?)]]><\/category>/g)]
+                .map(m => m[1])
+                .slice(0, 3)
+
             return {
-                title: item.title || '',
-                description: item.contentSnippet || '',
-                date: item.pubDate || '',
+                title: getTextContent(item, 'title'),
+                description,
+                date: getTextContent(item, 'pubDate'),
                 imageUrl,
-                url: item.link || '',
-                tags: (item.categories || []).slice(0, 3),
+                url: getTextContent(item, 'link'),
+                tags: categories.length ? categories : ['medium'],
             }
         })
     } catch (error) {

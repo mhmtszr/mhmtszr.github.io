@@ -1,6 +1,7 @@
 import {getAllArticleMeta} from "@/lib/mdx"
 import {getMediumArticlesServer} from "@/lib/medium-server"
 import {ArticlesContent} from "./articles-content"
+import {generateItemListSchema} from "@/lib/schema"
 
 export default async function ArticlesPage() {
     const allArticles = getAllArticleMeta()
@@ -36,5 +37,14 @@ export default async function ArticlesPage() {
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     )
 
-    return <ArticlesContent initialArticles={initialArticles}/>
+    const itemListSchema = generateItemListSchema(
+        initialArticles.map(a => ({title: a.title, url: a.url, image: a.imageUrl}))
+    )
+
+    return (
+        <>
+            <ArticlesContent initialArticles={initialArticles}/>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(itemListSchema)}}/>
+        </>
+    )
 }

@@ -741,7 +741,7 @@ function PhotographyContent() {
                                     preloadedImage={
                                         <Image
                                             src={photo.url}
-                                            alt={photo.title || ""}
+                                            alt={photo.title || `Photo from ${photo.city}, ${photo.country}`}
                                             width={800}
                                             height={800}
                                             className="h-full w-auto object-contain transform-gpu"
@@ -759,7 +759,7 @@ function PhotographyContent() {
                                             {index < 2 ? (
                                                 <Image
                                                     src={photo.url.replace('.webp', '-thumb.webp')}
-                                                    alt={photo.title || ""}
+                                                    alt={photo.title || `Photo from ${photo.city}, ${photo.country}`}
                                                     width={800}
                                                     height={600}
                                                     priority
@@ -770,7 +770,7 @@ function PhotographyContent() {
                                             ) : (
                                                 <DeferredImage
                                                     src={photo.url.replace('.webp', '-thumb.webp')}
-                                                    alt={photo.title || ""}
+                                                    alt={photo.title || `Photo from ${photo.city}, ${photo.country}`}
                                                     width={800}
                                                     height={600}
                                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
