@@ -35,7 +35,7 @@ export default function ElasticsearchInternalsPage() {
             </button>
             <iframe
                 ref={iframeRef}
-                src="/presentations/elasticsearch-internals.html"
+                src="/presentations/elasticsearch-internals.html?embed=1"
                 title="How Elasticsearch Actually Works Under the Hood"
                 allow="fullscreen"
                 onLoad={() => iframeRef.current?.focus()}
