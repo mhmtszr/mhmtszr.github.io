@@ -138,6 +138,28 @@ export function generateProfilePageSchema() {
     };
 }
 
+// PresentationDigitalDocument schema
+export function generatePresentationSchema(presentation: {
+    title: string
+    description: string
+    url: string
+}) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'PresentationDigitalDocument',
+        name: presentation.title,
+        description: presentation.description,
+        url: presentation.url,
+        author: {
+            '@type': 'Person',
+            name: 'Mehmet Sezer',
+            url: 'https://msezer.dev'
+        },
+        inLanguage: 'en',
+        isAccessibleForFree: true,
+    };
+}
+
 // BreadcrumbList schema
 export function generateBreadcrumbSchema(items: Array<{ label: string, href: string }>) {
     return {

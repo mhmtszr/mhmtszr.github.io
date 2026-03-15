@@ -31,9 +31,21 @@ export default async function ArticlesPage() {
         // Medium fetch failed, continue with MD articles only
     }
 
+    const presentationArticles = [
+        {
+            title: "How Elasticsearch Actually Works Under the Hood",
+            description: "A visual deep dive from bytes on disk to search results — Lucene's inverted indexes, FST trees, BM25 scoring, segment merging, and how Elasticsearch turns a single-node search library into a fault-tolerant distributed system.",
+            date: "2026-03-15",
+            imageUrl: "/article/elasticsearch-internals/preview.webp",
+            url: "/articles/elasticsearch-internals",
+            tags: ["elasticsearch", "lucene", "distributed-systems", "presentation"],
+            source: "website" as const,
+        },
+    ]
+
     const existingTitles = new Set(mdArticles.map(a => a.title.toLowerCase().trim()))
     const uniqueMedium = mediumArticles.filter(a => !existingTitles.has(a.title.toLowerCase().trim()))
-    const initialArticles = [...mdArticles, ...uniqueMedium].sort(
+    const initialArticles = [...mdArticles, ...presentationArticles, ...uniqueMedium].sort(
         (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     )
 

@@ -46,6 +46,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             changeFrequency: 'monthly' as const,
             priority: 0.6,
         },
+        {
+            url: 'https://msezer.dev/articles/elasticsearch-internals',
+            lastModified: new Date(),
+            changeFrequency: 'yearly' as const,
+            priority: 0.6,
+        },
     ]
 
     // Convert article dates to Date objects for lastModified

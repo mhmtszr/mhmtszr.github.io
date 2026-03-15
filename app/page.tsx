@@ -4,7 +4,7 @@ import {MediumIcon} from "@/components/icons/medium"
 import Link from "next/link"
 import Image from "next/image"
 import {generatePersonSchema, generateWebsiteSchema} from "@/lib/schema"
-import {getAllArticleMeta, getLatestArticles} from "@/lib/mdx"
+import {getAllArticleMeta} from "@/lib/mdx"
 
 export const metadata: Metadata = {
     title: {
@@ -41,15 +41,34 @@ export default async function HomePage() {
     const websiteSchema = generateWebsiteSchema()
     const personSchema = generatePersonSchema()
 
+    const presentationEntries: {
+        meta: { title: string; description: string; date: string; image?: string; tags?: string[] };
+        slug: string
+    }[] = [
+        {
+            meta: {
+                title: "How Elasticsearch Actually Works Under the Hood",
+                description: "A visual deep dive from bytes on disk to search results — Lucene's inverted indexes, FST trees, BM25 scoring, segment merging, and how Elasticsearch turns a single-node search library into a fault-tolerant distributed system.",
+                date: "2026-03-15",
+                image: "/article/elasticsearch-internals/preview.webp",
+                tags: ["elasticsearch", "lucene", "distributed-systems", "presentation"],
+            },
+            slug: "elasticsearch-internals",
+        },
+    ]
+
     let latestArticles: {
         meta: { title: string; description: string; date: string; image?: string; tags?: string[] };
         slug: string
     }[] = []
     try {
         const allArticles = getAllArticleMeta()
-        latestArticles = getLatestArticles(allArticles, 4)
+        latestArticles = [...allArticles, ...presentationEntries]
+            .filter((a) => !(a.meta as { draft?: boolean }).draft)
+            .sort((a, b) => new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime())
+            .slice(0, 4)
     } catch {
-        latestArticles = []
+        latestArticles = presentationEntries
     }
 
     return (
