@@ -16,9 +16,9 @@
 /site.webmanifest
   Cache-Control: public, max-age=2592000
 
-# Presentation HTML - revalidate on each deploy
+# Cache presentation HTML for 30 days
 /presentations/*.html
-  Cache-Control: public, max-age=0, must-revalidate
+  Cache-Control: public, max-age=2592000
 
 # Cache fonts
 /fonts/*
