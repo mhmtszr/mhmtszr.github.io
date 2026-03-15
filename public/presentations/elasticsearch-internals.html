@@ -3851,7 +3851,7 @@ graph TB
   }
 
   function getSlideTop(n) {
-    return slides[n].offsetTop;
+    return n * window.innerHeight;
   }
 
   function goToSlide(n, showAll) {
@@ -3864,9 +3864,16 @@ graph TB
   }
 
   function scrollToReveal(el) {
-    requestAnimationFrame(() => {
-      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
+    const slide = el.closest('.slide');
+    if (!slide) return;
+    const elTop = el.offsetTop - slide.offsetTop;
+    const elBot = elTop + el.offsetHeight;
+    const viewBot = slide.scrollTop + slide.clientHeight;
+    if (elBot > viewBot) {
+      slide.scrollTo({ top: elBot - slide.clientHeight + 20, behavior: 'smooth' });
+    } else if (elTop < slide.scrollTop) {
+      slide.scrollTo({ top: Math.max(0, elTop - 20), behavior: 'smooth' });
+    }
   }
 
   function nextStep() {
