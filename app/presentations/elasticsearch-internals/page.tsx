@@ -38,7 +38,17 @@ export default function ElasticsearchInternalsPage() {
                 src="/presentations/elasticsearch-internals.html?embed=1"
                 title="How Elasticsearch Actually Works Under the Hood"
                 allow="fullscreen"
-                onLoad={() => iframeRef.current?.focus()}
+                onLoad={() => {
+                    iframeRef.current?.focus()
+                    try {
+                        const doc = iframeRef.current?.contentDocument
+                        if (doc) {
+                            const style = doc.createElement('style')
+                            style.textContent = '.nav-bar{display:none!important}.progress-bar{top:0!important}.section-tag{top:8px!important}.key-hint{display:none!important}.slide{padding-top:40px!important}'
+                            doc.head.appendChild(style)
+                        }
+                    } catch (e) { /* cross-origin fallback */ }
+                }}
                 className="w-full h-full border-0"
             />
         </div>
