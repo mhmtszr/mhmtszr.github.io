@@ -41,19 +41,14 @@ export default async function HomePage() {
     const websiteSchema = generateWebsiteSchema()
     const personSchema = generatePersonSchema()
 
-    const presentationEntries: {
-        meta: { title: string; description: string; date: string; image?: string; tags?: string[] };
-        slug: string
-    }[] = [
+    const presentations = [
         {
-            meta: {
-                title: "How Elasticsearch Actually Works Under the Hood",
-                description: "A visual deep dive from bytes on disk to search results — Lucene's inverted indexes, FST trees, BM25 scoring, segment merging, and how Elasticsearch turns a single-node search library into a fault-tolerant distributed system.",
-                date: "2026-03-15",
-                image: "/article/elasticsearch-internals/preview.webp",
-                tags: ["elasticsearch", "lucene", "distributed-systems", "presentation"],
-            },
-            slug: "elasticsearch-internals",
+            title: "How Elasticsearch Actually Works Under the Hood",
+            description: "A visual deep dive from bytes on disk to search results — Lucene's inverted indexes, FST trees, BM25 scoring, segment merging, and distributed cluster coordination.",
+            date: "2026-03-15",
+            image: "/article/elasticsearch-internals/preview.webp",
+            href: "/presentations/elasticsearch-internals",
+            tags: ["elasticsearch", "lucene", "distributed-systems"],
         },
     ]
 
@@ -63,12 +58,12 @@ export default async function HomePage() {
     }[] = []
     try {
         const allArticles = getAllArticleMeta()
-        latestArticles = [...allArticles, ...presentationEntries]
+        latestArticles = allArticles
             .filter((a) => !(a.meta as { draft?: boolean }).draft)
             .sort((a, b) => new Date(b.meta.date).getTime() - new Date(a.meta.date).getTime())
-            .slice(0, 4)
+            .slice(0, 2)
     } catch {
-        latestArticles = presentationEntries
+        latestArticles = []
     }
 
     return (
@@ -234,58 +229,102 @@ export default async function HomePage() {
                 </div>
             </div>
 
-            <div className="mx-auto mt-14 w-full max-w-7xl pb-2 sm:mt-16">
-                {latestArticles.length > 0 && (
-                    <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-2xl font-bold sm:text-3xl">Recent writing</h2>
-                            <Link href="/articles"
-                                  className="inline-flex items-center gap-1 text-sm font-sans text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50">
-                                All articles
-                                <ArrowRight className="h-3.5 w-3.5"/>
-                            </Link>
+            <div className="mx-auto mt-14 w-full max-w-7xl pb-2 sm:mt-20">
+                <div className="grid gap-8 lg:grid-cols-2">
+                    {/* Recent Writing */}
+                    {latestArticles.length > 0 && (
+                        <div className="space-y-3 rounded-2xl border border-gray-200 bg-gray-50/50 p-4 dark:border-gray-800 dark:bg-gray-900/30">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-lg font-bold sm:text-xl">Recent writing</h2>
+                                <Link href="/articles"
+                                      className="inline-flex items-center gap-1 text-sm font-sans text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50">
+                                    All articles
+                                    <ArrowRight className="h-3.5 w-3.5"/>
+                                </Link>
+                            </div>
+                            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
+                                {latestArticles.map((article, idx) => {
+                                    const formattedDate = new Date(article.meta.date).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "short",
+                                        timeZone: "UTC",
+                                    })
+                                    return (
+                                        <Link
+                                            key={article.slug}
+                                            href={`/articles/${article.slug}`}
+                                            className="group overflow-hidden rounded-xl border border-gray-100 shadow-sm transition-all hover:border-gray-300 hover:shadow-md dark:border-gray-800 dark:hover:border-gray-600"
+                                        >
+                                            {article.meta.image ? (
+                                                <div className="relative hidden sm:block h-24 w-full overflow-hidden">
+                                                    <Image
+                                                        src={article.meta.image.replace('preview.webp', 'preview-thumb.webp')}
+                                                        alt={article.meta.title}
+                                                        fill
+                                                        priority={idx === 0}
+                                                        loading={idx === 0 ? "eager" : "lazy"}
+                                                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                                        sizes="(max-width: 1024px) 50vw, 33vw"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                <div
+                                                    className="hidden sm:block h-24 w-full bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900"/>
+                                            )}
+                                            <div className="space-y-1 p-3">
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 font-sans">{formattedDate}</p>
+                                                <h3 className="line-clamp-2 text-sm font-medium leading-snug transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                                                    {article.meta.title}
+                                                </h3>
+                                            </div>
+                                        </Link>
+                                    )
+                                })}
+                            </div>
                         </div>
-                        <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
-                            {latestArticles.map((article, idx) => {
-                                const formattedDate = new Date(article.meta.date).toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "short",
-                                    timeZone: "UTC",
-                                })
-                                return (
+                    )}
+
+                    {/* Presentations — hidden on mobile */}
+                    {presentations.length > 0 && (
+                        <div className="hidden space-y-3 rounded-2xl border border-gray-200 bg-gray-50/50 p-4 dark:border-gray-800 dark:bg-gray-900/30 lg:block">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-lg font-bold sm:text-xl">Recent presentations</h2>
+                                <Link href="/presentations"
+                                      className="inline-flex items-center gap-1 text-sm font-sans text-gray-500 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50">
+                                    All presentations
+                                    <ArrowRight className="h-3.5 w-3.5"/>
+                                </Link>
+                            </div>
+                            <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
+                                {presentations.map((p) => (
                                     <Link
-                                        key={article.slug}
-                                        href={`/articles/${article.slug}`}
+                                        key={p.href}
+                                        href={p.href}
                                         className="group overflow-hidden rounded-xl border border-gray-100 shadow-sm transition-all hover:border-gray-300 hover:shadow-md dark:border-gray-800 dark:hover:border-gray-600"
                                     >
-                                        {article.meta.image ? (
-                                            <div className="relative hidden sm:block h-28 w-full overflow-hidden lg:h-32">
-                                                <Image
-                                                    src={article.meta.image.replace('preview.webp', 'preview-thumb.webp')}
-                                                    alt={article.meta.title}
-                                                    fill
-                                                    priority={idx === 0}
-                                                    loading={idx === 0 ? "eager" : "lazy"}
-                                                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                                                    sizes="(max-width: 1280px) 50vw, 25vw"
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div
-                                                className="hidden sm:block h-28 w-full bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 lg:h-32"/>
-                                        )}
-                                        <div className="space-y-1.5 p-3">
-                                            <p className="text-xs text-gray-500 dark:text-gray-400 font-sans">{formattedDate}</p>
+                                        <div className="relative h-24 w-full overflow-hidden bg-gray-900">
+                                            <Image
+                                                src={p.image}
+                                                alt={p.title}
+                                                fill
+                                                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                                                sizes="320px"
+                                            />
+                                        </div>
+                                        <div className="space-y-1 p-3">
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 font-sans">
+                                                {new Date(p.date).toLocaleDateString("en-US", {year: "numeric", month: "short", timeZone: "UTC"})}
+                                            </p>
                                             <h3 className="line-clamp-2 text-sm font-medium leading-snug transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400">
-                                                {article.meta.title}
+                                                {p.title}
                                             </h3>
                                         </div>
                                     </Link>
-                                )
-                            })}
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
 
             <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(websiteSchema)}}/>

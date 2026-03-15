@@ -128,7 +128,7 @@ export default function RootLayout({
             <div className="flex min-h-screen flex-col">
                 <Sidebar/>
                 <div className="flex-1 md:ml-64 lg:ml-72">
-                    <main id="main-content" className="min-h-screen w-full overflow-x-hidden">{children}</main>
+                    <main id="main-content" className="min-h-screen w-full overflow-x-hidden pt-16 md:pt-0">{children}</main>
                 </div>
             </div>
         </body>

@@ -14,7 +14,7 @@ export default function MobileNav() {
 
     return (
         <div
-            className="sticky top-0 z-40 flex items-center justify-between px-4 h-16 border-b md:hidden! bg-white dark:bg-gray-950 font-sans">
+            className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 h-16 border-b md:hidden! bg-white dark:bg-gray-950 font-sans">
             <Link href="/" className="flex items-center gap-3">
                 <div className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full border border-gray-200 dark:border-gray-700">
                     <img src="/photography/profile.jpg" alt="Mehmet Sezer" className="aspect-square h-full w-full object-cover" fetchPriority="high"/>

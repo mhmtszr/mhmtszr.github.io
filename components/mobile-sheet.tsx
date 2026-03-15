@@ -11,6 +11,7 @@ import {
     ImageIcon,
     Linkedin,
     Menu,
+    MonitorPlay,
     Presentation,
     Twitter,
     User,
@@ -24,6 +25,7 @@ const navItems = [
     {name: "Projects", href: "/projects", icon: Code},
     {name: "Speaking", href: "/speaking", icon: Presentation},
     {name: "Articles", href: "/articles", icon: BookOpenText},
+    {name: "Presentations", href: "/presentations", icon: MonitorPlay},
     {name: "Photography", href: "/photography", icon: ImageIcon},
 ]
 

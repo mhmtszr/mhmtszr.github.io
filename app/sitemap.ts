@@ -47,7 +47,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.6,
         },
         {
-            url: 'https://msezer.dev/articles/elasticsearch-internals',
+            url: 'https://msezer.dev/presentations',
+            lastModified: new Date(),
+            changeFrequency: 'monthly' as const,
+            priority: 0.7,
+        },
+        {
+            url: 'https://msezer.dev/presentations/elasticsearch-internals',
             lastModified: new Date(),
             changeFrequency: 'yearly' as const,
             priority: 0.6,

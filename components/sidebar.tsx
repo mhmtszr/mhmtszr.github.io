@@ -7,6 +7,7 @@ import {
     Github,
     ImageIcon,
     Linkedin,
+    MonitorPlay,
     Presentation,
     Twitter,
     User,
@@ -22,6 +23,7 @@ const navItems = [
     {name: "Projects", href: "/projects", icon: <Code className="h-5 w-5"/>},
     {name: "Speaking", href: "/speaking", icon: <Presentation className="h-5 w-5"/>},
     {name: "Articles", href: "/articles", icon: <BookOpenText className="h-5 w-5"/>},
+    {name: "Presentations", href: "/presentations", icon: <MonitorPlay className="h-5 w-5"/>},
     {name: "Photography", href: "/photography", icon: <ImageIcon className="h-5 w-5"/>},
 ]
 
