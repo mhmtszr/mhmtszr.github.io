@@ -4,9 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Elasticsearch Internals — From Lucene to Cluster</title>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
   :root {
     --es-yellow: #FEC514;
@@ -28,7 +31,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Lora', serif;
     background: var(--es-darker);
     color: var(--es-text);
     overflow: hidden;
@@ -64,7 +67,7 @@
   .nav-controls button {
     background: var(--es-card); border: 1px solid var(--es-card-border);
     color: var(--es-text); padding: 6px 14px; border-radius: 6px;
-    cursor: pointer; font-size: 13px; font-family: 'Outfit', sans-serif;
+    cursor: pointer; font-size: 13px; font-family: 'Lora', serif;
     transition: all 0.2s;
   }
   .nav-controls button:hover { background: #1a1a2e; border-color: var(--es-yellow); }
@@ -91,6 +94,7 @@
   /* Slides */
   .slides-container {
     transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
   }
 
   .slide {
@@ -102,6 +106,8 @@
     overscroll-behavior: contain;
     scrollbar-width: thin;
     scrollbar-color: rgba(254,197,20,0.25) transparent;
+    content-visibility: auto;
+    contain-intrinsic-size: auto 100vh;
   }
   .slide::-webkit-scrollbar { width: 5px; }
   .slide::-webkit-scrollbar-track { background: transparent; }
@@ -808,100 +814,100 @@
     <p class="subtitle">Before text enters the inverted index, it passes through a 3-stage pipeline that transforms raw text into searchable terms.</p>
 
     <!-- Input -->
-    <div style="display:flex;align-items:center;gap:10px;margin-top:14px;">
-      <span style="font-size:10px;font-weight:800;color:var(--es-dark);background:var(--es-pink);padding:3px 10px;border-radius:5px;">INPUT</span>
-      <code style="font-size:13px;padding:8px 16px;border-radius:8px;background:#0D0D15;border:1px solid rgba(240,78,152,0.15);color:var(--es-text);flex:1;">"The Quick Brown Foxes are &lt;b&gt;FAST&lt;/b&gt;!"</code>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:20px;">
+      <span style="font-size:12px;font-weight:800;color:var(--es-dark);background:var(--es-pink);padding:5px 14px;border-radius:5px;">INPUT</span>
+      <code style="font-size:15px;padding:10px 20px;border-radius:8px;background:#0D0D15;border:1px solid rgba(240,78,152,0.15);color:var(--es-text);flex:1;">"The Quick Brown Foxes are &lt;b&gt;FAST&lt;/b&gt;!"</code>
     </div>
 
     <!-- Pipeline Stages -->
-    <div class="pipeline-grid" style="display:grid;grid-template-columns:1fr 20px 1fr 20px 1fr;align-items:stretch;gap:0;margin-top:12px;">
+    <div class="pipeline-grid" style="display:grid;grid-template-columns:1fr 20px 1fr 20px 1fr;align-items:stretch;gap:0;margin-top:18px;">
       <!-- Stage 1: Char Filters -->
-      <div class="reveal" style="border:1px solid rgba(254,197,20,0.2);border-radius:12px;padding:14px;background:rgba(254,197,20,0.02);">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-          <span style="font-size:10px;font-weight:800;color:var(--es-dark);background:var(--es-yellow);padding:2px 8px;border-radius:4px;">1</span>
-          <span style="font-size:14px;font-weight:700;">Char Filters</span>
+      <div class="reveal" style="border:1px solid rgba(254,197,20,0.2);border-radius:12px;padding:18px;background:rgba(254,197,20,0.02);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span style="font-size:12px;font-weight:800;color:var(--es-dark);background:var(--es-yellow);padding:3px 10px;border-radius:4px;">1</span>
+          <span style="font-size:16px;font-weight:700;">Char Filters</span>
         </div>
-        <p style="font-size:11px;color:var(--es-muted);margin-bottom:8px;">Transform raw characters before tokenizing.</p>
-        <div style="background:#0D0D15;border-radius:8px;padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.7;">
+        <p style="font-size:13px;color:var(--es-muted);margin-bottom:10px;">Transform raw characters before tokenizing.</p>
+        <div style="background:#0D0D15;border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;">
           <div><span style="color:var(--es-yellow);font-weight:600;">html_strip</span></div>
-          <div style="color:var(--es-muted);margin-top:2px;">&lt;b&gt;FAST&lt;/b&gt; <span style="color:var(--es-yellow);">&rarr;</span> FAST</div>
-          <div style="margin-top:4px;"><span style="color:var(--es-yellow);font-weight:600;">pattern_replace</span></div>
-          <div style="color:var(--es-muted);margin-top:2px;">remove special chars, normalize</div>
+          <div style="color:var(--es-muted);margin-top:3px;">&lt;b&gt;FAST&lt;/b&gt; <span style="color:var(--es-yellow);">&rarr;</span> FAST</div>
+          <div style="margin-top:6px;"><span style="color:var(--es-yellow);font-weight:600;">pattern_replace</span></div>
+          <div style="color:var(--es-muted);margin-top:3px;">remove special chars, normalize</div>
         </div>
       </div>
 
       <!-- Arrow -->
-      <div class="reveal pipeline-arrow" style="display:flex;align-items:center;justify-content:center;color:var(--es-yellow);font-size:20px;">&rarr;</div>
+      <div class="reveal pipeline-arrow" style="display:flex;align-items:center;justify-content:center;color:var(--es-yellow);font-size:24px;">&rarr;</div>
 
       <!-- Stage 2: Tokenizer -->
-      <div class="reveal" style="border:1px solid rgba(0,191,179,0.2);border-radius:12px;padding:14px;background:rgba(0,191,179,0.02);">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-          <span style="font-size:10px;font-weight:800;color:var(--es-dark);background:var(--es-teal);padding:2px 8px;border-radius:4px;">2</span>
-          <span style="font-size:14px;font-weight:700;">Tokenizer</span>
+      <div class="reveal" style="border:1px solid rgba(0,191,179,0.2);border-radius:12px;padding:18px;background:rgba(0,191,179,0.02);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span style="font-size:12px;font-weight:800;color:var(--es-dark);background:var(--es-teal);padding:3px 10px;border-radius:4px;">2</span>
+          <span style="font-size:16px;font-weight:700;">Tokenizer</span>
         </div>
-        <p style="font-size:11px;color:var(--es-muted);margin-bottom:8px;">Splits text into individual tokens.</p>
-        <div style="display:flex;gap:3px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:11px;">
-          <span style="padding:3px 6px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">The</span>
-          <span style="padding:3px 6px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">Quick</span>
-          <span style="padding:3px 6px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">Brown</span>
-          <span style="padding:3px 6px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">Foxes</span>
-          <span style="padding:3px 6px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">are</span>
-          <span style="padding:3px 6px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">FAST</span>
+        <p style="font-size:13px;color:var(--es-muted);margin-bottom:10px;">Splits text into individual tokens.</p>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:13px;">
+          <span style="padding:4px 8px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">The</span>
+          <span style="padding:4px 8px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">Quick</span>
+          <span style="padding:4px 8px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">Brown</span>
+          <span style="padding:4px 8px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">Foxes</span>
+          <span style="padding:4px 8px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">are</span>
+          <span style="padding:4px 8px;border-radius:4px;background:rgba(0,191,179,0.12);color:var(--es-teal);">FAST</span>
         </div>
-        <div style="font-size:10px;color:var(--es-muted);margin-top:6px;">Only <strong style="color:var(--es-text);">one</strong> tokenizer per analyzer</div>
+        <div style="font-size:12px;color:var(--es-muted);margin-top:8px;">Only <strong style="color:var(--es-text);">one</strong> tokenizer per analyzer</div>
       </div>
 
       <!-- Arrow -->
-      <div class="reveal pipeline-arrow" style="display:flex;align-items:center;justify-content:center;color:var(--es-teal);font-size:20px;">&rarr;</div>
+      <div class="reveal pipeline-arrow" style="display:flex;align-items:center;justify-content:center;color:var(--es-teal);font-size:24px;">&rarr;</div>
 
       <!-- Stage 3: Token Filters -->
-      <div class="reveal" style="border:1px solid rgba(0,214,143,0.2);border-radius:12px;padding:14px;background:rgba(0,214,143,0.02);">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
-          <span style="font-size:10px;font-weight:800;color:var(--es-dark);background:var(--es-green);padding:2px 8px;border-radius:4px;">3</span>
-          <span style="font-size:14px;font-weight:700;">Token Filters</span>
+      <div class="reveal" style="border:1px solid rgba(0,214,143,0.2);border-radius:12px;padding:18px;background:rgba(0,214,143,0.02);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+          <span style="font-size:12px;font-weight:800;color:var(--es-dark);background:var(--es-green);padding:3px 10px;border-radius:4px;">3</span>
+          <span style="font-size:16px;font-weight:700;">Token Filters</span>
         </div>
-        <p style="font-size:11px;color:var(--es-muted);margin-bottom:8px;">Transform, remove, or add tokens.</p>
-        <div style="background:#0D0D15;border-radius:8px;padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.8;">
+        <p style="font-size:13px;color:var(--es-muted);margin-bottom:10px;">Transform, remove, or add tokens.</p>
+        <div style="background:#0D0D15;border-radius:8px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2;">
           <div><span style="color:var(--es-yellow);">lowercase:</span> <span style="color:var(--es-muted);">Quick &rarr; quick, FAST &rarr; fast</span></div>
-          <div><span style="color:var(--es-red);">stop:</span> <span style="text-decoration:line-through;color:rgba(136,136,170,0.5);">the</span> <span style="text-decoration:line-through;color:rgba(136,136,170,0.5);">are</span> <span style="color:var(--es-red);font-size:9px;">removed</span></div>
+          <div><span style="color:var(--es-red);">stop:</span> <span style="text-decoration:line-through;color:rgba(136,136,170,0.5);">the</span> <span style="text-decoration:line-through;color:rgba(136,136,170,0.5);">are</span> <span style="color:var(--es-red);font-size:10px;">removed</span></div>
           <div><span style="color:var(--es-green);">stemmer:</span> <span style="color:var(--es-muted);">foxes &rarr; fox</span></div>
         </div>
       </div>
     </div>
 
     <!-- Output -->
-    <div class="reveal" style="display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 16px;border:1.5px solid rgba(0,214,143,0.3);border-radius:10px;background:rgba(0,214,143,0.04);">
-      <span style="font-size:10px;font-weight:800;color:var(--es-dark);background:var(--es-green);padding:3px 10px;border-radius:5px;">OUTPUT</span>
-      <span style="font-size:12px;color:var(--es-muted);">Terms for inverted index &rarr;</span>
-      <span style="display:flex;gap:4px;font-family:'JetBrains Mono',monospace;font-size:13px;">
-        <span style="padding:3px 8px;border-radius:5px;background:rgba(0,214,143,0.15);color:var(--es-green);font-weight:700;">quick</span>
-        <span style="padding:3px 8px;border-radius:5px;background:rgba(0,214,143,0.15);color:var(--es-green);font-weight:700;">brown</span>
-        <span style="padding:3px 8px;border-radius:5px;background:rgba(0,214,143,0.15);color:var(--es-green);font-weight:700;">fox</span>
-        <span style="padding:3px 8px;border-radius:5px;background:rgba(0,214,143,0.15);color:var(--es-green);font-weight:700;">fast</span>
+    <div class="reveal" style="display:flex;align-items:center;gap:12px;margin-top:18px;padding:14px 20px;border:1.5px solid rgba(0,214,143,0.3);border-radius:10px;background:rgba(0,214,143,0.04);">
+      <span style="font-size:12px;font-weight:800;color:var(--es-dark);background:var(--es-green);padding:5px 14px;border-radius:5px;">OUTPUT</span>
+      <span style="font-size:14px;color:var(--es-muted);">Terms for inverted index &rarr;</span>
+      <span style="display:flex;gap:6px;font-family:'JetBrains Mono',monospace;font-size:15px;">
+        <span style="padding:5px 10px;border-radius:5px;background:rgba(0,214,143,0.15);color:var(--es-green);font-weight:700;">quick</span>
+        <span style="padding:5px 10px;border-radius:5px;background:rgba(0,214,143,0.15);color:var(--es-green);font-weight:700;">brown</span>
+        <span style="padding:5px 10px;border-radius:5px;background:rgba(0,214,143,0.15);color:var(--es-green);font-weight:700;">fox</span>
+        <span style="padding:5px 10px;border-radius:5px;background:rgba(0,214,143,0.15);color:var(--es-green);font-weight:700;">fast</span>
       </span>
     </div>
 
     <!-- Analyzer Types -->
-    <div class="reveal analyzer-types" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-top:14px;">
-      <div class="card" style="padding:12px;">
-        <h3 style="font-size:12px;margin-bottom:4px;"><span class="highlight">Standard</span> <span style="font-weight:400;color:var(--es-muted);font-size:10px;">(default)</span></h3>
-        <p style="font-size:11px;">Unicode tokenizer + lowercase filter</p>
-        <code style="font-size:10px;display:block;margin-top:4px;color:var(--es-yellow);">"Foxes" &rarr; "foxes"</code>
+    <div class="reveal analyzer-types" style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-top:20px;">
+      <div class="card" style="padding:16px;">
+        <h3 style="font-size:14px;margin-bottom:6px;"><span class="highlight">Standard</span> <span style="font-weight:400;color:var(--es-muted);font-size:11px;">(default)</span></h3>
+        <p style="font-size:13px;">Unicode tokenizer + lowercase filter</p>
+        <code style="font-size:12px;display:block;margin-top:6px;color:var(--es-yellow);">"Foxes" &rarr; "foxes"</code>
       </div>
-      <div class="card" style="padding:12px;">
-        <h3 style="font-size:12px;margin-bottom:4px;"><span class="highlight-teal">Custom</span></h3>
-        <p style="font-size:11px;">Your own char_filter + tokenizer + filter chain</p>
-        <code style="font-size:10px;display:block;margin-top:4px;color:var(--es-teal);">"Foxes" &rarr; "fox" (with stemmer)</code>
+      <div class="card" style="padding:16px;">
+        <h3 style="font-size:14px;margin-bottom:6px;"><span class="highlight-teal">Custom</span></h3>
+        <p style="font-size:13px;">Your own char_filter + tokenizer + filter chain</p>
+        <code style="font-size:12px;display:block;margin-top:6px;color:var(--es-teal);">"Foxes" &rarr; "fox" (with stemmer)</code>
       </div>
-      <div class="card" style="padding:12px;">
-        <h3 style="font-size:12px;margin-bottom:4px;"><span class="highlight-pink">Keyword</span></h3>
-        <p style="font-size:11px;">No-op &mdash; entire input is one token</p>
-        <code style="font-size:10px;display:block;margin-top:4px;color:var(--es-pink);">"a@b.com" &rarr; "a@b.com"</code>
+      <div class="card" style="padding:16px;">
+        <h3 style="font-size:14px;margin-bottom:6px;"><span class="highlight-pink">Keyword</span></h3>
+        <p style="font-size:13px;">No-op &mdash; entire input is one token</p>
+        <code style="font-size:12px;display:block;margin-top:6px;color:var(--es-pink);">"a@b.com" &rarr; "a@b.com"</code>
       </div>
-      <div class="card" style="padding:12px;">
-        <h3 style="font-size:12px;margin-bottom:4px;"><span class="highlight-purple">Language</span></h3>
-        <p style="font-size:11px;">Language-specific stemmer + stop words</p>
-        <code style="font-size:10px;display:block;margin-top:4px;color:var(--es-purple);">"running" &rarr; "run" (english)</code>
+      <div class="card" style="padding:16px;">
+        <h3 style="font-size:14px;margin-bottom:6px;"><span class="highlight-purple">Language</span></h3>
+        <p style="font-size:13px;">Language-specific stemmer + stop words</p>
+        <code style="font-size:12px;display:block;margin-top:6px;color:var(--es-purple);">"running" &rarr; "run" (english)</code>
       </div>
     </div>
   </div>
@@ -911,28 +917,28 @@
 <!-- SLIDE 3b: ANATOMY — TERM DICTIONARY -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part I: Lucene" data-section-color="yellow" id="slide-3b">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number">Core Data Structure</div>
     <h2>Anatomy of the <span class="highlight">Inverted Index</span></h2>
-    <p class="subtitle">Three layers working together to make full-text search fast.</p>
+    <p class="subtitle" style="font-size:17px;">Three layers working together to make full-text search fast.</p>
 
-    <div class="card-grid grid-3" style="margin-top:20px;">
-      <div class="card" style="border-color:rgba(254,197,20,0.3);">
-        <h3><span class="highlight">1. Term Dictionary</span></h3>
-        <p>A sorted list of every unique term &rarr; disk pointer. Stored as an <strong>FST</strong> (Finite State Transducer) &mdash; a compressed automaton that shares prefixes and suffixes.</p>
-        <div style="margin-top:10px;background:#0D0D15;border-radius:8px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.9;color:var(--es-muted);">
+    <div class="card-grid grid-3" style="margin-top:28px;">
+      <div class="card" style="border-color:rgba(254,197,20,0.3);padding:24px;">
+        <h3 style="font-size:18px;"><span class="highlight">1. Term Dictionary</span></h3>
+        <p style="font-size:15px;line-height:1.6;">A sorted list of every unique term &rarr; disk pointer. Stored as an <strong>FST</strong> (Finite State Transducer) &mdash; a compressed automaton that shares prefixes and suffixes.</p>
+        <div style="margin-top:14px;background:#0D0D15;border-radius:8px;padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:2;color:var(--es-muted);">
           <span style="color:var(--es-teal);">elasticsearch</span> &rarr; <span style="color:var(--es-yellow);">block 1</span><br>
           <span style="color:var(--es-green);">fast</span> &rarr; <span style="color:var(--es-yellow);">block 1</span><br>
           <span style="color:var(--es-orange);">lucene</span> &rarr; <span style="color:var(--es-yellow);">block 2</span>
         </div>
-        <p style="margin-top:10px;font-size:13px;"><strong>Lookup:</strong> O(length of term) &mdash; independent of index size.</p>
+        <p style="margin-top:14px;font-size:15px;"><strong>Lookup:</strong> O(length of term) &mdash; independent of index size.</p>
       </div>
-      <div class="card" style="border-color:rgba(30,30,46,0.5);opacity:0.35;">
-        <h3 style="color:var(--es-muted);">2. Posting List</h3>
+      <div class="card" style="border-color:rgba(30,30,46,0.5);opacity:0.35;padding:24px;">
+        <h3 style="color:var(--es-muted);font-size:18px;">2. Posting List</h3>
         <p>&nbsp;</p>
       </div>
-      <div class="card" style="border-color:rgba(30,30,46,0.5);opacity:0.35;">
-        <h3 style="color:var(--es-muted);">3. Per-Field Indexes</h3>
+      <div class="card" style="border-color:rgba(30,30,46,0.5);opacity:0.35;padding:24px;">
+        <h3 style="color:var(--es-muted);font-size:18px;">3. Per-Field Indexes</h3>
         <p>&nbsp;</p>
       </div>
     </div>
@@ -1153,30 +1159,30 @@ graph LR
 <!-- SLIDE 3b-2: ANATOMY — POSTING LIST -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part I: Lucene" data-section-color="yellow" id="slide-3b2">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number">Core Data Structure</div>
     <h2>Anatomy of the <span class="highlight">Inverted Index</span></h2>
-    <p class="subtitle">Three layers working together to make full-text search fast.</p>
+    <p class="subtitle" style="font-size:17px;">Three layers working together to make full-text search fast.</p>
 
-    <div class="card-grid grid-3" style="margin-top:20px;">
-      <div class="card" style="border-color:rgba(254,197,20,0.15);opacity:0.4;">
-        <h3><span class="highlight">1. Term Dictionary</span></h3>
-        <p>FST: term &rarr; disk pointer</p>
-        <p style="font-size:13px;margin-top:6px;"><strong>Lookup:</strong> O(term length)</p>
+    <div class="card-grid grid-3" style="margin-top:28px;">
+      <div class="card" style="border-color:rgba(254,197,20,0.15);opacity:0.4;padding:24px;">
+        <h3 style="font-size:18px;"><span class="highlight">1. Term Dictionary</span></h3>
+        <p style="font-size:15px;">FST: term &rarr; disk pointer</p>
+        <p style="font-size:15px;margin-top:8px;"><strong>Lookup:</strong> O(term length)</p>
       </div>
-      <div class="card" style="border-color:rgba(0,191,179,0.3);">
-        <h3><span class="highlight-teal">2. Posting List</span></h3>
-        <p>For each term: the <strong>sorted</strong> list of document IDs + frequency + positions. Compressed with <strong>delta encoding</strong> + <strong>bit packing</strong>.</p>
-        <div style="margin-top:10px;background:#0D0D15;border-radius:8px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.9;">
+      <div class="card" style="border-color:rgba(0,191,179,0.3);padding:24px;">
+        <h3 style="font-size:18px;"><span class="highlight-teal">2. Posting List</span></h3>
+        <p style="font-size:15px;line-height:1.6;">For each term: the <strong>sorted</strong> list of document IDs + frequency + positions. Compressed with <strong>delta encoding</strong> + <strong>bit packing</strong>.</p>
+        <div style="margin-top:14px;background:#0D0D15;border-radius:8px;padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:2;">
           <span style="color:var(--es-orange);">lucene</span>:<br>
           <span style="color:var(--es-muted);">&nbsp;&nbsp;doc IDs:</span>&nbsp;&nbsp; <span style="color:var(--es-pink);">[2, 3]</span> <span style="color:#555577;">&larr; sorted!</span><br>
           <span style="color:var(--es-muted);">&nbsp;&nbsp;freq:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color:var(--es-green);">[1, 1]</span> <span style="color:#555577;">&larr; per doc</span><br>
           <span style="color:var(--es-muted);">&nbsp;&nbsp;positions:</span> <span style="color:var(--es-purple);">[[0], [2]]</span> <span style="color:#555577;">&larr; for phrase queries</span>
         </div>
-        <p style="margin-top:10px;font-size:13px;"><strong>Stores:</strong> doc IDs, term frequency, positions, offsets.</p>
+        <p style="margin-top:14px;font-size:15px;"><strong>Stores:</strong> doc IDs, term frequency, positions, offsets.</p>
       </div>
-      <div class="card" style="border-color:rgba(30,30,46,0.5);opacity:0.35;">
-        <h3 style="color:var(--es-muted);">3. Per-Field Indexes</h3>
+      <div class="card" style="border-color:rgba(30,30,46,0.5);opacity:0.35;padding:24px;">
+        <h3 style="color:var(--es-muted);font-size:18px;">3. Per-Field Indexes</h3>
         <p>&nbsp;</p>
       </div>
     </div>
@@ -1610,35 +1616,35 @@ graph LR
 <!-- SLIDE 3b-3: ANATOMY — PER-FIELD INDEXES -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part I: Lucene" data-section-color="yellow" id="slide-3b3">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number">Core Data Structure</div>
     <h2>Anatomy of the <span class="highlight">Inverted Index</span></h2>
-    <p class="subtitle">Three layers working together to make full-text search fast.</p>
+    <p class="subtitle" style="font-size:17px;">Three layers working together to make full-text search fast.</p>
 
-    <div class="card-grid grid-3" style="margin-top:20px;">
-      <div class="card" style="border-color:rgba(254,197,20,0.15);opacity:0.4;">
-        <h3><span class="highlight">1. Term Dictionary</span></h3>
-        <p>FST: term &rarr; disk pointer</p>
-        <p style="font-size:13px;margin-top:6px;"><strong>Lookup:</strong> O(term length)</p>
+    <div class="card-grid grid-3" style="margin-top:28px;">
+      <div class="card" style="border-color:rgba(254,197,20,0.15);opacity:0.4;padding:24px;">
+        <h3 style="font-size:18px;"><span class="highlight">1. Term Dictionary</span></h3>
+        <p style="font-size:15px;">FST: term &rarr; disk pointer</p>
+        <p style="font-size:15px;margin-top:8px;"><strong>Lookup:</strong> O(term length)</p>
       </div>
-      <div class="card" style="border-color:rgba(0,191,179,0.15);opacity:0.4;">
-        <h3><span class="highlight-teal">2. Posting List</span></h3>
-        <p>Sorted doc IDs + metadata</p>
-        <p style="font-size:13px;margin-top:6px;"><strong>Compression:</strong> delta + bit packing</p>
+      <div class="card" style="border-color:rgba(0,191,179,0.15);opacity:0.4;padding:24px;">
+        <h3 style="font-size:18px;"><span class="highlight-teal">2. Posting List</span></h3>
+        <p style="font-size:15px;">Sorted doc IDs + metadata</p>
+        <p style="font-size:15px;margin-top:8px;"><strong>Compression:</strong> delta + bit packing</p>
       </div>
-      <div class="card" style="border-color:rgba(240,78,152,0.3);">
-        <h3><span class="highlight-pink">3. Per-Field Indexes</span></h3>
-        <p>Each field gets its <strong>own inverted index</strong>. Completely independent.</p>
-        <div style="margin-top:10px;background:#0D0D15;border-radius:8px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.9;">
+      <div class="card" style="border-color:rgba(240,78,152,0.3);padding:24px;">
+        <h3 style="font-size:18px;"><span class="highlight-pink">3. Per-Field Indexes</span></h3>
+        <p style="font-size:15px;line-height:1.6;">Each field gets its <strong>own inverted index</strong>. Completely independent.</p>
+        <div style="margin-top:14px;background:#0D0D15;border-radius:8px;padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:2;">
           <span style="color:var(--es-yellow);">title:</span> <span style="color:var(--es-muted);">laptop &rarr; [1, 3, 7]</span><br>
           <span style="color:var(--es-teal);">body:</span>&nbsp; <span style="color:var(--es-muted);">laptop &rarr; [1, 2, 3, 5, 7]</span>
         </div>
-        <p style="margin-top:10px;font-size:13px;"><strong>Why:</strong> <code>title:laptop</code> only scans the title index.</p>
+        <p style="margin-top:14px;font-size:15px;"><strong>Why:</strong> <code>title:laptop</code> only scans the title index.</p>
       </div>
     </div>
 
-    <div class="info-box" style="margin-top:16px;">
-      <p><strong>Key insight:</strong> The inverted index trades <strong>write-time work</strong> (analyzing text, building data structures) for <strong>read-time speed</strong> (instant lookups). This is the fundamental trade-off of every search engine.</p>
+    <div class="info-box" style="margin-top:20px;">
+      <p style="font-size:15px;"><strong>Key insight:</strong> The inverted index trades <strong>write-time work</strong> (analyzing text, building data structures) for <strong>read-time speed</strong> (instant lookups). This is the fundamental trade-off of every search engine.</p>
     </div>
   </div>
 </section>
@@ -1647,14 +1653,14 @@ graph LR
 <!-- SLIDE 4: WHAT IS A SEGMENT -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part I: Lucene" data-section-color="yellow" id="slide-4">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number">Core Concept</div>
     <h2>Segments: <span class="highlight-teal">Immutable Mini-Indexes</span></h2>
-    <p class="subtitle">A Lucene index is not a single giant inverted index. It's a collection of smaller, immutable pieces called segments.</p>
+    <p class="subtitle" style="font-size:16px;">A Lucene index is not a single giant inverted index. It's a collection of smaller, immutable pieces called segments.</p>
 
-    <div class="two-col">
+    <div class="two-col" style="margin-top:16px;">
       <div>
-        <div class="diagram-container" style="margin-top:0;">
+        <div class="diagram-container" style="margin-top:0;padding:20px;">
           <div class="mermaid">
 graph TB
     subgraph LUCENE_INDEX["Lucene Index"]
@@ -1683,25 +1689,25 @@ graph TB
       </div>
 
       <div>
-        <h3>Why <span class="highlight">Immutable</span>?</h3>
-        <p style="color:var(--es-muted); font-size:13px; margin-bottom:10px;">Once written, <strong>never modified</strong>. This enables:</p>
+        <h3 style="font-size:20px;">Why <span class="highlight">Immutable</span>?</h3>
+        <p style="color:var(--es-muted); font-size:15px; margin-bottom:14px;">Once written, <strong>never modified</strong>. This enables:</p>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-          <div class="card" style="padding:12px;">
-            <h3 style="font-size:13px;margin-bottom:4px;"><span class="highlight">1. No Locking</span></h3>
-            <p style="font-size:12px;">Multiple threads read simultaneously &mdash; zero contention.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="card" style="padding:16px;">
+            <h3 style="font-size:15px;margin-bottom:6px;"><span class="highlight">1. No Locking</span></h3>
+            <p style="font-size:14px;">Multiple threads read simultaneously &mdash; zero contention.</p>
           </div>
-          <div class="card" style="padding:12px;">
-            <h3 style="font-size:13px;margin-bottom:4px;"><span class="highlight-teal">2. Cache Friendly</span></h3>
-            <p style="font-size:12px;">OS page cache never invalidated &mdash; data never changes.</p>
+          <div class="card" style="padding:16px;">
+            <h3 style="font-size:15px;margin-bottom:6px;"><span class="highlight-teal">2. Cache Friendly</span></h3>
+            <p style="font-size:14px;">OS page cache never invalidated &mdash; data never changes.</p>
           </div>
-          <div class="card" style="padding:12px;">
-            <h3 style="font-size:13px;margin-bottom:4px;"><span class="highlight-green">3. Compression</span></h3>
-            <p style="font-size:12px;">Compress once, read forever &mdash; no decompress for updates.</p>
+          <div class="card" style="padding:16px;">
+            <h3 style="font-size:15px;margin-bottom:6px;"><span class="highlight-green">3. Compression</span></h3>
+            <p style="font-size:14px;">Compress once, read forever &mdash; no decompress for updates.</p>
           </div>
-          <div class="card" style="padding:12px;">
-            <h3 style="font-size:13px;margin-bottom:4px;"><span class="highlight-pink">4. Easy Cleanup</span></h3>
-            <p style="font-size:12px;">Delete segment = delete file. No garbage collection.</p>
+          <div class="card" style="padding:16px;">
+            <h3 style="font-size:15px;margin-bottom:6px;"><span class="highlight-pink">4. Easy Cleanup</span></h3>
+            <p style="font-size:14px;">Delete segment = delete file. No garbage collection.</p>
           </div>
         </div>
       </div>
@@ -1715,27 +1721,27 @@ graph TB
 <style>
   /* ── Inside a Segment: visual tables ── */
   .seg-section {
-    background: var(--es-card); border-radius: 12px; padding: 16px;
+    background: var(--es-card); border-radius: 12px; padding: 20px;
     border: 1px solid var(--es-card-border); transition: all 0.3s;
   }
   .seg-section:hover { border-color: var(--es-yellow); }
   .seg-section-header {
     display: flex; align-items: center; gap: 12px; margin-bottom: 10px;
   }
-  .seg-section-header h3 { margin-bottom: 0; font-size: 15px; }
+  .seg-section-header h3 { margin-bottom: 0; font-size: 17px; }
   .seg-section-header .badge {
     font-size: 11px; padding: 3px 10px; border-radius: 20px;
     font-family: 'JetBrains Mono', monospace; font-weight: 600;
   }
-  .seg-desc { font-size: 13px; color: var(--es-muted); line-height: 1.5; margin-bottom: 10px; }
+  .seg-desc { font-size: 14px; color: var(--es-muted); line-height: 1.5; margin-bottom: 12px; }
 
   .seg-table {
     width: 100%; border-collapse: separate; border-spacing: 0;
-    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    font-family: 'JetBrains Mono', monospace; font-size: 14px;
     border-radius: 8px; overflow: hidden;
   }
   .seg-table th {
-    text-align: left; padding: 8px 14px; font-size: 11px;
+    text-align: left; padding: 10px 14px; font-size: 12px;
     letter-spacing: 1px; text-transform: uppercase; font-weight: 700;
   }
   .seg-table td {
@@ -1755,12 +1761,12 @@ graph TB
 </style>
 
 <section class="slide" data-section="Part I: Lucene" data-section-color="yellow" id="slide-5">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number">Deep Dive</div>
     <h2>Inside a <span class="highlight-orange">Segment</span></h2>
-    <p class="subtitle">A segment is a self-contained mini-index on disk. Inside, the same data is stored in <strong>3 different layouts</strong> &mdash; each optimized for a different access pattern.</p>
+    <p class="subtitle" style="font-size:16px;">A segment is a self-contained mini-index on disk. Inside, the same data is stored in <strong>3 different layouts</strong> &mdash; each optimized for a different access pattern.</p>
 
-    <div class="card-grid grid-3" style="margin-top:14px;">
+    <div class="card-grid grid-3" style="margin-top:18px;">
 
       <!-- ── INVERTED INDEX ── -->
       <div class="seg-section" style="border-color:rgba(254,197,20,0.25);">
@@ -1928,11 +1934,11 @@ graph TB
     </div>
 
     <!-- .liv file -->
-    <div class="seg-section" style="border-color:rgba(240,78,152,0.25);padding:12px 18px;margin-top:10px;">
-      <div style="display:flex;align-items:center;gap:20px;">
+    <div class="seg-section" style="border-color:rgba(240,78,152,0.25);padding:16px 20px;margin-top:14px;">
+      <div style="display:flex;align-items:center;gap:24px;">
         <div style="flex:1;">
-          <h3 style="margin:0 0 4px;font-size:14px;"><span class="highlight-pink">.liv File</span> &mdash; "which docs are still alive?"</h3>
-          <p style="font-size:12px;color:var(--es-muted);line-height:1.4;margin:0;">Immutable segments can't delete in-place &mdash; a <strong>.liv</strong> bitset (1 bit/doc) tracks live docs. Reclaimed on <strong style="color:var(--es-orange);">merge</strong>.</p>
+          <h3 style="margin:0 0 6px;font-size:16px;"><span class="highlight-pink">.liv File</span> &mdash; "which docs are still alive?"</h3>
+          <p style="font-size:14px;color:var(--es-muted);line-height:1.5;margin:0;">Immutable segments can't delete in-place &mdash; a <strong>.liv</strong> bitset (1 bit/doc) tracks live docs. Reclaimed on <strong style="color:var(--es-orange);">merge</strong>.</p>
         </div>
         <div style="flex-shrink:0;background:#0D0D15;border-radius:8px;padding:8px 12px;font-family:'JetBrains Mono',monospace;">
           <div style="display:flex;gap:4px;font-size:14px;font-weight:700;">
@@ -1958,18 +1964,18 @@ graph TB
   <div class="slide-content">
     <div class="slide-number">Write Path</div>
     <h2>Writing to <span class="highlight">Lucene</span></h2>
-    <p class="subtitle">How documents go from your application into a searchable index.</p>
+    <p class="subtitle" style="font-size:16px;">How documents go from your application into a searchable index.</p>
 
-    <div class="diagram-container" style="padding:16px 20px; margin-top:10px;">
-      <div style="width:100%;max-width:900px;margin:0 auto;position:relative;">
+    <div class="diagram-container" style="padding:24px 28px; margin-top:16px;">
+      <div style="width:100%;max-width:1000px;margin:0 auto;position:relative;">
 
         <!-- Actor boxes -->
-        <div style="display:flex;gap:6px;margin-bottom:0;">
-          <div style="flex:1;text-align:center;padding:7px 2px;border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;border:1.5px solid var(--es-muted);background:var(--es-card);color:var(--es-text);">Application</div>
-          <div style="flex:1;text-align:center;padding:7px 2px;border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;border:1.5px solid var(--es-yellow);background:var(--es-card);color:var(--es-yellow);">IndexWriter</div>
-          <div style="flex:1;text-align:center;padding:7px 2px;border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;border:1.5px solid var(--es-pink);background:var(--es-card);color:var(--es-pink);">Buffer</div>
-          <div style="flex:1;text-align:center;padding:7px 2px;border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;border:1.5px solid var(--es-orange);background:var(--es-card);color:var(--es-orange);">Segment</div>
-          <div style="flex:1;text-align:center;padding:7px 2px;border-radius:7px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;border:1.5px solid var(--es-teal);background:var(--es-card);color:var(--es-teal);">Disk</div>
+        <div style="display:flex;gap:8px;margin-bottom:0;">
+          <div style="flex:1;text-align:center;padding:10px 4px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;border:1.5px solid var(--es-muted);background:var(--es-card);color:var(--es-text);">Application</div>
+          <div style="flex:1;text-align:center;padding:10px 4px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;border:1.5px solid var(--es-yellow);background:var(--es-card);color:var(--es-yellow);">IndexWriter</div>
+          <div style="flex:1;text-align:center;padding:10px 4px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;border:1.5px solid var(--es-pink);background:var(--es-card);color:var(--es-pink);">Buffer</div>
+          <div style="flex:1;text-align:center;padding:10px 4px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;border:1.5px solid var(--es-orange);background:var(--es-card);color:var(--es-orange);">Segment</div>
+          <div style="flex:1;text-align:center;padding:10px 4px;border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;border:1.5px solid var(--es-teal);background:var(--es-card);color:var(--es-teal);">Disk</div>
         </div>
 
         <!-- Lifelines -->
@@ -1982,61 +1988,61 @@ graph TB
         </div>
 
         <!-- Step 1: App → IndexWriter: addDocument(doc) -->
-        <div class="reveal" style="position:relative;padding:12px 0 4px;">
-          <svg viewBox="0 0 1000 44" preserveAspectRatio="xMidYMid meet" style="width:100%;height:44px;display:block;overflow:visible;">
+        <div class="reveal" style="position:relative;padding:16px 0 6px;">
+          <svg viewBox="0 0 1000 50" preserveAspectRatio="xMidYMid meet" style="width:100%;height:50px;display:block;overflow:visible;">
             <defs><marker id="lw1" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FEC514"/></marker></defs>
-            <rect x="120" y="2" width="150" height="20" rx="4" fill="rgba(254,197,20,0.08)" stroke="rgba(254,197,20,0.25)" stroke-width="1"/>
-            <text x="195" y="16" fill="#FEC514" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;">addDocument(doc)</text>
-            <line x1="100" y1="34" x2="290" y2="34" stroke="#FEC514" stroke-width="2" marker-end="url(#lw1)"/>
+            <rect x="120" y="2" width="160" height="24" rx="4" fill="rgba(254,197,20,0.08)" stroke="rgba(254,197,20,0.25)" stroke-width="1"/>
+            <text x="200" y="18" fill="#FEC514" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;">addDocument(doc)</text>
+            <line x1="100" y1="38" x2="290" y2="38" stroke="#FEC514" stroke-width="2.5" marker-end="url(#lw1)"/>
           </svg>
         </div>
 
         <!-- Step 2: IndexWriter → Buffer: Analyze + build inverted index -->
-        <div class="reveal" style="position:relative;padding:4px 0;">
-          <svg viewBox="0 0 1000 70" preserveAspectRatio="xMidYMid meet" style="width:100%;height:70px;display:block;overflow:visible;">
+        <div class="reveal" style="position:relative;padding:6px 0;">
+          <svg viewBox="0 0 1000 80" preserveAspectRatio="xMidYMid meet" style="width:100%;height:80px;display:block;overflow:visible;">
             <defs><marker id="lw2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#F04E98"/></marker></defs>
-            <rect x="305" y="0" width="185" height="20" rx="4" fill="rgba(240,78,152,0.08)" stroke="rgba(240,78,152,0.25)" stroke-width="1"/>
-            <text x="397" y="14" fill="#F04E98" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;">Analyze + build inverted index</text>
-            <line x1="300" y1="30" x2="490" y2="30" stroke="#F04E98" stroke-width="2" marker-end="url(#lw2)"/>
+            <rect x="305" y="0" width="195" height="24" rx="4" fill="rgba(240,78,152,0.08)" stroke="rgba(240,78,152,0.25)" stroke-width="1"/>
+            <text x="402" y="17" fill="#F04E98" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;">Analyze + build inverted index</text>
+            <line x1="300" y1="34" x2="490" y2="34" stroke="#F04E98" stroke-width="2.5" marker-end="url(#lw2)"/>
             <!-- Note: In RAM only -->
-            <rect x="410" y="40" width="190" height="28" rx="6" fill="rgba(240,78,152,0.06)" stroke="rgba(240,78,152,0.15)" stroke-width="1"/>
-            <text x="505" y="59" fill="#F04E98" text-anchor="middle" style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;">In RAM only. Not searchable.</text>
+            <rect x="410" y="44" width="200" height="30" rx="6" fill="rgba(240,78,152,0.06)" stroke="rgba(240,78,152,0.15)" stroke-width="1"/>
+            <text x="510" y="64" fill="#F04E98" text-anchor="middle" style="font-family:'Lora',serif;font-size:13px;font-weight:500;">In RAM only. Not searchable.</text>
           </svg>
         </div>
 
         <!-- Step 3: FLUSH — IndexWriter → Segment -->
-        <div class="reveal" style="position:relative;padding:4px 0;">
-          <svg viewBox="0 0 1000 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:90px;display:block;overflow:visible;">
+        <div class="reveal" style="position:relative;padding:6px 0;">
+          <svg viewBox="0 0 1000 100" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100px;display:block;overflow:visible;">
             <defs><marker id="lw3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#FEC514"/></marker></defs>
             <!-- FLUSH phase label -->
-            <rect x="290" y="0" width="58" height="17" rx="4" fill="rgba(254,197,20,0.15)" stroke="rgba(254,197,20,0.3)" stroke-width="1"/>
-            <text x="319" y="12" fill="#FEC514" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;">FLUSH</text>
+            <rect x="290" y="0" width="64" height="20" rx="4" fill="rgba(254,197,20,0.15)" stroke="rgba(254,197,20,0.3)" stroke-width="1"/>
+            <text x="322" y="14" fill="#FEC514" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;">FLUSH</text>
             <!-- Label above arrow -->
-            <rect x="370" y="24" width="205" height="20" rx="4" fill="rgba(254,197,20,0.08)" stroke="rgba(254,197,20,0.25)" stroke-width="1"/>
-            <text x="472" y="38" fill="#FEC514" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;">Write buffer → segment files</text>
+            <rect x="370" y="28" width="220" height="24" rx="4" fill="rgba(254,197,20,0.08)" stroke="rgba(254,197,20,0.25)" stroke-width="1"/>
+            <text x="480" y="44" fill="#FEC514" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;">Write buffer → segment files</text>
             <!-- Arrow: IW → Segment -->
-            <line x1="300" y1="54" x2="690" y2="54" stroke="#FEC514" stroke-width="2" marker-end="url(#lw3)"/>
+            <line x1="300" y1="62" x2="690" y2="62" stroke="#FEC514" stroke-width="2.5" marker-end="url(#lw3)"/>
             <!-- Note: Searchable via NRT -->
-            <rect x="570" y="62" width="230" height="28" rx="6" fill="rgba(254,197,20,0.06)" stroke="rgba(254,197,20,0.15)" stroke-width="1"/>
-            <text x="685" y="81" fill="#FEC514" text-anchor="middle" style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;">OS page cache. Searchable (NRT)!</text>
+            <rect x="570" y="72" width="240" height="30" rx="6" fill="rgba(254,197,20,0.06)" stroke="rgba(254,197,20,0.15)" stroke-width="1"/>
+            <text x="690" y="92" fill="#FEC514" text-anchor="middle" style="font-family:'Lora',serif;font-size:13px;font-weight:500;">OS page cache. Searchable (NRT)!</text>
           </svg>
         </div>
 
         <!-- Step 4: COMMIT — IndexWriter → Disk -->
-        <div class="reveal" style="position:relative;padding:4px 0;">
-          <svg viewBox="0 0 1000 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:90px;display:block;overflow:visible;">
+        <div class="reveal" style="position:relative;padding:6px 0;">
+          <svg viewBox="0 0 1000 100" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100px;display:block;overflow:visible;">
             <defs><marker id="lw4" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#00BFB3"/></marker></defs>
             <!-- COMMIT phase label -->
-            <rect x="290" y="0" width="70" height="17" rx="4" fill="rgba(0,191,179,0.15)" stroke="rgba(0,191,179,0.3)" stroke-width="1"/>
-            <text x="325" y="12" fill="#00BFB3" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;">COMMIT</text>
+            <rect x="290" y="0" width="76" height="20" rx="4" fill="rgba(0,191,179,0.15)" stroke="rgba(0,191,179,0.3)" stroke-width="1"/>
+            <text x="328" y="14" fill="#00BFB3" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;">COMMIT</text>
             <!-- Label above arrow -->
-            <rect x="420" y="24" width="240" height="20" rx="4" fill="rgba(0,191,179,0.08)" stroke="rgba(0,191,179,0.25)" stroke-width="1"/>
-            <text x="540" y="38" fill="#00BFB3" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;">fsync segments + write segments_N</text>
+            <rect x="420" y="28" width="260" height="24" rx="4" fill="rgba(0,191,179,0.08)" stroke="rgba(0,191,179,0.25)" stroke-width="1"/>
+            <text x="550" y="44" fill="#00BFB3" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;">fsync segments + write segments_N</text>
             <!-- Arrow: IW → Disk -->
-            <line x1="300" y1="54" x2="890" y2="54" stroke="#00BFB3" stroke-width="2" marker-end="url(#lw4)"/>
+            <line x1="300" y1="62" x2="890" y2="62" stroke="#00BFB3" stroke-width="2.5" marker-end="url(#lw4)"/>
             <!-- Note: Durable -->
-            <rect x="770" y="62" width="180" height="28" rx="6" fill="rgba(0,191,179,0.06)" stroke="rgba(0,191,179,0.15)" stroke-width="1"/>
-            <text x="860" y="81" fill="#00BFB3" text-anchor="middle" style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;">Durable + crash-safe.</text>
+            <rect x="770" y="72" width="190" height="30" rx="6" fill="rgba(0,191,179,0.06)" stroke="rgba(0,191,179,0.15)" stroke-width="1"/>
+            <text x="865" y="92" fill="#00BFB3" text-anchor="middle" style="font-family:'Lora',serif;font-size:13px;font-weight:500;">Durable + crash-safe.</text>
           </svg>
         </div>
 
@@ -2050,12 +2056,12 @@ graph TB
 <!-- SLIDE 7: WHERE DOES DATA LIVE -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part I: Lucene" data-section-color="yellow" id="slide-7">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number">Durability</div>
     <h2>Where Does the Data <span class="highlight-green">Actually Live</span>?</h2>
-    <p class="subtitle">Data passes through three layers, each with different trade-offs between speed and safety.</p>
+    <p class="subtitle" style="font-size:16px;">Data passes through three layers, each with different trade-offs between speed and safety.</p>
 
-    <div class="durability-panels" style="display:flex; align-items:stretch; gap:0; margin-top:20px;">
+    <div class="durability-panels" style="display:flex; align-items:stretch; gap:0; margin-top:24px;">
 
       <!-- Panel 1: In-Memory Buffer -->
       <div style="flex:1; position:relative; overflow:hidden;">
@@ -2189,7 +2195,7 @@ graph TB
             <rect x="540" y="18" width="135" height="28" rx="6" fill="rgba(167,139,250,0.08)" stroke="#A78BFA" stroke-width="1.5"/>
             <text x="607" y="37" fill="#A78BFA" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;">Term: "laptop"</text>
             <!-- Note -->
-            <text x="500" y="64" fill="#8888AA" text-anchor="middle" style="font-family:'Outfit',sans-serif;font-size:10px;">tokenize + lowercase (same analyzer as index time)</text>
+            <text x="500" y="64" fill="#8888AA" text-anchor="middle" style="font-family:'Lora',serif;font-size:10px;">tokenize + lowercase (same analyzer as index time)</text>
           </svg>
         </div>
 
@@ -2299,69 +2305,69 @@ graph TB
 <!-- SLIDE: BM25 SCORING -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part I: Lucene" data-section-color="yellow" id="slide-scoring">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number">Relevance</div>
     <h2>How Lucene <span class="highlight-purple">Scores</span> Results: <span class="highlight">BM25</span></h2>
-    <p class="subtitle">Every matching document gets a relevance score. Lucene uses BM25 &mdash; an evolution of TF-IDF with term frequency saturation.</p>
+    <p class="subtitle" style="font-size:16px;">Every matching document gets a relevance score. Lucene uses BM25 &mdash; an evolution of TF-IDF with term frequency saturation.</p>
 
-    <div class="two-col" style="gap:24px;margin-top:14px;">
+    <div class="two-col" style="gap:28px;margin-top:18px;">
       <div>
         <!-- Simplified formula -->
-        <div style="border:1px solid rgba(167,139,250,0.2);border-radius:12px;padding:14px;background:rgba(167,139,250,0.02);margin-bottom:10px;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;text-align:center;padding:10px 14px;border-radius:8px;background:#0D0D15;color:var(--es-text);line-height:1.6;">
+        <div style="border:1px solid rgba(167,139,250,0.2);border-radius:12px;padding:18px;background:rgba(167,139,250,0.02);margin-bottom:14px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:15px;text-align:center;padding:12px 16px;border-radius:8px;background:#0D0D15;color:var(--es-text);line-height:1.6;">
             score(q,d) = <span style="color:var(--es-muted);">&Sigma;</span> <span style="color:var(--es-purple);">IDF(t)</span> &times; <span style="color:var(--es-yellow);">TF(t,d)</span> &times; <span style="color:var(--es-teal);">norm(d)</span>
           </div>
-          <div style="font-size:10px;color:var(--es-muted);text-align:center;margin-top:6px;">summed for each query term</div>
+          <div style="font-size:12px;color:var(--es-muted);text-align:center;margin-top:8px;">summed for each query term</div>
         </div>
 
         <!-- IDF -->
-        <div style="border:1px solid rgba(167,139,250,0.15);border-radius:10px;padding:10px 14px;background:rgba(167,139,250,0.02);margin-bottom:8px;">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <span style="font-size:10px;font-weight:800;color:var(--es-dark);background:var(--es-purple);padding:2px 8px;border-radius:4px;">IDF</span>
-            <span style="font-size:12px;font-weight:600;">Inverse Document Frequency</span>
+        <div style="border:1px solid rgba(167,139,250,0.15);border-radius:10px;padding:14px 16px;background:rgba(167,139,250,0.02);margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span style="font-size:12px;font-weight:800;color:var(--es-dark);background:var(--es-purple);padding:3px 10px;border-radius:4px;">IDF</span>
+            <span style="font-size:14px;font-weight:600;">Inverse Document Frequency</span>
           </div>
-          <p style="font-size:11px;color:var(--es-muted);">How <strong style="color:var(--es-text);">rare</strong> is the term? Rare terms score much higher.</p>
-          <div style="display:flex;gap:8px;margin-top:6px;">
-            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:6px 8px;text-align:center;">
-              <div style="font-size:10px;color:var(--es-muted);">"the" &mdash; 99% of docs</div>
-              <div style="height:4px;border-radius:2px;background:#1e1e2e;margin-top:4px;">
+          <p style="font-size:13px;color:var(--es-muted);">How <strong style="color:var(--es-text);">rare</strong> is the term? Rare terms score much higher.</p>
+          <div style="display:flex;gap:10px;margin-top:8px;">
+            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:8px 10px;text-align:center;">
+              <div style="font-size:12px;color:var(--es-muted);">"the" &mdash; 99% of docs</div>
+              <div style="height:5px;border-radius:2px;background:#1e1e2e;margin-top:6px;">
                 <div style="height:100%;width:8%;border-radius:2px;background:var(--es-red);"></div>
               </div>
-              <div style="font-size:10px;color:var(--es-red);margin-top:2px;font-family:'JetBrains Mono',monospace;">IDF &asymp; 0.01</div>
+              <div style="font-size:12px;color:var(--es-red);margin-top:4px;font-family:'JetBrains Mono',monospace;">IDF &asymp; 0.01</div>
             </div>
-            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:6px 8px;text-align:center;">
-              <div style="font-size:10px;color:var(--es-muted);">"elasticsearch" &mdash; 2% of docs</div>
-              <div style="height:4px;border-radius:2px;background:#1e1e2e;margin-top:4px;">
+            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:8px 10px;text-align:center;">
+              <div style="font-size:12px;color:var(--es-muted);">"elasticsearch" &mdash; 2% of docs</div>
+              <div style="height:5px;border-radius:2px;background:#1e1e2e;margin-top:6px;">
                 <div style="height:100%;width:85%;border-radius:2px;background:var(--es-green);"></div>
               </div>
-              <div style="font-size:10px;color:var(--es-green);margin-top:2px;font-family:'JetBrains Mono',monospace;">IDF &asymp; 3.9</div>
+              <div style="font-size:12px;color:var(--es-green);margin-top:4px;font-family:'JetBrains Mono',monospace;">IDF &asymp; 3.9</div>
             </div>
           </div>
         </div>
 
         <!-- TF -->
-        <div style="border:1px solid rgba(254,197,20,0.15);border-radius:10px;padding:10px 14px;background:rgba(254,197,20,0.02);margin-bottom:8px;">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <span style="font-size:10px;font-weight:800;color:var(--es-dark);background:var(--es-yellow);padding:2px 8px;border-radius:4px;">TF</span>
-            <span style="font-size:12px;font-weight:600;">Term Frequency <span style="font-weight:400;color:var(--es-muted);font-size:10px;">(with saturation)</span></span>
+        <div style="border:1px solid rgba(254,197,20,0.15);border-radius:10px;padding:14px 16px;background:rgba(254,197,20,0.02);margin-bottom:10px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span style="font-size:12px;font-weight:800;color:var(--es-dark);background:var(--es-yellow);padding:3px 10px;border-radius:4px;">TF</span>
+            <span style="font-size:14px;font-weight:600;">Term Frequency <span style="font-weight:400;color:var(--es-muted);font-size:12px;">(with saturation)</span></span>
           </div>
-          <p style="font-size:11px;color:var(--es-muted);">More occurrences = higher score, but with <strong style="color:var(--es-yellow);">diminishing returns</strong>.</p>
-          <div style="display:flex;gap:4px;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:10px;flex-wrap:wrap;">
-            <span style="padding:3px 7px;border-radius:4px;background:rgba(254,197,20,0.08);color:var(--es-yellow);">tf=1 &rarr; 0.55</span>
-            <span style="padding:3px 7px;border-radius:4px;background:rgba(254,197,20,0.12);color:var(--es-yellow);">tf=3 &rarr; 0.77</span>
-            <span style="padding:3px 7px;border-radius:4px;background:rgba(254,197,20,0.18);color:var(--es-yellow);">tf=10 &rarr; 0.89</span>
-            <span style="padding:3px 7px;border-radius:4px;background:rgba(254,197,20,0.22);color:var(--es-yellow);">tf=100 &rarr; 0.99</span>
+          <p style="font-size:13px;color:var(--es-muted);">More occurrences = higher score, but with <strong style="color:var(--es-yellow);">diminishing returns</strong>.</p>
+          <div style="display:flex;gap:6px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:12px;flex-wrap:wrap;">
+            <span style="padding:4px 9px;border-radius:4px;background:rgba(254,197,20,0.08);color:var(--es-yellow);">tf=1 &rarr; 0.55</span>
+            <span style="padding:4px 9px;border-radius:4px;background:rgba(254,197,20,0.12);color:var(--es-yellow);">tf=3 &rarr; 0.77</span>
+            <span style="padding:4px 9px;border-radius:4px;background:rgba(254,197,20,0.18);color:var(--es-yellow);">tf=10 &rarr; 0.89</span>
+            <span style="padding:4px 9px;border-radius:4px;background:rgba(254,197,20,0.22);color:var(--es-yellow);">tf=100 &rarr; 0.99</span>
           </div>
         </div>
 
         <!-- Norm -->
-        <div style="border:1px solid rgba(0,191,179,0.15);border-radius:10px;padding:10px 14px;background:rgba(0,191,179,0.02);">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-            <span style="font-size:10px;font-weight:800;color:var(--es-dark);background:var(--es-teal);padding:2px 8px;border-radius:4px;">NORM</span>
-            <span style="font-size:12px;font-weight:600;">Field Length Normalization</span>
+        <div style="border:1px solid rgba(0,191,179,0.15);border-radius:10px;padding:14px 16px;background:rgba(0,191,179,0.02);">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span style="font-size:12px;font-weight:800;color:var(--es-dark);background:var(--es-teal);padding:3px 10px;border-radius:4px;">NORM</span>
+            <span style="font-size:14px;font-weight:600;">Field Length Normalization</span>
           </div>
-          <p style="font-size:11px;color:var(--es-muted);"><strong style="color:var(--es-text);">Shorter fields rank higher.</strong> "laptop" in a 3-word title beats "laptop" in a 500-word body.</p>
-          <div style="display:flex;gap:10px;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:10px;">
+          <p style="font-size:13px;color:var(--es-muted);"><strong style="color:var(--es-text);">Shorter fields rank higher.</strong> "laptop" in a 3-word title beats "laptop" in a 500-word body.</p>
+          <div style="display:flex;gap:12px;margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:12px;">
             <span style="color:var(--es-teal);">b = 0.75</span>
             <span style="color:var(--es-muted);">controls length sensitivity (0 = ignore length)</span>
           </div>
@@ -2370,83 +2376,83 @@ graph TB
 
       <!-- Right Column: Practical Example -->
       <div>
-        <h3 style="margin-bottom:10px;">Example: <code style="color:var(--es-yellow);font-size:15px;">"laptop"</code></h3>
+        <h3 style="margin-bottom:12px;font-size:18px;">Example: <code style="color:var(--es-yellow);font-size:17px;">"laptop"</code></h3>
 
         <!-- Doc A: High score -->
-        <div style="border:1px solid rgba(0,214,143,0.3);border-radius:10px;padding:12px 14px;background:rgba(0,214,143,0.03);margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="border:1px solid rgba(0,214,143,0.3);border-radius:10px;padding:16px 18px;background:rgba(0,214,143,0.03);margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <div>
-              <span style="font-size:12px;font-weight:700;color:var(--es-green);">Doc A</span>
-              <span style="font-size:11px;color:var(--es-muted);margin-left:6px;">title: "Laptop Pro Max"</span>
+              <span style="font-size:14px;font-weight:700;color:var(--es-green);">Doc A</span>
+              <span style="font-size:13px;color:var(--es-muted);margin-left:8px;">title: "Laptop Pro Max"</span>
             </div>
-            <span style="font-size:16px;font-weight:800;color:var(--es-green);font-family:'JetBrains Mono',monospace;">8.2</span>
+            <span style="font-size:20px;font-weight:800;color:var(--es-green);font-family:'JetBrains Mono',monospace;">8.2</span>
           </div>
-          <div style="display:flex;gap:6px;">
-            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:6px 8px;">
-              <div style="font-size:9px;color:var(--es-purple);font-weight:600;">IDF</div>
-              <div style="height:4px;border-radius:2px;background:#1e1e2e;margin:4px 0;">
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:8px 10px;">
+              <div style="font-size:11px;color:var(--es-purple);font-weight:600;">IDF</div>
+              <div style="height:5px;border-radius:2px;background:#1e1e2e;margin:5px 0;">
                 <div style="height:100%;width:70%;border-radius:2px;background:var(--es-purple);"></div>
               </div>
-              <div style="font-size:10px;color:var(--es-purple);font-family:'JetBrains Mono',monospace;">3.2</div>
+              <div style="font-size:12px;color:var(--es-purple);font-family:'JetBrains Mono',monospace;">3.2</div>
             </div>
-            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:6px 8px;">
-              <div style="font-size:9px;color:var(--es-yellow);font-weight:600;">TF</div>
-              <div style="height:4px;border-radius:2px;background:#1e1e2e;margin:4px 0;">
+            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:8px 10px;">
+              <div style="font-size:11px;color:var(--es-yellow);font-weight:600;">TF</div>
+              <div style="height:5px;border-radius:2px;background:#1e1e2e;margin:5px 0;">
                 <div style="height:100%;width:55%;border-radius:2px;background:var(--es-yellow);"></div>
               </div>
-              <div style="font-size:10px;color:var(--es-yellow);font-family:'JetBrains Mono',monospace;">1&times; (0.55)</div>
+              <div style="font-size:12px;color:var(--es-yellow);font-family:'JetBrains Mono',monospace;">1&times; (0.55)</div>
             </div>
-            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:6px 8px;">
-              <div style="font-size:9px;color:var(--es-teal);font-weight:600;">NORM</div>
-              <div style="height:4px;border-radius:2px;background:#1e1e2e;margin:4px 0;">
+            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:8px 10px;">
+              <div style="font-size:11px;color:var(--es-teal);font-weight:600;">NORM</div>
+              <div style="height:5px;border-radius:2px;background:#1e1e2e;margin:5px 0;">
                 <div style="height:100%;width:90%;border-radius:2px;background:var(--es-teal);"></div>
               </div>
-              <div style="font-size:10px;color:var(--es-teal);">3 words &uarr;&uarr;</div>
+              <div style="font-size:12px;color:var(--es-teal);">3 words &uarr;&uarr;</div>
             </div>
           </div>
         </div>
 
         <!-- Doc B: Low score -->
-        <div style="border:1px solid rgba(255,77,106,0.2);border-radius:10px;padding:12px 14px;background:rgba(255,77,106,0.02);margin-bottom:12px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="border:1px solid rgba(255,77,106,0.2);border-radius:10px;padding:16px 18px;background:rgba(255,77,106,0.02);margin-bottom:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
             <div>
-              <span style="font-size:12px;font-weight:700;color:var(--es-red);">Doc B</span>
-              <span style="font-size:11px;color:var(--es-muted);margin-left:6px;">body: "This store sells ...laptop... (500 words)"</span>
+              <span style="font-size:14px;font-weight:700;color:var(--es-red);">Doc B</span>
+              <span style="font-size:13px;color:var(--es-muted);margin-left:8px;">body: "This store sells ...laptop... (500 words)"</span>
             </div>
-            <span style="font-size:16px;font-weight:800;color:var(--es-red);font-family:'JetBrains Mono',monospace;">1.4</span>
+            <span style="font-size:20px;font-weight:800;color:var(--es-red);font-family:'JetBrains Mono',monospace;">1.4</span>
           </div>
-          <div style="display:flex;gap:6px;">
-            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:6px 8px;">
-              <div style="font-size:9px;color:var(--es-purple);font-weight:600;">IDF</div>
-              <div style="height:4px;border-radius:2px;background:#1e1e2e;margin:4px 0;">
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:8px 10px;">
+              <div style="font-size:11px;color:var(--es-purple);font-weight:600;">IDF</div>
+              <div style="height:5px;border-radius:2px;background:#1e1e2e;margin:5px 0;">
                 <div style="height:100%;width:70%;border-radius:2px;background:var(--es-purple);"></div>
               </div>
-              <div style="font-size:10px;color:var(--es-purple);font-family:'JetBrains Mono',monospace;">3.2</div>
+              <div style="font-size:12px;color:var(--es-purple);font-family:'JetBrains Mono',monospace;">3.2</div>
             </div>
-            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:6px 8px;">
-              <div style="font-size:9px;color:var(--es-yellow);font-weight:600;">TF</div>
-              <div style="height:4px;border-radius:2px;background:#1e1e2e;margin:4px 0;">
+            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:8px 10px;">
+              <div style="font-size:11px;color:var(--es-yellow);font-weight:600;">TF</div>
+              <div style="height:5px;border-radius:2px;background:#1e1e2e;margin:5px 0;">
                 <div style="height:100%;width:55%;border-radius:2px;background:var(--es-yellow);"></div>
               </div>
-              <div style="font-size:10px;color:var(--es-yellow);font-family:'JetBrains Mono',monospace;">1&times; (0.55)</div>
+              <div style="font-size:12px;color:var(--es-yellow);font-family:'JetBrains Mono',monospace;">1&times; (0.55)</div>
             </div>
-            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:6px 8px;">
-              <div style="font-size:9px;color:var(--es-teal);font-weight:600;">NORM</div>
-              <div style="height:4px;border-radius:2px;background:#1e1e2e;margin:4px 0;">
+            <div style="flex:1;background:#0D0D15;border-radius:6px;padding:8px 10px;">
+              <div style="font-size:11px;color:var(--es-teal);font-weight:600;">NORM</div>
+              <div style="height:5px;border-radius:2px;background:#1e1e2e;margin:5px 0;">
                 <div style="height:100%;width:8%;border-radius:2px;background:var(--es-teal);"></div>
               </div>
-              <div style="font-size:10px;color:var(--es-teal);">500 words &darr;&darr;</div>
+              <div style="font-size:12px;color:var(--es-teal);">500 words &darr;&darr;</div>
             </div>
           </div>
         </div>
 
         <!-- Key Insights -->
-        <div style="border:1px solid rgba(254,197,20,0.2);border-radius:10px;padding:12px 14px;background:rgba(254,197,20,0.03);">
-          <div style="font-size:12px;font-weight:700;color:var(--es-yellow);margin-bottom:6px;">Key Insights</div>
-          <div style="font-size:11px;color:var(--es-muted);line-height:1.7;">
+        <div style="border:1px solid rgba(254,197,20,0.2);border-radius:10px;padding:16px 18px;background:rgba(254,197,20,0.03);">
+          <div style="font-size:14px;font-weight:700;color:var(--es-yellow);margin-bottom:8px;">Key Insights</div>
+          <div style="font-size:13px;color:var(--es-muted);line-height:1.8;">
             &bull; Score is computed <strong style="color:var(--es-text);">per segment</strong> (each segment has its own IDF stats)<br>
-            &bull; <code style="font-size:10px;color:var(--es-yellow);">k1 = 1.2</code> controls TF saturation, <code style="font-size:10px;color:var(--es-teal);">b = 0.75</code> field-length impact<br>
-            &bull; Use <code style="font-size:10px;color:var(--es-pink);">"explain": true</code> in your query to see the full breakdown<br>
+            &bull; <code style="font-size:12px;color:var(--es-yellow);">k1 = 1.2</code> controls TF saturation, <code style="font-size:12px;color:var(--es-teal);">b = 0.75</code> field-length impact<br>
+            &bull; Use <code style="font-size:12px;color:var(--es-pink);">"explain": true</code> in your query to see the full breakdown<br>
             &bull; Replaced TF-IDF as default in <strong style="color:var(--es-text);">Lucene 6+ / ES 5+</strong>
           </div>
         </div>
@@ -2459,12 +2465,12 @@ graph TB
 <!-- SLIDE 9: DELETE & UPDATE -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part I: Lucene" data-section-color="yellow" id="slide-9">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number">Immutability Consequences</div>
     <h2>Delete & Update in <span class="highlight-pink">Lucene</span></h2>
-    <p class="subtitle">Since segments are immutable, neither delete nor update can modify existing data in-place.</p>
+    <p class="subtitle" style="font-size:16px;">Since segments are immutable, neither delete nor update can modify existing data in-place.</p>
 
-    <div class="two-col" style="gap:28px;">
+    <div class="two-col" style="gap:28px;margin-top:16px;">
       <div>
         <h3><span class="highlight-red">Delete</span></h3>
         <p style="font-size:13px;color:var(--es-muted);margin:6px 0 10px;">Document <strong style="color:var(--es-text);">stays</strong> in the segment. A <code>.liv</code> bitset tracks who's alive.</p>
@@ -2614,12 +2620,12 @@ graph LR
 <!-- SLIDE 10b: WHY MERGE + MERGE POLICY -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part I: Lucene" data-section-color="yellow" id="slide-10b">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number">Maintenance</div>
     <h2>Why Merge &amp; <span class="highlight-orange">Merge Policy</span></h2>
-    <p class="subtitle">Merging is essential for keeping search performance high and reclaiming disk space.</p>
+    <p class="subtitle" style="font-size:16px;">Merging is essential for keeping search performance high and reclaiming disk space.</p>
 
-    <div class="two-col" style="margin-top:16px;">
+    <div class="two-col" style="margin-top:20px;">
       <div>
         <h3>Why Merge?</h3>
         <div class="card" style="margin-top:12px;">
@@ -2699,38 +2705,38 @@ graph LR
 <!-- SLIDE 12: LUCENE'S PROBLEMS -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part II: Problems" data-section-color="red" id="slide-12">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number" style="color:var(--es-red);">The Hard Problems</div>
     <h2>What Lucene <span class="highlight-red">Can't Do</span></h2>
 
-    <div class="card-grid grid-2" style="margin-top:20px;">
-      <div class="reveal problem-card" style="padding:18px;">
-        <h3>1. Single-Node Only</h3>
-        <p>Your data must fit on one machine. No built-in distribution.</p>
+    <div class="card-grid grid-2" style="margin-top:28px;gap:16px;">
+      <div class="reveal problem-card" style="padding:24px;">
+        <h3 style="font-size:18px;">1. Single-Node Only</h3>
+        <p style="font-size:15px;">Your data must fit on one machine. No built-in distribution.</p>
       </div>
-      <div class="reveal problem-card" style="padding:18px;">
-        <h3>2. No High Availability</h3>
-        <p>One server down = total outage. No replication, no failover.</p>
+      <div class="reveal problem-card" style="padding:24px;">
+        <h3 style="font-size:18px;">2. No High Availability</h3>
+        <p style="font-size:15px;">One server down = total outage. No replication, no failover.</p>
       </div>
-      <div class="reveal problem-card" style="padding:18px;">
-        <h3>3. Commit is Expensive</h3>
-        <p><code>fsync</code> after every doc? ~100 docs/sec. Unusable.</p>
+      <div class="reveal problem-card" style="padding:24px;">
+        <h3 style="font-size:18px;">3. Commit is Expensive</h3>
+        <p style="font-size:15px;"><code>fsync</code> after every doc? ~100 docs/sec. Unusable.</p>
       </div>
-      <div class="reveal problem-card" style="padding:18px;">
-        <h3>4. Not Real-Time</h3>
-        <p>Docs invisible until next commit or reader reopen.</p>
+      <div class="reveal problem-card" style="padding:24px;">
+        <h3 style="font-size:18px;">4. Not Real-Time</h3>
+        <p style="font-size:15px;">Docs invisible until next commit or reader reopen.</p>
       </div>
-      <div class="reveal problem-card" style="padding:18px;">
-        <h3>5. No HTTP API</h3>
-        <p>Java library only. Need your own server layer for other languages.</p>
+      <div class="reveal problem-card" style="padding:24px;">
+        <h3 style="font-size:18px;">5. No HTTP API</h3>
+        <p style="font-size:15px;">Java library only. Need your own server layer for other languages.</p>
       </div>
-      <div class="reveal problem-card" style="padding:18px;">
-        <h3>6. No Schema Management</h3>
-        <p>You handle field types, backward compatibility, reindexing yourself.</p>
+      <div class="reveal problem-card" style="padding:24px;">
+        <h3 style="font-size:18px;">6. No Schema Management</h3>
+        <p style="font-size:15px;">You handle field types, backward compatibility, reindexing yourself.</p>
       </div>
     </div>
 
-    <div class="reveal" style="margin-top:20px; text-align:center; font-size:20px;">
+    <div class="reveal" style="margin-top:28px; text-align:center; font-size:22px;">
       <span class="highlight" style="font-weight:700;">These are exactly the problems Elasticsearch was built to solve. &darr;</span>
     </div>
   </div>
@@ -2754,53 +2760,53 @@ graph LR
 <!-- SLIDE 14: ES SOLVES LUCENE'S PROBLEMS -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part III: Elasticsearch" data-section-color="teal" id="slide-14">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number" style="color:var(--es-teal);">Solutions</div>
     <h2>How ES Solves <span class="highlight-teal">Each Problem</span></h2>
 
-    <div style="display:flex;flex-direction:column;gap:12px;margin-top:18px;">
+    <div style="display:flex;flex-direction:column;gap:16px;margin-top:24px;">
       <div class="reveal solution-pair" style="display:flex;gap:16px;align-items:stretch;">
-        <div class="problem-card" style="flex:1;opacity:0.7;margin:0;padding:20px;">
-          <h3>Single-Node Only</h3>
-          <p>Lucene runs on one machine.</p>
+        <div class="problem-card" style="flex:1;opacity:0.7;margin:0;padding:22px;">
+          <h3 style="font-size:16px;">Single-Node Only</h3>
+          <p style="font-size:14px;">Lucene runs on one machine.</p>
         </div>
         <div style="display:flex;align-items:center;font-size:24px;color:var(--es-teal);">&rarr;</div>
-        <div class="solution-card" style="flex:2;margin:0;padding:20px;">
-          <h3>Sharding &rarr; Horizontal Scaling</h3>
-          <p>Split into <strong>shards</strong> (each a Lucene index), distribute across nodes. 10TB? 10 nodes with 1TB each.</p>
+        <div class="solution-card" style="flex:2;margin:0;padding:22px;">
+          <h3 style="font-size:16px;">Sharding &rarr; Horizontal Scaling</h3>
+          <p style="font-size:14px;">Split into <strong>shards</strong> (each a Lucene index), distribute across nodes. 10TB? 10 nodes with 1TB each.</p>
         </div>
       </div>
       <div class="reveal solution-pair" style="display:flex;gap:16px;align-items:stretch;">
-        <div class="problem-card" style="flex:1;opacity:0.7;margin:0;padding:20px;">
-          <h3>No High Availability</h3>
-          <p>One server down = total outage.</p>
+        <div class="problem-card" style="flex:1;opacity:0.7;margin:0;padding:22px;">
+          <h3 style="font-size:16px;">No High Availability</h3>
+          <p style="font-size:14px;">One server down = total outage.</p>
         </div>
         <div style="display:flex;align-items:center;font-size:24px;color:var(--es-teal);">&rarr;</div>
-        <div class="solution-card" style="flex:2;margin:0;padding:20px;">
-          <h3>Replication &rarr; Fault Tolerance</h3>
-          <p><strong>Replica shards</strong> on different nodes. Primary dies? Replica promoted automatically. Zero downtime.</p>
+        <div class="solution-card" style="flex:2;margin:0;padding:22px;">
+          <h3 style="font-size:16px;">Replication &rarr; Fault Tolerance</h3>
+          <p style="font-size:14px;"><strong>Replica shards</strong> on different nodes. Primary dies? Replica promoted automatically. Zero downtime.</p>
         </div>
       </div>
       <div class="reveal solution-pair" style="display:flex;gap:16px;align-items:stretch;">
-        <div class="problem-card" style="flex:1;opacity:0.7;margin:0;padding:20px;">
-          <h3>Commit is Expensive</h3>
-          <p>fsync after every doc is too slow.</p>
+        <div class="problem-card" style="flex:1;opacity:0.7;margin:0;padding:22px;">
+          <h3 style="font-size:16px;">Commit is Expensive</h3>
+          <p style="font-size:14px;">fsync after every doc is too slow.</p>
         </div>
         <div style="display:flex;align-items:center;font-size:24px;color:var(--es-teal);">&rarr;</div>
-        <div class="solution-card" style="flex:2;margin:0;padding:20px;">
-          <h3>Translog &rarr; Cheap Durability</h3>
-          <p>Append-only <strong>transaction log</strong>, cheap to fsync. Full Lucene commits happen infrequently in the background.</p>
+        <div class="solution-card" style="flex:2;margin:0;padding:22px;">
+          <h3 style="font-size:16px;">Translog &rarr; Cheap Durability</h3>
+          <p style="font-size:14px;">Append-only <strong>transaction log</strong>, cheap to fsync. Full Lucene commits happen infrequently in the background.</p>
         </div>
       </div>
       <div class="reveal solution-pair" style="display:flex;gap:16px;align-items:stretch;">
-        <div class="problem-card" style="flex:1;opacity:0.7;margin:0;padding:20px;">
-          <h3>Not Real-Time</h3>
-          <p>Docs invisible until commit.</p>
+        <div class="problem-card" style="flex:1;opacity:0.7;margin:0;padding:22px;">
+          <h3 style="font-size:16px;">Not Real-Time</h3>
+          <p style="font-size:14px;">Docs invisible until commit.</p>
         </div>
         <div style="display:flex;align-items:center;font-size:24px;color:var(--es-teal);">&rarr;</div>
-        <div class="solution-card" style="flex:2;margin:0;padding:20px;">
-          <h3>Refresh &rarr; Near Real-Time</h3>
-          <p>New segments written to <strong>OS page cache</strong> every 1s. Searchable via NRT reader, no fsync needed.</p>
+        <div class="solution-card" style="flex:2;margin:0;padding:22px;">
+          <h3 style="font-size:16px;">Refresh &rarr; Near Real-Time</h3>
+          <p style="font-size:14px;">New segments written to <strong>OS page cache</strong> every 1s. Searchable via NRT reader, no fsync needed.</p>
         </div>
       </div>
     </div>
@@ -2811,13 +2817,13 @@ graph LR
 <!-- SLIDE 15: CLUSTER ARCHITECTURE -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part III: Elasticsearch" data-section-color="teal" id="slide-15">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number" style="color:var(--es-teal);">Architecture</div>
     <h2>Cluster, Nodes, <span class="highlight">Shards</span></h2>
 
-    <div class="reveal-children cluster-layout" style="display:flex;gap:22px;margin-top:16px;">
+    <div class="reveal-children cluster-layout" style="display:flex;flex-direction:column;gap:20px;margin-top:20px;">
       <!-- CLUSTER DIAGRAM -->
-      <div style="flex:3;">
+      <div>
         <div style="border:2px solid var(--es-blue);border-radius:14px;padding:16px;background:rgba(0,119,204,0.04);">
           <div style="font-size:13px;font-weight:700;color:var(--es-blue);margin-bottom:12px;font-family:'JetBrains Mono',monospace;">CLUSTER: "my-app"</div>
           <div style="display:flex;gap:10px;">
@@ -2886,25 +2892,25 @@ graph LR
       </div>
 
       <!-- INFO CARDS -->
-      <div style="flex:2;display:flex;flex-direction:column;gap:10px;">
-        <div class="card" style="padding:14px;margin:0;">
-          <h3 style="font-size:15px;"><span class="highlight-blue">Cluster</span></h3>
-          <p style="font-size:13px;">One or more nodes working together. Identified by a cluster name. Nodes auto-discover each other.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;">
+        <div class="card" style="padding:16px;margin:0;">
+          <h3 style="font-size:16px;"><span class="highlight-blue">Cluster</span></h3>
+          <p style="font-size:14px;">One or more nodes working together. Identified by a cluster name. Nodes auto-discover each other.</p>
         </div>
-        <div class="card" style="padding:14px;margin:0;">
-          <h3 style="font-size:15px;"><span class="highlight-teal">Node Roles</span></h3>
+        <div class="card" style="padding:16px;margin:0;">
+          <h3 style="font-size:16px;"><span class="highlight-teal">Node Roles</span></h3>
           <p style="font-size:13px;">
             <span class="tag tag-yellow" style="font-size:11px;">master</span> cluster state &nbsp;
             <span class="tag tag-teal" style="font-size:11px;">data</span> stores shards<br>
             <span class="tag tag-green" style="font-size:11px;">ingest</span> pipelines &nbsp;
             <span class="tag tag-blue" style="font-size:11px;">coordinating</span> routes requests</p>
         </div>
-        <div class="card" style="padding:14px;margin:0;">
-          <h3 style="font-size:15px;"><span class="highlight">Shard</span></h3>
-          <p style="font-size:13px;">Each shard = <strong>one Lucene index</strong>. ES distributes many Lucene indexes across machines. Each contains its own segments.</p>
+        <div class="card" style="padding:16px;margin:0;">
+          <h3 style="font-size:16px;"><span class="highlight">Shard</span></h3>
+          <p style="font-size:14px;">Each shard = <strong>one Lucene index</strong>. ES distributes many Lucene indexes across machines. Each contains its own segments.</p>
         </div>
-        <div class="card" style="padding:14px;margin:0;">
-          <h3 style="font-size:15px;"><span class="highlight-pink">Routing</span></h3>
+        <div class="card" style="padding:16px;margin:0;">
+          <h3 style="font-size:16px;"><span class="highlight-pink">Routing</span></h3>
           <p style="font-size:13px;"><code style="font-size:12px;">shard = hash(_routing) % num_primary_shards</code><br>Default: <code style="font-size:12px;">_routing = _id</code> &mdash; Why primary shard count is <strong>fixed</strong> at creation.</p>
         </div>
       </div>
@@ -2986,7 +2992,7 @@ graph LR
         <div class="reveal" style="position:relative;padding:6px 0;">
           <svg viewBox="0 0 1000 36" preserveAspectRatio="xMidYMid meet" style="width:100%;height:36px;display:block;overflow:visible;">
             <rect x="8" y="2" width="240" height="32" rx="7" fill="rgba(255,77,106,0.06)" stroke="rgba(255,77,106,0.2)" stroke-width="1"/>
-            <text x="128" y="23" fill="#FF4D6A" text-anchor="middle" style="font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;">Search → NOT FOUND YET</text>
+            <text x="128" y="23" fill="#FF4D6A" text-anchor="middle" style="font-family:'Lora',serif;font-size:14px;font-weight:600;">Search → NOT FOUND YET</text>
           </svg>
         </div>
 
@@ -3007,7 +3013,7 @@ graph LR
             <line x1="416" y1="58" x2="740" y2="58" stroke="#00D68F" stroke-width="2" marker-end="url(#nr5)"/>
             <!-- Note: no fsync -->
             <rect x="600" y="66" width="220" height="24" rx="6" fill="rgba(0,214,143,0.06)" stroke="rgba(0,214,143,0.12)" stroke-width="1"/>
-            <text x="710" y="82" fill="#00D68F" text-anchor="middle" style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;">No fsync needed! Just FS cache.</text>
+            <text x="710" y="82" fill="#00D68F" text-anchor="middle" style="font-family:'Lora',serif;font-size:12px;font-weight:500;">No fsync needed! Just FS cache.</text>
           </svg>
         </div>
 
@@ -3015,7 +3021,7 @@ graph LR
         <div class="reveal" style="position:relative;padding:6px 0;">
           <svg viewBox="0 0 1000 36" preserveAspectRatio="xMidYMid meet" style="width:100%;height:36px;display:block;overflow:visible;">
             <rect x="8" y="2" width="240" height="32" rx="7" fill="rgba(0,214,143,0.06)" stroke="rgba(0,214,143,0.2)" stroke-width="1"/>
-            <text x="128" y="23" fill="#00D68F" text-anchor="middle" style="font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;">Search again → FOUND!</text>
+            <text x="128" y="23" fill="#00D68F" text-anchor="middle" style="font-family:'Lora',serif;font-size:14px;font-weight:600;">Search again → FOUND!</text>
           </svg>
         </div>
 
@@ -3037,7 +3043,7 @@ graph LR
             <line x1="583" y1="28" x2="740" y2="28" stroke="#FF8B4A" stroke-width="2" marker-end="url(#nr7r)"/>
             <!-- Note -->
             <rect x="480" y="34" width="320" height="16" rx="5" fill="rgba(255,139,74,0.04)" stroke="rgba(255,139,74,0.1)" stroke-width="1"/>
-            <text x="640" y="46" fill="#FF8B4A" text-anchor="middle" style="font-family:'Outfit',sans-serif;font-size:11px;font-weight:500;">Lucene can't do this — ES translog adds durability</text>
+            <text x="640" y="46" fill="#FF8B4A" text-anchor="middle" style="font-family:'Lora',serif;font-size:11px;font-weight:500;">Lucene can't do this — ES translog adds durability</text>
           </svg>
         </div>
 
@@ -3068,12 +3074,12 @@ graph LR
 <!-- SLIDE 17: TRANSLOG -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part III: Elasticsearch" data-section-color="teal" id="slide-17">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number" style="color:var(--es-teal);">Durability</div>
     <h2>Translog: The <span class="highlight-pink">Transaction Log</span></h2>
-    <p class="subtitle">Refresh only writes to the filesystem cache &mdash; not durable. If the node crashes, unflushed data is lost. The translog prevents this.</p>
+    <p class="subtitle" style="font-size:16px;">Refresh only writes to the filesystem cache &mdash; not durable. If the node crashes, unflushed data is lost. The translog prevents this.</p>
 
-    <div class="two-col">
+    <div class="two-col" style="margin-top:16px;">
       <div>
         <div class="diagram-container" style="margin-top:0;">
           <div class="mermaid">
@@ -3121,34 +3127,34 @@ graph TB
       </div>
 
       <div>
-        <h3>How It Works</h3>
-        <div class="flow-steps">
+        <h3 style="font-size:20px;">How It Works</h3>
+        <div class="flow-steps" style="gap:16px;margin-top:14px;">
           <div class="flow-step">
-            <div class="step-number">1</div>
+            <div class="step-number" style="width:36px;height:36px;font-size:16px;">1</div>
             <div class="step-content">
-              <h4>Dual write</h4>
-              <p>Every operation goes to both in-memory buffer and translog.</p>
+              <h4 style="font-size:17px;">Dual write</h4>
+              <p style="font-size:15px;">Every operation goes to both in-memory buffer and translog.</p>
             </div>
           </div>
           <div class="flow-step">
-            <div class="step-number">2</div>
+            <div class="step-number" style="width:36px;height:36px;font-size:16px;">2</div>
             <div class="step-content">
-              <h4>Translog is fsync'd</h4>
-              <p>Fsync'd after every op by default. Append-only writes stay fast.</p>
+              <h4 style="font-size:17px;">Translog is fsync'd</h4>
+              <p style="font-size:15px;">Fsync'd after every op by default. Append-only writes stay fast.</p>
             </div>
           </div>
           <div class="flow-step">
-            <div class="step-number">3</div>
+            <div class="step-number" style="width:36px;height:36px;font-size:16px;">3</div>
             <div class="step-content">
-              <h4>Survives refresh</h4>
-              <p>Translog kept after refresh &mdash; segment isn't committed yet.</p>
+              <h4 style="font-size:17px;">Survives refresh</h4>
+              <p style="font-size:15px;">Translog kept after refresh &mdash; segment isn't committed yet.</p>
             </div>
           </div>
           <div class="flow-step">
-            <div class="step-number">4</div>
+            <div class="step-number" style="width:36px;height:36px;font-size:16px;">4</div>
             <div class="step-content">
-              <h4>Cleared on flush</h4>
-              <p>Truncated when Lucene commit (flush) makes segments durable.</p>
+              <h4 style="font-size:17px;">Cleared on flush</h4>
+              <p style="font-size:15px;">Truncated when Lucene commit (flush) makes segments durable.</p>
             </div>
           </div>
         </div>
@@ -3233,10 +3239,10 @@ graph TB
             <text x="502" y="13" fill="#00BFB3" text-anchor="middle" style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;">PARALLEL</text>
             <!-- Primary → Replica 1 -->
             <line x1="528" y1="34" x2="707" y2="34" stroke="#00BFB3" stroke-width="2" marker-end="url(#aw5)"/>
-            <text x="617" y="28" fill="#00BFB3" text-anchor="middle" style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;">Replicate</text>
+            <text x="617" y="28" fill="#00BFB3" text-anchor="middle" style="font-family:'Lora',serif;font-size:12px;font-weight:500;">Replicate</text>
             <!-- Primary → Replica 2 -->
             <line x1="528" y1="58" x2="896" y2="58" stroke="#00BFB3" stroke-width="2" marker-end="url(#aw5)"/>
-            <text x="712" y="52" fill="#00BFB3" text-anchor="middle" style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:500;">Replicate</text>
+            <text x="712" y="52" fill="#00BFB3" text-anchor="middle" style="font-family:'Lora',serif;font-size:12px;font-weight:500;">Replicate</text>
           </svg>
         </div>
 
@@ -3442,12 +3448,12 @@ graph TB
 <!-- SLIDE: ADAPTIVE REPLICA SELECTION -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part III: Elasticsearch" data-section-color="teal" id="slide-ars">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number" style="color:var(--es-teal);">Smart Routing</div>
     <h2>Adaptive <span class="highlight-teal">Replica Selection</span></h2>
-    <p class="subtitle">Each shard has multiple copies (primary + replicas). Which copy should handle the search? ARS picks the fastest one.</p>
+    <p class="subtitle" style="font-size:16px;">Each shard has multiple copies (primary + replicas). Which copy should handle the search? ARS picks the fastest one.</p>
 
-    <div class="two-col" style="margin-top:18px;gap:28px;">
+    <div class="two-col" style="margin-top:20px;gap:28px;">
       <!-- Left: Before ARS vs With ARS -->
       <div>
         <!-- Round Robin (old) -->
@@ -3555,37 +3561,37 @@ graph TB
 <!-- SLIDE 20: FAILURE HANDLING & SUMMARY -->
 <!-- ════════════════════════════════════════════════════════════ -->
 <section class="slide" data-section="Part III: Elasticsearch" data-section-color="teal" id="slide-20">
-  <div class="slide-content">
+  <div class="slide-content" style="display:flex;flex-direction:column;justify-content:center;margin-top:auto;margin-bottom:auto;">
     <div class="slide-number" style="color:var(--es-teal);">Fault Tolerance & Summary</div>
     <h2>When Things <span class="highlight-red">Go Wrong</span></h2>
 
-    <div class="two-col">
+    <div class="two-col" style="margin-top:16px;">
       <div>
-        <h3>Failure Scenarios</h3>
-        <div class="card-grid" style="grid-template-columns:1fr; gap:8px; margin-top:12px;">
-          <div class="card" style="padding:10px 16px; border-color: rgba(254,197,20,0.3);">
-            <h3 style="font-size:13px;margin-bottom:2px;"><span class="highlight">Primary Shard Dies</span></h3>
-            <p style="font-size:12px;">Master promotes replica to primary &rarr; retries op &rarr; allocates new replica elsewhere.</p>
+        <h3 style="font-size:20px;">Failure Scenarios</h3>
+        <div class="card-grid" style="grid-template-columns:1fr; gap:12px; margin-top:14px;">
+          <div class="card" style="padding:16px 20px; border-color: rgba(254,197,20,0.3);">
+            <h3 style="font-size:16px;margin-bottom:4px;"><span class="highlight">Primary Shard Dies</span></h3>
+            <p style="font-size:14px;">Master promotes replica to primary &rarr; retries op &rarr; allocates new replica elsewhere.</p>
           </div>
-          <div class="card" style="padding:10px 16px; border-color: rgba(0,191,179,0.3);">
-            <h3 style="font-size:13px;margin-bottom:2px;"><span class="highlight-teal">Replica Shard Dies</span></h3>
-            <p style="font-size:12px;">Removed from in-sync set &rarr; primary continues &rarr; master rebuilds replica on another node.</p>
+          <div class="card" style="padding:16px 20px; border-color: rgba(0,191,179,0.3);">
+            <h3 style="font-size:16px;margin-bottom:4px;"><span class="highlight-teal">Replica Shard Dies</span></h3>
+            <p style="font-size:14px;">Removed from in-sync set &rarr; primary continues &rarr; master rebuilds replica on another node.</p>
           </div>
-          <div class="card" style="padding:10px 16px; border-color: rgba(240,78,152,0.3);">
-            <h3 style="font-size:13px;margin-bottom:2px;"><span class="highlight-pink">Stale Primary (Network Partition)</span></h3>
-            <p style="font-size:12px;">Replicas reject writes (term mismatch) &rarr; old primary discovers replacement &rarr; ops rerouted.</p>
+          <div class="card" style="padding:16px 20px; border-color: rgba(240,78,152,0.3);">
+            <h3 style="font-size:16px;margin-bottom:4px;"><span class="highlight-pink">Stale Primary (Network Partition)</span></h3>
+            <p style="font-size:14px;">Replicas reject writes (term mismatch) &rarr; old primary discovers replacement &rarr; ops rerouted.</p>
           </div>
-          <div class="card" style="padding:10px 16px; border-color: rgba(255,139,74,0.3);">
-            <h3 style="font-size:13px;margin-bottom:2px;"><span class="highlight-orange">Read Failure</span></h3>
-            <p style="font-size:12px;">Coordinator retries on another shard copy &rarr; if all fail, returns partial results.</p>
+          <div class="card" style="padding:16px 20px; border-color: rgba(255,139,74,0.3);">
+            <h3 style="font-size:16px;margin-bottom:4px;"><span class="highlight-orange">Read Failure</span></h3>
+            <p style="font-size:14px;">Coordinator retries on another shard copy &rarr; if all fail, returns partial results.</p>
           </div>
         </div>
 
       </div>
 
       <div>
-        <h3>Putting It All Together</h3>
-        <table class="es-table" style="margin-top:12px;">
+        <h3 style="font-size:20px;">Putting It All Together</h3>
+        <table class="es-table" style="margin-top:14px;font-size:14px;">
           <tr><th>Lucene Concept</th><th>ES Layer</th></tr>
           <tr>
             <td>Inverted Index</td>
@@ -3613,9 +3619,9 @@ graph TB
           </tr>
         </table>
 
-        <div style="margin-top:16px; padding:16px; background:linear-gradient(135deg, var(--es-card), rgba(254,197,20,0.04)); border:1px solid var(--es-card-border); border-radius:12px; text-align:center;">
-          <p style="font-size:15px; font-weight:600; margin-bottom:6px;">The Big Picture</p>
-          <p style="font-size:13px; color:var(--es-muted); line-height:1.7;">
+        <div style="margin-top:20px; padding:20px; background:linear-gradient(135deg, var(--es-card), rgba(254,197,20,0.04)); border:1px solid var(--es-card-border); border-radius:12px; text-align:center;">
+          <p style="font-size:17px; font-weight:600; margin-bottom:8px;">The Big Picture</p>
+          <p style="font-size:15px; color:var(--es-muted); line-height:1.7;">
             <span class="highlight">Lucene</span> gives us the search.
             <span class="highlight-pink">Translog</span> gives us durability.
             <span class="highlight-green">Refresh</span> gives us near real-time.<br>
@@ -3765,37 +3771,47 @@ graph TB
     }
     setTimeout(tick, 1200);
   })();
-  mermaid.initialize({
-    startOnLoad: true,
-    theme: 'dark',
-    themeVariables: {
-      primaryColor: '#12121A',
-      primaryTextColor: '#E8E8F0',
-      primaryBorderColor: '#FEC514',
-      lineColor: '#FEC514',
-      secondaryColor: '#1a1a2e',
-      tertiaryColor: '#0a0a0f',
-      fontFamily: 'Outfit, sans-serif',
-      fontSize: '13px',
-      noteBkgColor: '#1a1a2e',
-      noteTextColor: '#E8E8F0',
-      noteBorderColor: '#FEC514',
-      actorBkg: '#12121A',
-      actorBorder: '#00BFB3',
-      actorTextColor: '#E8E8F0',
-      signalColor: '#FEC514',
-      signalTextColor: '#E8E8F0',
-      labelBoxBkgColor: '#12121A',
-      labelBoxBorderColor: '#FEC514',
-      labelTextColor: '#FEC514',
-      loopTextColor: '#E8E8F0',
-      activationBkgColor: '#1a1a2e',
-      activationBorderColor: '#FEC514',
-      sequenceNumberColor: '#FEC514'
-    },
-    flowchart: { curve: 'basis', padding: 16 },
-    sequence: { actorMargin: 30, messageMargin: 18, mirrorActors: false }
-  });
+
+  // Initialize mermaid when ready (loaded via defer)
+  function initMermaid() {
+    if (typeof mermaid === 'undefined') {
+      setTimeout(initMermaid, 50);
+      return;
+    }
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'dark',
+      themeVariables: {
+        primaryColor: '#12121A',
+        primaryTextColor: '#E8E8F0',
+        primaryBorderColor: '#FEC514',
+        lineColor: '#FEC514',
+        secondaryColor: '#1a1a2e',
+        tertiaryColor: '#0a0a0f',
+        fontFamily: 'Lora, serif',
+        fontSize: '13px',
+        noteBkgColor: '#1a1a2e',
+        noteTextColor: '#E8E8F0',
+        noteBorderColor: '#FEC514',
+        actorBkg: '#12121A',
+        actorBorder: '#00BFB3',
+        actorTextColor: '#E8E8F0',
+        signalColor: '#FEC514',
+        signalTextColor: '#E8E8F0',
+        labelBoxBkgColor: '#12121A',
+        labelBoxBorderColor: '#FEC514',
+        labelTextColor: '#FEC514',
+        loopTextColor: '#E8E8F0',
+        activationBkgColor: '#1a1a2e',
+        activationBorderColor: '#FEC514',
+        sequenceNumberColor: '#FEC514'
+      },
+      flowchart: { curve: 'basis', padding: 16 },
+      sequence: { actorMargin: 30, messageMargin: 18, mirrorActors: false }
+    });
+    mermaid.run();
+  }
+  initMermaid();
 
   const container = document.getElementById('slidesContainer');
   const slides = document.querySelectorAll('.slide');
