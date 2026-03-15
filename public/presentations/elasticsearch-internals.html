@@ -3866,13 +3866,15 @@ graph TB
   function scrollToReveal(el) {
     const slide = el.closest('.slide');
     if (!slide) return;
-    const elTop = el.offsetTop - slide.offsetTop;
-    const elBot = elTop + el.offsetHeight;
+    const slideRect = slide.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const relTop = elRect.top - slideRect.top + slide.scrollTop;
+    const relBot = relTop + elRect.height;
     const viewBot = slide.scrollTop + slide.clientHeight;
-    if (elBot > viewBot) {
-      slide.scrollTo({ top: elBot - slide.clientHeight + 20, behavior: 'smooth' });
-    } else if (elTop < slide.scrollTop) {
-      slide.scrollTo({ top: Math.max(0, elTop - 20), behavior: 'smooth' });
+    if (relBot > viewBot) {
+      slide.scrollTo({ top: relBot - slide.clientHeight + 20, behavior: 'smooth' });
+    } else if (relTop < slide.scrollTop) {
+      slide.scrollTo({ top: Math.max(0, relTop - 20), behavior: 'smooth' });
     }
   }
 
