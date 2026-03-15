@@ -25,7 +25,7 @@ export default function ElasticsearchInternalsPage() {
     }, [])
 
     return (
-        <div className="relative h-screen">
+        <div className="relative h-[calc(100vh-4rem)] md:h-screen">
             <button
                 onClick={toggleFullscreen}
                 aria-label={isFullscreen ? "Exit full screen" : "Full screen"}
