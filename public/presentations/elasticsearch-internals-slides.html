@@ -46,6 +46,57 @@
   .in-iframe .key-hint { display: none !important; }
   .in-iframe .slide { padding-top: 40px !important; }
 
+  /* ── Mobile floating nav (iframe only) ── */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 200;
+    align-items: center;
+    gap: 6px;
+    background: rgba(6,6,10,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--es-card-border);
+    border-radius: 28px;
+    padding: 5px 6px;
+  }
+  .mobile-nav-btn {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--es-card);
+    border: 1px solid var(--es-card-border);
+    color: var(--es-yellow);
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition: background 0.15s, border-color 0.15s;
+    font-family: system-ui, sans-serif;
+    line-height: 1;
+    padding: 0;
+  }
+  .mobile-nav-btn:active {
+    background: rgba(254,197,20,0.15);
+    border-color: var(--es-yellow);
+  }
+  .mobile-nav-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--es-muted);
+    min-width: 40px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  @media (max-width: 900px) {
+    .in-iframe .mobile-nav { display: flex; }
+  }
+
   .nav-bar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
@@ -360,6 +411,11 @@
     .key-hint { display: none; }
     .es-table th { padding: 8px 10px; font-size: 11px; }
     .es-table td { padding: 8px 10px; font-size: 12px; }
+
+    /* iframe mobile: tighter layout, account for floating nav */
+    .in-iframe .slide { padding: 28px 16px 72px !important; }
+    .in-iframe .section-tag { display: none !important; }
+    .in-iframe .progress-bar { height: 2px !important; }
   }
 
   @media (max-width: 900px) {
@@ -372,9 +428,17 @@
   @media (max-width: 900px) {
     .pipeline-grid { grid-template-columns: 1fr !important; gap: 10px !important; }
     .pipeline-arrow { display: none !important; }
-    .solution-pair { flex-direction: column !important; }
+    .solution-pair { flex-direction: column !important; gap: 8px !important; }
     .solution-pair .problem-card,
     .solution-pair .solution-card { flex: unset !important; }
+    .solution-pair > div[style*="font-size:28px"] {
+      transform: rotate(90deg);
+      font-size: 22px !important;
+      margin: -4px 0 !important;
+      padding: 0 !important;
+      line-height: 1;
+      align-self: center;
+    }
     .cluster-nodes { flex-direction: column !important; }
     .cluster-nodes > div { width: 100% !important; }
     .data-layers { flex-direction: column !important; gap: 8px !important; }
@@ -391,6 +455,30 @@
     .subtitle { font-size: 12px; }
     .nav-bar .logo span { display: none; }
     .nav-controls button { padding: 3px 8px; font-size: 11px; }
+
+    /* iframe mobile small: even tighter */
+    .in-iframe .slide { padding: 20px 12px 72px !important; }
+    .in-iframe h1 { font-size: 24px !important; }
+    .in-iframe h2 { font-size: 18px !important; }
+    .in-iframe .subtitle { font-size: 11px !important; }
+    .in-iframe .card { padding: 10px !important; border-radius: 8px !important; }
+    .in-iframe .card h3 { font-size: 13px !important; }
+    .in-iframe .card p { font-size: 11px !important; }
+    .in-iframe .problem-card, .in-iframe .solution-card { padding: 10px !important; }
+    .in-iframe .problem-card h3, .in-iframe .solution-card h3 { font-size: 13px !important; }
+    .in-iframe .problem-card p, .in-iframe .solution-card p { font-size: 11px !important; }
+    .in-iframe .info-box { padding: 6px 10px !important; }
+    .in-iframe .info-box p { font-size: 11px !important; }
+    .in-iframe .code-block { padding: 10px !important; font-size: 10px !important; line-height: 1.6 !important; }
+    .in-iframe .flow-step { gap: 8px !important; padding: 3px 0 !important; }
+    .in-iframe .step-content h4 { font-size: 12px !important; }
+    .in-iframe .step-content p { font-size: 11px !important; }
+    .in-iframe .step-number { width: 22px !important; height: 22px !important; font-size: 10px !important; border-width: 1.5px !important; }
+    .in-iframe .flow-step::before { left: 10px !important; }
+    .in-iframe .tag { font-size: 10px !important; padding: 3px 8px !important; }
+    .in-iframe .es-table th { padding: 6px 8px !important; font-size: 10px !important; }
+    .in-iframe .es-table td { padding: 6px 8px !important; font-size: 11px !important; }
+    .in-iframe .diagram-container { padding: 8px !important; }
   }
 
   /* Scale up on tall/large screens (fullscreen, high-res monitors) */
@@ -456,6 +544,8 @@
     .diagram-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .diagram-container > div { min-width: 600px; }
     .diagram-container svg { min-width: 600px; }
+    /* iframe mobile: ensure diagrams are scrollable */
+    .in-iframe .diagram-container { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
     /* Source docs (inverted index slide) */
     .source-docs { flex-direction: column; gap: 8px; }
@@ -479,14 +569,16 @@
       gap: 12px !important;
     }
     .durability-panels > div[style*="width:58px"],
-    .durability-panels > div[style*="width:70px"] {
+    .durability-panels > div[style*="width:70px"],
+    .durability-panels > div[style*="width:90px"] {
       width: 100% !important;
       flex-direction: row !important;
       height: auto !important;
       padding: 8px 0 !important;
     }
     .durability-panels > div[style*="width:58px"] > div[style*="font-size:22px"],
-    .durability-panels > div[style*="width:70px"] > div[style*="font-size:22px"] {
+    .durability-panels > div[style*="width:70px"] > div[style*="font-size:22px"],
+    .durability-panels > div[style*="width:90px"] > div[style*="font-size:22px"] {
       transform: rotate(90deg);
     }
 
@@ -556,6 +648,26 @@
     .search-demo-body { padding: 10px 12px; }
     .search-step { font-size: 12px; }
     .search-perf { font-size: 11px; }
+
+    /* Cover slide: scale journey flow boxes */
+    .in-iframe .journey-flow > div[style*="padding"] {
+      padding: 12px 16px !important;
+    }
+    .in-iframe .journey-flow div[style*="font-size:21px"] {
+      font-size: 15px !important;
+    }
+    .in-iframe .journey-flow div[style*="font-size:15px"] {
+      font-size: 12px !important;
+    }
+    .in-iframe .journey-flow div[style*="font-size:14px"] {
+      font-size: 11px !important;
+    }
+    /* Cover subtitle */
+    .in-iframe #slide-1 .subtitle { font-size: 14px !important; }
+    /* Cover navigate hint */
+    .in-iframe #slide-1 div[style*="font-size:16px"][style*="JetBrains"] {
+      font-size: 12px !important;
+    }
   }
 </style>
 </head>
@@ -572,6 +684,13 @@
 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 <div class="section-tag" id="sectionTag" style="background:rgba(254,197,20,0.15);color:var(--es-yellow);">Intro</div>
 <div class="key-hint"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> or <kbd>Space</kbd></div>
+
+<!-- Mobile floating nav (visible only on mobile in iframe) -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-btn" id="mobilePrev" aria-label="Previous">&#8249;</button>
+  <div class="mobile-nav-counter" id="mobileCounter">1 / 30</div>
+  <button class="mobile-nav-btn" id="mobileNext" aria-label="Next">&#8250;</button>
+</div>
 
 <div class="slides-container" id="slidesContainer">
 
@@ -3835,6 +3954,10 @@ graph LR
     tag.textContent = section;
     tag.style.background = sectionColors[colorKey]?.bg || sectionColors.yellow.bg;
     tag.style.color = sectionColors[colorKey]?.color || sectionColors.yellow.color;
+
+    // Mobile counter
+    const mc = document.getElementById('mobileCounter');
+    if (mc) mc.textContent = `${currentSlide + 1} / ${totalSlides}`;
   }
 
   // Auto-reveal removed — only explicit .reveal classes are used now
@@ -3998,13 +4121,14 @@ graph LR
     const dy = e.changedTouches[0].screenY - touchStartY;
     const dt = Date.now() - touchStartTime;
     const absDx = Math.abs(dx), absDy = Math.abs(dy);
-    // Require: horizontal > 50px, more horizontal than vertical, under 500ms
-    if (absDx > 50 && absDx > absDy * 1.2 && dt < 500) {
+    const isIframe = document.documentElement.classList.contains('in-iframe');
+    // Horizontal swipe — skip in iframe mode (use floating nav buttons instead)
+    if (!isIframe && absDx > 50 && absDx > absDy * 1.2 && dt < 500) {
       if (dx < 0) nextStep();   // swipe left → next
       else prevStep();          // swipe right → prev
     }
-    // Vertical swipe: swipe up → next, swipe down → prev
-    if (absDy > 50 && absDy > absDx * 1.2 && dt < 500) {
+    // Vertical swipe — skip in iframe mode (conflicts with content scrolling)
+    if (!isIframe && absDy > 50 && absDy > absDx * 1.2 && dt < 500) {
       if (dy < 0) nextStep();   // swipe up → next
       else prevStep();          // swipe down → prev
     }
@@ -4013,6 +4137,10 @@ graph LR
   // Wire up nav buttons
   document.querySelector('.nav-controls').innerHTML =
     '<button onclick="prevStep()">Prev</button><button onclick="nextStep()">Next</button>';
+
+  // Wire up mobile nav buttons
+  document.getElementById('mobilePrev').addEventListener('click', function(e) { e.stopPropagation(); prevStep(); });
+  document.getElementById('mobileNext').addEventListener('click', function(e) { e.stopPropagation(); nextStep(); });
 
   // Init: restore slide from URL hash (check parent frame first for iframe usage)
   let initHash = location.hash;
