@@ -9,6 +9,114 @@ import {PageContainer} from "../components/page-container"
 // Photography data with actual photos
 const photos = [
     {
+        url: '/photography/topoftherock.webp',
+        title: 'Top of the Rock',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/newyork3.webp',
+        title: 'Manhattan',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/newyork2.webp',
+        title: 'Manhattan',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/bryantpark.webp',
+        title: 'Bryant Park',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/dumbo.webp',
+        title: 'Dumbo',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/brooklyn.webp',
+        title: 'Brooklyn',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/newyorkstockexchange.webp',
+        title: 'New York Stock Exchange Building',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/özgürlükheykeli.webp',
+        title: 'Statue of Liberty',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/newyork1.webp',
+        title: 'Manhattan',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/upperwest.webp',
+        title: 'Upper West Side',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/centralpark.webp',
+        title: 'Central Park',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/petrossianbuilding.webp',
+        title: 'Petrossian Building',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/timessquare.webp',
+        title: 'Times Square',
+        city: 'New York City',
+        country: 'United States',
+    },
+    {
+        url: '/photography/danieloverlook.webp',
+        title: 'Jerome C. Daniel Overlook',
+        city: 'Los Angeles, California',
+        country: 'United States',
+    },
+    {
+        url: '/photography/hollywood.webp',
+        title: 'Hollywood',
+        city: 'Los Angeles, California',
+        country: 'United States',
+    },
+    {
+        url: '/photography/hollywood2.webp',
+        title: 'Hollywood',
+        city: 'Los Angeles, California',
+        country: 'United States',
+    },
+    {
+        url: '/photography/losangeles1.webp',
+        title: 'Beverly Hills',
+        city: 'Los Angeles, California',
+        country: 'United States',
+    },
+    {
+        url: '/photography/santamonicapier.webp',
+        title: 'Santa Monica Pier',
+        city: 'Los Angeles, California',
+        country: 'United States',
+    },
+    {
         url: '/photography/tokyo.webp',
         title: 'Shibuya Crossing',
         city: 'Tokyo',
@@ -375,9 +483,21 @@ const photos = [
         country: 'Bosnia and Herzegovina'
     },
     {
+        url: '/photography/batum.webp',
+        title: 'Batumi',
+        city: 'Batumi',
+        country: 'Georgia'
+    },
+    {
         url: '/photography/igneada.webp',
         title: 'İğneada Longoz Ormanları',
         city: 'Kırklareli',
+        country: 'Turkey'
+    },
+    {
+        url: '/photography/rize.webp',
+        title: 'Rize',
+        city: 'Rize',
         country: 'Turkey'
     },
     {

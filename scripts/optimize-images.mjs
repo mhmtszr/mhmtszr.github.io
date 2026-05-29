@@ -38,11 +38,11 @@ async function convertPhotography() {
     before += srcSize;
 
     // Thumb: 800px wide, q90
-    await sharp(src).resize(800, null, { withoutEnlargement: true }).webp({ quality: 90 }).toFile(thumbDest);
+    await sharp(src).resize(800, null, { withoutEnlargement: true }).webp({ quality: 100 }).toFile(thumbDest);
     const thumbSize = await fileSize(thumbDest);
 
     // Full: 1920px wide, q90
-    await sharp(src).resize(1920, null, { withoutEnlargement: true }).webp({ quality: 90 }).toFile(fullDest);
+    await sharp(src).resize(1920, null, { withoutEnlargement: true }).webp({ quality: 100 }).toFile(fullDest);
     const fullSize = await fileSize(fullDest);
 
     after += thumbSize + fullSize;
@@ -82,7 +82,7 @@ async function convertArticles() {
 
       await sharp(src)
         .resize(1200, null, { withoutEnlargement: true })
-        .webp({ quality: 90 })
+        .webp({ quality: 100 })
         .toFile(dest);
       const destSize = await fileSize(dest);
       after += destSize;
@@ -107,7 +107,7 @@ async function convertOG() {
 
   await sharp(OG_SRC)
     .resize(1200, null, { withoutEnlargement: true })
-    .png({ quality: 80, compressionLevel: 9 })
+    .png({ quality: 100, compressionLevel: 9 })
     .toFile(OG_DEST);
   const destSize = await fileSize(OG_DEST);
   totalAfter += destSize;
