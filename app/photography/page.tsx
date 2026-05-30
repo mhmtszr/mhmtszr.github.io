@@ -900,9 +900,9 @@ function PhotographyContent() {
                                                 />
                                             )}
                                             <div
-                                                className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-opacity duration-300"/>
+                                                className="absolute inset-0 bg-black/0 sm:group-hover:bg-black/30 transition-opacity duration-300"/>
                                             <div
-                                                className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/60 to-transparent">
+                                                className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/60 to-transparent">
                                                 <p className="text-sm font-medium truncate font-sans">{photo.title}</p>
                                                 <p className="text-xs mt-1 truncate font-sans">{photo.city}, {photo.country}</p>
                                             </div>
